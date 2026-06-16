@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { PageHeader, SectionHeader } from "@/components/ui";
+import { PageHeader, SectionHeader, TrendPill } from "@/components/ui";
 import { IntelFallback } from "@/components/ui/States";
-import { TrendPill } from "@/components/ui";
 import { getDiscovery } from "@/lib/intel/discovery";
 import { formatUsd, formatPct, formatCompact, timeAgo } from "@/lib/format";
-import { ArrowRight, StarIcon, ExternalIcon } from "@/components/icons";
+import { StarIcon, ExternalIcon } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 120;
@@ -19,20 +18,14 @@ export default async function OverviewPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Platform"
-        title="Overview"
-        description="A live cross-section of every source — trending markets, accelerating narratives, fast-moving projects, and the latest news. Everything here is real and clickable."
-        actions={
-          <Link href="/discovery" className="btn-primary px-4 py-2 text-[13px]">
-            Open Discovery
-            <ArrowRight width={15} height={15} />
-          </Link>
-        }
+        eyebrow="Overview"
+        title="What's gaining attention right now"
+        description="A live cross-section — trending markets, accelerating narratives, fast-moving projects, and the latest news. Everything is real and clickable."
       />
 
       {status !== "ok" ? (
         <section className="page-section">
-          <IntelFallback status={status} error={error} service="Live sources" />
+          <IntelFallback status={status} error={error} />
         </section>
       ) : (
         <>
@@ -53,10 +46,10 @@ export default async function OverviewPage() {
             </div>
 
             <div className="rounded-2xl border border-border/70 bg-surface/50 p-4">
-              <SectionHeader title="Accelerating narratives" actions={<Link href="/narratives" className="text-sm font-medium text-accent hover:underline">Narratives</Link>} />
+              <SectionHeader title="Accelerating narratives" actions={<Link href="/research" className="text-sm font-medium text-accent hover:underline">Research</Link>} />
               <div className="space-y-0.5">
                 {data.narratives.slice(0, 6).map((n) => (
-                  <Link key={n.id} href={`/narratives/${n.id}`} className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-surface">
+                  <Link key={n.id} href={`/research/${n.id}`} className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-surface">
                     <span className="min-w-0 flex-1 truncate text-sm text-foreground">{n.name}</span>
                     <span className="text-[11px] text-muted">{n.articleCount} articles</span>
                     {n.recentCount > 0 && <TrendPill trend="up" value={`+${n.recentCount}`} />}
@@ -67,7 +60,7 @@ export default async function OverviewPage() {
           </section>
 
           <section className="page-section">
-            <SectionHeader title="Fast-moving projects" actions={<Link href="/projects" className="text-sm font-medium text-accent hover:underline">All projects</Link>} />
+            <SectionHeader title="Fast-moving projects" actions={<Link href="/ecosystems" className="text-sm font-medium text-accent hover:underline">Ecosystems</Link>} />
             <div className="card-grid">
               {data.projects.map((p) => (
                 <Link key={p.fullName} href={`/projects/${p.slug}`} className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface">
@@ -83,7 +76,7 @@ export default async function OverviewPage() {
           </section>
 
           <section className="page-section">
-            <SectionHeader title="Latest news" actions={<Link href="/discovery" className="text-sm font-medium text-accent hover:underline">Discovery</Link>} />
+            <SectionHeader title="Latest news" actions={<Link href="/research" className="text-sm font-medium text-accent hover:underline">Research</Link>} />
             <ul className="space-y-2">
               {data.articles.map((a) => (
                 <li key={a.url}>

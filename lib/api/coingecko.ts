@@ -26,15 +26,33 @@ export interface MarketAsset {
   rank: number;
 }
 
+export interface TokenLinks {
+  website?: string;
+  explorer?: string;
+  github?: string;
+  twitter?: string;
+  reddit?: string;
+  telegram?: string;
+}
+
 export interface TokenData {
   id: string;
   symbol: string;
   name: string;
+  image: string;
   description: string;
-  homepage?: string;
+  categories: string[];
+  links: TokenLinks;
+  rank: number;
   price: number;
   marketCap: number;
+  fdv: number;
+  volume: number;
+  circulatingSupply: number;
+  totalSupply: number;
   change24h: number;
+  change7d: number;
+  change30d: number;
 }
 
 export interface TrendingCoin {
@@ -62,7 +80,7 @@ interface RawMarket {
 }
 
 export function getMarketData(
-  opts: { perPage?: number; ids?: string[] } = {},
+  opts: { perPage?: number; ids?: string[]; category?: string } = {},
 ): Promise<MarketAsset[]> {
   const params = new URLSearchParams({
     vs_currency: "usd",
@@ -72,6 +90,7 @@ export function getMarketData(
     price_change_percentage: "24h",
   });
   if (opts.ids?.length) params.set("ids", opts.ids.join(","));
+  if (opts.category) params.set("category", opts.category);
 
   return withCache(`cg:markets:${params}`, TTL_MARKET, async () => {
     const raw = await httpJson<RawMarket[]>(`${BASE}/coins/markets?${params}`, {
@@ -95,12 +114,32 @@ interface RawCoin {
   symbol: string;
   name: string;
   description?: { en?: string };
-  links?: { homepage?: string[] };
+  categories?: (string | null)[];
+  image?: { large?: string; small?: string; thumb?: string };
+  links?: {
+    homepage?: string[];
+    blockchain_site?: string[];
+    repos_url?: { github?: string[] };
+    twitter_screen_name?: string;
+    subreddit_url?: string;
+    telegram_channel_identifier?: string;
+  };
+  market_cap_rank?: number | null;
   market_data?: {
     current_price?: { usd?: number };
     market_cap?: { usd?: number };
+    fully_diluted_valuation?: { usd?: number };
+    total_volume?: { usd?: number };
+    circulating_supply?: number;
+    total_supply?: number;
     price_change_percentage_24h?: number;
+    price_change_percentage_7d?: number;
+    price_change_percentage_30d?: number;
   };
+}
+
+function firstNonEmpty(arr?: (string | null | undefined)[]): string | undefined {
+  return arr?.map((s) => s?.trim()).find((s) => s) || undefined;
 }
 
 export function getTokenData(id: string): Promise<TokenData> {
@@ -109,15 +148,34 @@ export function getTokenData(id: string): Promise<TokenData> {
       `${BASE}/coins/${encodeURIComponent(id)}?localization=false&tickers=false&community_data=false&developer_data=false`,
       { headers: headers() },
     );
+    const md = c.market_data;
+    const twitter = c.links?.twitter_screen_name?.trim();
+    const telegram = c.links?.telegram_channel_identifier?.trim();
     return {
       id: c.id,
       symbol: c.symbol.toUpperCase(),
       name: c.name,
-      description: c.description?.en?.split(". ")[0] ?? "",
-      homepage: c.links?.homepage?.find(Boolean),
-      price: c.market_data?.current_price?.usd ?? 0,
-      marketCap: c.market_data?.market_cap?.usd ?? 0,
-      change24h: c.market_data?.price_change_percentage_24h ?? 0,
+      image: c.image?.large ?? c.image?.small ?? c.image?.thumb ?? "",
+      description: c.description?.en?.split(". ").slice(0, 2).join(". ") ?? "",
+      categories: (c.categories ?? []).filter((x): x is string => Boolean(x)),
+      links: {
+        website: firstNonEmpty(c.links?.homepage),
+        explorer: firstNonEmpty(c.links?.blockchain_site),
+        github: firstNonEmpty(c.links?.repos_url?.github),
+        twitter: twitter ? `https://x.com/${twitter}` : undefined,
+        reddit: c.links?.subreddit_url?.trim() || undefined,
+        telegram: telegram ? `https://t.me/${telegram}` : undefined,
+      },
+      rank: c.market_cap_rank ?? 0,
+      price: md?.current_price?.usd ?? 0,
+      marketCap: md?.market_cap?.usd ?? 0,
+      fdv: md?.fully_diluted_valuation?.usd ?? 0,
+      volume: md?.total_volume?.usd ?? 0,
+      circulatingSupply: md?.circulating_supply ?? 0,
+      totalSupply: md?.total_supply ?? 0,
+      change24h: md?.price_change_percentage_24h ?? 0,
+      change7d: md?.price_change_percentage_7d ?? 0,
+      change30d: md?.price_change_percentage_30d ?? 0,
     };
   });
 }

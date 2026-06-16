@@ -15,12 +15,12 @@ export default async function EcosystemsPage() {
       <PageHeader
         eyebrow="Ecosystems"
         title="Explore ecosystems"
-        description="Base, Ethereum, Solana, AI, and DeFi — each page is built live from real GitHub projects, real builders, narrative themes, and current news momentum."
+        description="Base, Ethereum, Solana, AI, and DeFi — each page is built live from real projects, builders, narratives, and current news."
       />
 
       <section className="page-section">
         {status !== "ok" ? (
-          <IntelFallback status={status} error={error} service="News feeds" />
+          <IntelFallback status={status} error={error} />
         ) : (
           <div className="card-grid">
             {data.map((e) => (

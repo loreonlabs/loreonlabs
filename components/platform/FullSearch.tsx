@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SearchIcon } from "@/components/icons";
 
-type SearchType = "project" | "founder" | "market" | "narrative" | "ecosystem";
+type SearchType = "project" | "builder" | "market" | "narrative" | "ecosystem" | "launchpad";
 
 interface SearchResult {
   id: string;
@@ -17,10 +17,11 @@ interface SearchResult {
 
 const TYPE_LABEL: Record<SearchType, string> = {
   project: "Project",
-  founder: "Founder",
+  builder: "Builder",
   market: "Market",
-  narrative: "Narrative",
+  narrative: "Research",
   ecosystem: "Ecosystem",
+  launchpad: "Launchpad",
 };
 
 const SUGGESTIONS = ["ethereum", "solana", "AI agents", "uniswap", "base", "DeFi"];

@@ -57,12 +57,12 @@ export default async function MarketsPage() {
       <PageHeader
         eyebrow="Markets"
         title="Monitor market attention"
-        description="Live market data from CoinGecko — gainers, losers, trending, and the largest assets by market cap. Every row opens a detail page."
+        description="Live token and market data — gainers, losers, trending, and the largest assets by market cap. Every row opens a detail page."
       />
 
       <section className="page-section">
         {status !== "ok" ? (
-          <IntelFallback status={status} error={error} service="CoinGecko" />
+          <IntelFallback status={status} error={error} />
         ) : (
           <>
             <div className="grid gap-5 lg:grid-cols-3">
@@ -73,7 +73,7 @@ export default async function MarketsPage() {
 
             {data.trending.length > 0 && (
               <div className="mt-5">
-                <SectionHeader title="Trending" description="Most searched on CoinGecko right now." />
+                <SectionHeader title="Trending" description="Most searched right now." />
                 <div className="flex flex-wrap gap-2">
                   {data.trending.map((t) => (
                     <Link

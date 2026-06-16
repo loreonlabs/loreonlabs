@@ -1,69 +1,59 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { PageHeader, SectionHeader, StatCard, Badge, BackLink } from "@/components/ui";
-import { getEcosystem } from "@/lib/intel/ecosystems";
-import { ecosystemById } from "@/lib/intel/config";
-import { formatCompact, timeAgo, stageLabels, faviconUrl } from "@/lib/format";
-import { StarIcon, ExternalIcon } from "@/components/icons";
+import { PageHeader, SectionHeader, Badge, BackLink } from "@/components/ui";
+import { ExternalLinks } from "@/components/ui/ExternalLinks";
+import { getLaunchpad } from "@/lib/intel/launchpads";
+import { launchpadById } from "@/lib/intel/config";
+import { faviconUrl, timeAgo, formatCompact, stageLabels } from "@/lib/format";
+import { ExternalIcon, StarIcon } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  return { title: ecosystemById(slug)?.name ?? "Ecosystem" };
+  return { title: launchpadById(slug)?.name ?? "Launchpad" };
 }
 
-export default async function EcosystemDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function LaunchpadDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const { data } = await getEcosystem(slug);
+  const { data } = await getLaunchpad(slug);
   if (!data) notFound();
 
-  const { name, overview, recentNews, launchpads, projects, builders, narratives, news } = data;
+  const { launchpad: l, ecosystemName, narratives, projects, builders, news } = data;
 
   return (
     <>
       <div className="mb-4">
-        <BackLink href="/ecosystems" label="Ecosystems" />
+        <BackLink href="/launchpads" label="Launchpads" />
       </div>
 
-      <PageHeader eyebrow="Ecosystem" title={name} description={overview}>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatCard label="Launchpads" value={String(launchpads.length || "—")} />
-          <StatCard label="Projects" value={String(projects.length || "—")} />
-          <StatCard label="Builders" value={String(builders.length || "—")} />
-          <StatCard label="News this week" value={String(recentNews)} trend={recentNews > 0 ? "up" : "flat"} />
+      <PageHeader eyebrow={`Launchpad · ${l.chain}`} title={l.name} description={l.description}>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={faviconUrl(l.website)} alt="" width={28} height={28} className="h-7 w-7 rounded-lg bg-background/60" />
+            <Badge tone="accent">{l.chain}</Badge>
+            {ecosystemName && (
+              <Link href={`/ecosystems/${l.ecosystem}`}><Badge>{ecosystemName} ecosystem</Badge></Link>
+            )}
+          </div>
+          <ExternalLinks
+            links={[
+              { kind: "website", label: "Official site", href: l.website },
+              { kind: "docs", label: "Docs", href: l.docs ?? "" },
+            ]}
+          />
         </div>
       </PageHeader>
 
-      {launchpads.length > 0 && (
-        <section className="page-section">
-          <SectionHeader title="Launchpads" actions={<Link href={`/launchpads?ecosystem=${slug}`} className="text-sm font-medium text-accent hover:underline">All</Link>} />
-          <div className="card-grid">
-            {launchpads.map((l) => (
-              <Link key={l.id} href={`/launchpads/${l.id}`} className="hairline-top group flex items-center gap-3 rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={faviconUrl(l.website)} alt="" width={32} height={32} className="h-8 w-8 rounded-lg bg-background/60" />
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-semibold text-foreground">{l.name}</div>
-                  <div className="line-clamp-1 text-[11px] text-muted">{l.description}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
       {narratives.length > 0 && (
         <section className="page-section">
-          <SectionHeader title="Narratives" actions={<Link href="/research" className="text-sm font-medium text-accent hover:underline">Research</Link>} />
-          <div className="card-grid">
+          <SectionHeader title="Narratives" />
+          <div className="flex flex-wrap gap-2">
             {narratives.map((n) => (
-              <Link key={n.id} href={`/research/${n.id}`} className="hairline-top group h-full rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface">
-                <div className="text-sm font-semibold text-foreground">{n.name}</div>
-                <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{n.summary}</p>
-              </Link>
+              <Link key={n.id} href={`/research/${n.id}`}><Badge tone="accent">{n.name}</Badge></Link>
             ))}
           </div>
         </section>
@@ -71,7 +61,7 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
 
       {projects.length > 0 && (
         <section className="page-section">
-          <SectionHeader title="Top projects" />
+          <SectionHeader title={`Projects in ${ecosystemName ?? l.chain}`} actions={<Link href={`/ecosystems/${l.ecosystem}`} className="text-sm font-medium text-accent hover:underline">Ecosystem</Link>} />
           <div className="card-grid">
             {projects.map((p) => (
               <Link key={p.fullName} href={`/projects/${p.slug}`} className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface">
@@ -89,7 +79,7 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
 
       {builders.length > 0 && (
         <section className="page-section">
-          <SectionHeader title="Top builders" actions={<Link href={`/builders?ecosystem=${slug}`} className="text-sm font-medium text-accent hover:underline">All builders</Link>} />
+          <SectionHeader title={`Builders in ${ecosystemName ?? l.chain}`} actions={<Link href={`/builders?ecosystem=${l.ecosystem}`} className="text-sm font-medium text-accent hover:underline">All builders</Link>} />
           <div className="card-grid">
             {builders.map((b) => (
               <Link key={b.login} href={`/builders/${b.login}`} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface/60 p-3.5 transition-colors hover:border-accent/40">
@@ -107,7 +97,7 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
 
       {news.length > 0 && (
         <section className="page-section">
-          <SectionHeader title="Recent articles" description="Every item links to the original." />
+          <SectionHeader title="Recent mentions" description="Every item links to the original article." />
           <ul className="space-y-2">
             {news.map((a) => (
               <li key={a.url}>

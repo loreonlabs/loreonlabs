@@ -13,10 +13,12 @@ export default function AttentionScorePage() {
       <h2 id="what-it-measures">What it measures</h2>
       <p>
         Attention reflects <strong>emerging interest</strong> in a narrative,
-        founder, project, or market — computed live from the underlying sources.
+        builder, project, or market — computed live from the underlying sources.
         It is weighted toward acceleration, so something small but fast-moving can
-        outrank something large but flat. For the exact metric behind each surface,
-        see the <a href="/ranking-system">Ranking System</a>.
+        outrank something large but flat. Each surface is ranked by a concrete,
+        real metric: markets by 24h change and market cap, projects by stars and
+        recent activity, builders by contributions, and narratives by article
+        momentum.
       </p>
       <p>
         Importantly, LoreonLabs does <strong>not</strong> invent 0–100 scores or

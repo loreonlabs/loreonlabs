@@ -2,7 +2,7 @@ import "server-only";
 
 import * as gh from "@/lib/api/github";
 import * as cg from "@/lib/api/coingecko";
-import { ECOSYSTEMS, NARRATIVE_THEMES } from "./config";
+import { ECOSYSTEMS, NARRATIVE_THEMES, LAUNCHPADS } from "./config";
 import { toSlug } from "./projects";
 
 /**
@@ -13,10 +13,11 @@ import { toSlug } from "./projects";
 
 export type SearchType =
   | "project"
-  | "founder"
+  | "builder"
   | "market"
   | "narrative"
-  | "ecosystem";
+  | "ecosystem"
+  | "launchpad";
 
 export interface SearchResult {
   id: string;
@@ -33,7 +34,7 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
 
   const lower = q.toLowerCase();
 
-  // Local (instant) matches — themes & ecosystems.
+  // Local (instant) matches — themes, ecosystems, launchpads.
   const narratives: SearchResult[] = NARRATIVE_THEMES.filter((t) =>
     `${t.name} ${t.category}`.toLowerCase().includes(lower),
   ).map((t) => ({
@@ -41,7 +42,7 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
     type: "narrative",
     title: t.name,
     subtitle: t.category,
-    href: `/narratives/${t.id}`,
+    href: `/research/${t.id}`,
   }));
 
   const ecosystems: SearchResult[] = ECOSYSTEMS.filter((e) =>
@@ -52,6 +53,16 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
     title: e.name,
     subtitle: "Ecosystem",
     href: `/ecosystems/${e.id}`,
+  }));
+
+  const launchpads: SearchResult[] = LAUNCHPADS.filter((l) =>
+    l.name.toLowerCase().includes(lower),
+  ).map((l) => ({
+    id: `launchpad-${l.id}`,
+    type: "launchpad",
+    title: l.name,
+    subtitle: `${l.chain} launchpad`,
+    href: `/launchpads/${l.id}`,
   }));
 
   // Live matches — fail soft so one provider can't break search.
@@ -69,12 +80,12 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
     href: `/projects/${toSlug(r.fullName)}`,
   }));
 
-  const founders: SearchResult[] = users.map((u) => ({
-    id: `founder-${u.login}`,
-    type: "founder",
+  const builders: SearchResult[] = users.map((u) => ({
+    id: `builder-${u.login}`,
+    type: "builder",
     title: u.login,
-    subtitle: "GitHub builder",
-    href: `/founders/${u.login}`,
+    subtitle: "Builder",
+    href: `/builders/${u.login}`,
     image: u.avatarUrl,
   }));
 
@@ -87,8 +98,12 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
     image: c.thumb,
   }));
 
-  return [...markets, ...projects, ...founders, ...narratives, ...ecosystems].slice(
-    0,
-    24,
-  );
+  return [
+    ...markets,
+    ...launchpads,
+    ...projects,
+    ...builders,
+    ...narratives,
+    ...ecosystems,
+  ].slice(0, 24);
 }

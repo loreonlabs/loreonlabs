@@ -4,14 +4,16 @@ import { serverEnv } from "@/lib/env";
 import * as rss from "@/lib/api/rss";
 import * as hn from "@/lib/api/hackernews";
 import * as tavily from "@/lib/api/tavily";
-import { NARRATIVE_THEMES, themeById, type NarrativeTheme } from "./config";
+import { NARRATIVE_THEMES, themeById, ecosystemById, type NarrativeTheme } from "./config";
 import { intel, type Intel } from "./result";
+import { listProjects, type IntelProject } from "./projects";
+import { listBuilders, type IntelBuilder } from "./builders";
 
 /**
- * Narrative intelligence — real article clusters. Each narrative is a theme
- * (a category, not a fictional entity) populated from live RSS + Hacker News,
- * with an AI summary + cited sources from Tavily on the detail page. Article
- * count, momentum, and dates are all computed from real fetched articles.
+ * Research / narrative intelligence — real article clusters. Each narrative is
+ * a theme populated from live news and developer sources, with an executive
+ * summary and cited sources. Article count, momentum, and dates are computed
+ * from real, dated articles. Themes without enough real coverage are hidden.
  */
 
 export interface Article {
@@ -25,14 +27,16 @@ export interface IntelNarrative {
   id: string;
   name: string;
   category: string;
+  summary: string;
   ecosystems: string[];
   articleCount: number;
-  /** Articles within the last 7 days — the momentum signal. */
-  recentCount: number;
+  recentCount: number; // last 7 days
   latestDate: string;
   sources: Article[];
 }
 
+/** Minimum real articles for a narrative to be shown at all. */
+const MIN_ARTICLES = 4;
 const WEEK = 7 * 24 * 60 * 60 * 1000;
 
 function hnToArticle(i: hn.HNItem): Article {
@@ -49,27 +53,23 @@ function matches(theme: NarrativeTheme, text: string): boolean {
   return theme.keywords.some((k) => t.includes(k.toLowerCase()));
 }
 
-function clusterFor(theme: NarrativeTheme, pool: Article[]): IntelNarrative {
+function dedupeByUrl(articles: Article[]): Article[] {
   const seen = new Set<string>();
-  const sources = pool.filter((a) => {
-    if (!matches(theme, `${a.title}`)) return false;
-    if (seen.has(a.url)) return false;
-    seen.add(a.url);
-    return true;
-  });
+  return articles.filter((a) => a.url && !seen.has(a.url) && seen.add(a.url));
+}
+
+function clusterFor(theme: NarrativeTheme, pool: Article[]): IntelNarrative {
+  const sources = dedupeByUrl(pool.filter((a) => matches(theme, a.title)));
   const now = Date.now();
   const recentCount = sources.filter(
     (a) => a.publishedAt && now - Date.parse(a.publishedAt) < WEEK,
   ).length;
-  const latestDate = sources
-    .map((a) => a.publishedAt)
-    .filter(Boolean)
-    .sort()
-    .at(-1);
+  const latestDate = sources.map((a) => a.publishedAt).filter(Boolean).sort().at(-1);
   return {
     id: theme.id,
     name: theme.name,
     category: theme.category,
+    summary: theme.summary,
     ecosystems: theme.ecosystems,
     articleCount: sources.length,
     recentCount,
@@ -80,16 +80,11 @@ function clusterFor(theme: NarrativeTheme, pool: Article[]): IntelNarrative {
 
 export async function buildPool(): Promise<Article[]> {
   const [feed, stories] = await Promise.all([
-    rss.getAggregatedFeed(60).catch(() => []),
+    rss.getAggregatedFeed(120).catch(() => []),
     hn.getTopStories(60).catch(() => []),
   ]);
   return [
-    ...feed.map((f) => ({
-      title: f.title,
-      url: f.link,
-      source: f.source,
-      publishedAt: f.publishedAt,
-    })),
+    ...feed.map((f) => ({ title: f.title, url: f.link, source: f.source, publishedAt: f.publishedAt })),
     ...stories.map(hnToArticle),
   ];
 }
@@ -99,16 +94,21 @@ export async function listNarratives(): Promise<Intel<IntelNarrative[]>> {
     empty: [],
     run: async () => {
       const pool = await buildPool();
-      return NARRATIVE_THEMES.map((t) => clusterFor(t, pool)).sort(
-        (a, b) => b.recentCount - a.recentCount || b.articleCount - a.articleCount,
-      );
+      return NARRATIVE_THEMES.map((t) => clusterFor(t, pool))
+        .filter((n) => n.articleCount >= MIN_ARTICLES) // hide thin narratives
+        .sort((a, b) => b.recentCount - a.recentCount || b.articleCount - a.articleCount);
     },
   });
 }
 
 export interface NarrativeDetail extends IntelNarrative {
   aiSummary: string | null;
+  timeline: Article[]; // chronological, newest first
   allSources: Article[];
+  relatedNarratives: { id: string; name: string }[];
+  relatedEcosystems: { id: string; name: string }[];
+  relatedProjects: IntelProject[];
+  relatedBuilders: IntelBuilder[];
 }
 
 export async function getNarrative(id: string): Promise<Intel<NarrativeDetail | null>> {
@@ -117,7 +117,7 @@ export async function getNarrative(id: string): Promise<Intel<NarrativeDetail | 
 
   return intel<NarrativeDetail | null>({
     empty: null,
-    isEmpty: (v) => v == null,
+    isEmpty: (v) => v == null || v.allSources.length < MIN_ARTICLES,
     run: async () => {
       const pool = await buildPool();
       const base = clusterFor(theme, pool);
@@ -131,22 +131,53 @@ export async function getNarrative(id: string): Promise<Intel<NarrativeDetail | 
           tavilySources = search.results.map((r) => ({
             title: r.title,
             url: r.url,
-            source: "Web",
+            source: hostOf(r.url),
             publishedAt: "",
           }));
         }
       }
 
-      const seen = new Set<string>();
-      const allSources = [...base.sources, ...tavilySources, ...articlesFrom(theme, pool)].filter(
-        (a) => a.url && !seen.has(a.url) && seen.add(a.url),
-      );
+      const fromPool = dedupeByUrl(pool.filter((a) => matches(theme, a.title)));
+      const allSources = dedupeByUrl([...fromPool, ...tavilySources]);
+      const timeline = [...allSources]
+        .filter((a) => a.publishedAt)
+        .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
 
-      return { ...base, aiSummary, allSources };
+      const relatedNarratives = NARRATIVE_THEMES.filter(
+        (t) => t.id !== theme.id && t.ecosystems.some((e) => theme.ecosystems.includes(e)),
+      )
+        .slice(0, 4)
+        .map((t) => ({ id: t.id, name: t.name }));
+      const relatedEcosystems = theme.ecosystems
+        .map((e) => ecosystemById(e))
+        .filter((e): e is NonNullable<typeof e> => Boolean(e))
+        .map((e) => ({ id: e.id, name: e.name }));
+
+      const primaryEco = theme.ecosystems[0];
+      const [projectsRes, buildersRes] = await Promise.all([
+        primaryEco ? listProjects({ ecosystem: primaryEco }) : Promise.resolve({ data: [] as IntelProject[] }),
+        primaryEco ? listBuilders({ ecosystem: primaryEco }) : Promise.resolve({ data: [] as IntelBuilder[] }),
+      ]);
+
+      return {
+        ...base,
+        articleCount: allSources.length,
+        aiSummary,
+        timeline,
+        allSources,
+        relatedNarratives,
+        relatedEcosystems,
+        relatedProjects: projectsRes.data.slice(0, 6),
+        relatedBuilders: buildersRes.data.slice(0, 6),
+      };
     },
   });
 }
 
-function articlesFrom(theme: NarrativeTheme, pool: Article[]): Article[] {
-  return pool.filter((a) => matches(theme, a.title));
+function hostOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "Source";
+  }
 }

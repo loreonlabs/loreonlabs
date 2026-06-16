@@ -4,34 +4,32 @@ import { IntelFallback } from "@/components/ui/States";
 import { listNarratives } from "@/lib/intel/narratives";
 import { timeAgo } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Narratives" };
+export const metadata: Metadata = { title: "Research" };
 export const dynamic = "force-dynamic";
 export const revalidate = 600;
 
-export default async function NarrativesPage() {
+export default async function ResearchPage() {
   const { status, data, error } = await listNarratives();
 
   return (
     <>
       <PageHeader
-        eyebrow="Narratives"
-        title="Track growing narratives"
-        description="Themes clustered from live Hacker News and crypto news feeds. Article count and momentum (stories in the last 7 days) are computed from real, dated articles — no invented scores."
+        eyebrow="Research"
+        title="Narratives, backed by real coverage"
+        description="Each narrative is clustered from live news and developer sources. Momentum is the number of articles in the last 7 days — computed from real, dated coverage. Narratives without enough coverage are hidden."
       />
 
       <section className="page-section">
         {status !== "ok" ? (
-          <IntelFallback status={status} error={error} service="News feeds" />
+          <IntelFallback status={status} error={error} empty={{ title: "No narratives with sufficient coverage", message: "Check back as new coverage lands." }} />
         ) : (
           <div className="card-grid">
             {data.map((n) => (
               <ContentCard
                 key={n.id}
-                href={`/narratives/${n.id}`}
+                href={`/research/${n.id}`}
                 title={n.name}
-                description={
-                  n.sources[0]?.title ?? "Monitoring sources for new coverage."
-                }
+                description={n.summary}
                 tags={
                   <>
                     <Badge tone="accent">{n.category}</Badge>
@@ -40,8 +38,8 @@ export default async function NarrativesPage() {
                 }
                 footer={
                   <>
-                    <span>{n.articleCount} article{n.articleCount === 1 ? "" : "s"}</span>
-                    <span>{n.latestDate ? timeAgo(n.latestDate) : "—"}</span>
+                    <span>{n.articleCount} articles</span>
+                    <span>{n.latestDate ? timeAgo(n.latestDate) : ""}</span>
                   </>
                 }
               />

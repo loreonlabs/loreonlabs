@@ -61,6 +61,16 @@ export function formatPct(value: number): string {
   return `${sign}${value.toFixed(1)}%`;
 }
 
+/** Real favicon for an official site (used as a logo when no logo asset exists). */
+export function faviconUrl(siteUrl: string, size = 64): string {
+  try {
+    const host = new URL(siteUrl).hostname;
+    return `https://www.google.com/s2/favicons?domain=${host}&sz=${size}`;
+  } catch {
+    return "";
+  }
+}
+
 export function timeAgo(iso: string): string {
   if (!iso) return "";
   const ts = Date.parse(iso);

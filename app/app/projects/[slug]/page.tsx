@@ -31,9 +31,9 @@ export default async function ProjectDetailPage({
     return (
       <>
         <div className="mb-4">
-          <BackLink href="/projects" label="Projects" />
+          <BackLink href="/ecosystems" label="Ecosystems" />
         </div>
-        <PageHeader eyebrow="Project" title="Project unavailable" description="GitHub did not return this repository." />
+        <PageHeader eyebrow="Project" title="Project unavailable" description="This repository is unavailable." />
       </>
     );
   }
@@ -43,13 +43,13 @@ export default async function ProjectDetailPage({
   return (
     <>
       <div className="mb-4">
-        <BackLink href="/projects" label="Projects" />
+        <BackLink href="/ecosystems" label="Ecosystems" />
       </div>
 
       <PageHeader
         eyebrow={data.ecosystemName ?? project.category}
         title={project.name}
-        description={project.description || `${project.fullName} on GitHub.`}
+        description={project.description || `${project.fullName}`}
       >
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2">
@@ -79,7 +79,7 @@ export default async function ProjectDetailPage({
 
       <div className="page-section grid gap-6 lg:grid-cols-2">
         <div>
-          <SectionHeader title="Recent commits" description="Live from the default branch." />
+          <SectionHeader title="Recent commits" description="Latest commits." />
           {commits.length === 0 ? (
             <p className="t-body">No recent commits available.</p>
           ) : (
@@ -114,7 +114,7 @@ export default async function ProjectDetailPage({
               {contributors.map((c) => (
                 <Link
                   key={c.login}
-                  href={`/founders/${c.login}`}
+                  href={`/builders/${c.login}`}
                   className="flex items-center gap-3 rounded-lg border border-border/60 bg-surface/40 p-2.5 transition-colors hover:border-accent/40"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}

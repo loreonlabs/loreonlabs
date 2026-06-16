@@ -1,15 +1,21 @@
 import "server-only";
 
-import { ECOSYSTEMS, ecosystemById, NARRATIVE_THEMES } from "./config";
+import {
+  ECOSYSTEMS,
+  ecosystemById,
+  themeById,
+  launchpadsForEcosystem,
+  type LaunchpadConfig,
+} from "./config";
 import { intel, type Intel } from "./result";
 import { buildPool, type Article } from "./narratives";
 import { listProjects, type IntelProject } from "./projects";
-import { listBuilders, type IntelBuilder } from "./founders";
+import { listBuilders, type IntelBuilder } from "./builders";
 
 /**
- * Ecosystem intelligence — fully dynamic. The list shows real news momentum per
- * ecosystem (from live articles); the detail page aggregates real projects
- * (GitHub), real builders (GitHub), related narrative themes, and recent news.
+ * Ecosystem intelligence — fully dynamic and interconnected. The list shows
+ * real news momentum; detail pages aggregate launchpads, real projects, real
+ * builders, narrative themes, and recent news for that ecosystem.
  */
 
 const WEEK = 7 * 24 * 60 * 60 * 1000;
@@ -37,8 +43,9 @@ function newsFor(keywords: string[], pool: Article[]): Article[] {
 export async function listEcosystems(): Promise<Intel<IntelEcosystem[]>> {
   return intel<IntelEcosystem[]>({
     empty: [],
+    isEmpty: () => false,
     run: async () => {
-      const pool = await buildPool();
+      const pool = await buildPool().catch(() => [] as Article[]);
       const now = Date.now();
       return ECOSYSTEMS.map((e) => {
         const news = newsFor(e.keywords, pool);
@@ -48,9 +55,7 @@ export async function listEcosystems(): Promise<Intel<IntelEcosystem[]>> {
           symbol: e.symbol,
           blurb: e.blurb,
           newsCount: news.length,
-          recentNews: news.filter(
-            (a) => a.publishedAt && now - Date.parse(a.publishedAt) < WEEK,
-          ).length,
+          recentNews: news.filter((a) => a.publishedAt && now - Date.parse(a.publishedAt) < WEEK).length,
         };
       }).sort((a, b) => b.recentNews - a.recentNews);
     },
@@ -58,10 +63,15 @@ export async function listEcosystems(): Promise<Intel<IntelEcosystem[]>> {
 }
 
 export interface EcosystemDetail {
-  ecosystem: IntelEcosystem;
+  id: string;
+  name: string;
+  symbol: string;
+  overview: string;
+  recentNews: number;
+  launchpads: LaunchpadConfig[];
   projects: IntelProject[];
   builders: IntelBuilder[];
-  narratives: { id: string; name: string; category: string }[];
+  narratives: { id: string; name: string; summary: string }[];
   news: Article[];
 }
 
@@ -74,28 +84,25 @@ export async function getEcosystem(id: string): Promise<Intel<EcosystemDetail | 
     isEmpty: (v) => v == null,
     run: async () => {
       const [pool, projectsRes, buildersRes] = await Promise.all([
-        buildPool(),
+        buildPool().catch(() => [] as Article[]),
         listProjects({ ecosystem: id }),
         listBuilders({ ecosystem: id }),
       ]);
       const news = newsFor(cfg.keywords, pool);
       const now = Date.now();
       return {
-        ecosystem: {
-          id: cfg.id,
-          name: cfg.name,
-          symbol: cfg.symbol,
-          blurb: cfg.blurb,
-          newsCount: news.length,
-          recentNews: news.filter(
-            (a) => a.publishedAt && now - Date.parse(a.publishedAt) < WEEK,
-          ).length,
-        },
+        id: cfg.id,
+        name: cfg.name,
+        symbol: cfg.symbol,
+        overview: cfg.overview,
+        recentNews: news.filter((a) => a.publishedAt && now - Date.parse(a.publishedAt) < WEEK).length,
+        launchpads: launchpadsForEcosystem(id),
         projects: projectsRes.data.slice(0, 9),
         builders: buildersRes.data.slice(0, 9),
-        narratives: NARRATIVE_THEMES.filter((t) => t.ecosystems.includes(id)).map(
-          (t) => ({ id: t.id, name: t.name, category: t.category }),
-        ),
+        narratives: cfg.narrativeIds
+          .map((nid) => themeById(nid))
+          .filter((t): t is NonNullable<typeof t> => Boolean(t))
+          .map((t) => ({ id: t.id, name: t.name, summary: t.summary })),
         news: news.slice(0, 8),
       };
     },
