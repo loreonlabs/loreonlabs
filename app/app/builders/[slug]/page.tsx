@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PageHeader, SectionHeader, StatCard, Badge, BackLink } from "@/components/ui";
 import { ExternalLinks } from "@/components/ui/ExternalLinks";
 import { getBuilder } from "@/lib/intel/builders";
+import { ecosystemById } from "@/lib/intel/config";
 import { formatCompact, timeAgo } from "@/lib/format";
 import { toSlug } from "@/lib/intel/projects";
 import { StarIcon } from "@/components/icons";
@@ -21,7 +22,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
   const { data } = await getBuilder(slug);
   if (!data) notFound();
 
-  const { profile, repos, ecosystemNames, totalStars } = data;
+  const { profile, repos, ecosystemIds, ecosystemNames, totalStars, relatedBuilders, relatedNarratives } = data;
   const recent = [...repos].sort((a, b) => Date.parse(b.pushedAt) - Date.parse(a.pushedAt)).slice(0, 4);
 
   return (
@@ -39,8 +40,8 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
           <div className="flex flex-wrap items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={profile.avatarUrl} alt="" width={28} height={28} className="h-7 w-7 rounded-full" />
-            {ecosystemNames.map((e) => (
-              <Badge key={e} tone="accent">{e}</Badge>
+            {ecosystemIds.map((id) => (
+              <Link key={id} href={`/ecosystems/${id}`}><Badge tone="accent">{ecosystemById(id)?.name ?? id}</Badge></Link>
             ))}
           </div>
           <ExternalLinks
@@ -58,7 +59,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
           <StatCard label="Followers" value={formatCompact(profile.followers)} />
           <StatCard label="Public repos" value={formatCompact(profile.publicRepos)} />
           <StatCard label="Stars (recent)" value={formatCompact(totalStars)} />
-          <StatCard label="Ecosystems" value={String(ecosystemNames.length || "—")} />
+          <StatCard label="Ecosystems" value={String(ecosystemIds.length || "—")} />
         </div>
       </section>
 
@@ -70,11 +71,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
           ) : (
             <div className="space-y-2">
               {repos.slice(0, 8).map((r) => (
-                <Link
-                  key={r.fullName}
-                  href={`/projects/${toSlug(r.fullName)}`}
-                  className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 p-3 transition-colors hover:border-accent/40"
-                >
+                <Link key={r.fullName} href={`/projects/${toSlug(r.fullName)}`} className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 p-3 transition-colors hover:border-accent/40">
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[13px] font-medium text-foreground">{r.fullName.split("/")[1]}</div>
                     <div className="truncate text-[11px] text-muted">{r.description || "No description."}</div>
@@ -96,12 +93,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
             <ul className="space-y-2">
               {recent.map((r) => (
                 <li key={r.fullName}>
-                  <a
-                    href={r.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block rounded-xl border border-border/60 bg-surface/40 p-3 transition-colors hover:border-accent/40"
-                  >
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" className="block rounded-xl border border-border/60 bg-surface/40 p-3 transition-colors hover:border-accent/40">
                     <div className="truncate text-[13px] font-medium text-foreground">{r.fullName}</div>
                     <div className="mt-1 text-[11px] text-muted">pushed {timeAgo(r.pushedAt) || "recently"}</div>
                   </a>
@@ -111,6 +103,35 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
           )}
         </div>
       </div>
+
+      {relatedNarratives.length > 0 && (
+        <section className="page-section">
+          <SectionHeader title="Connected narratives" />
+          <div className="flex flex-wrap gap-2">
+            {relatedNarratives.map((n) => (
+              <Link key={n.id} href={`/research/${n.id}`}><Badge tone="accent">{n.name}</Badge></Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {relatedBuilders.length > 0 && (
+        <section className="page-section">
+          <SectionHeader title="Related builders" description="Others building in the same ecosystem." />
+          <div className="card-grid">
+            {relatedBuilders.map((b) => (
+              <Link key={b.login} href={`/builders/${b.login}`} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface/60 p-3.5 transition-colors hover:border-accent/40">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={b.avatarUrl} alt="" width={36} height={36} className="h-9 w-9 rounded-full" />
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-medium text-foreground">{b.name ?? b.login}</div>
+                  <div className="text-[11px] text-muted">{formatCompact(b.contributions)} {b.featured ? "followers" : "commits"}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </>
   );
 }

@@ -33,7 +33,21 @@ export const ECOSYSTEMS: EcosystemConfig[] = [
     overview:
       "Base has become a center of gravity for consumer onchain apps, AI agents, and social. A rich launchpad layer (Bankr, Clanker, Flaunch, Virtuals) lets anyone deploy tokens and agents, while apps like Aerodrome and Farcaster anchor liquidity and social.",
     githubTopic: "base",
-    seedRepos: ["ethereum-optimism/optimism", "base-org/web"],
+    // Real, official Base-ecosystem repos — builders are discovered from their
+    // live contributor graphs (Base core, OnchainKit/DevRel, Smart Wallet,
+    // Farcaster social, the OP stack, and a leading DEX). Repos that don't
+    // resolve simply contribute nothing.
+    seedRepos: [
+      "base-org/web",
+      "base-org/node",
+      "coinbase/onchainkit",
+      "coinbase/smart-wallet",
+      "coinbase/build-onchain-apps",
+      "farcasterxyz/protocol",
+      "farcasterxyz/snapchain",
+      "ethereum-optimism/optimism",
+      "velodrome-finance/contracts",
+    ],
     keywords: ["base", "coinbase", "onchain", "farcaster", "clanker", "bankr"],
     narrativeIds: [
       "ai-agents",

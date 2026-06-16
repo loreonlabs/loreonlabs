@@ -37,6 +37,7 @@ export interface Developer {
   website: string | null;
   twitter: string | null;
   location: string | null;
+  createdAt: string;
 }
 
 export interface Contributor {
@@ -133,6 +134,7 @@ interface RawUser {
   blog: string | null;
   twitter_username: string | null;
   location: string | null;
+  created_at: string;
 }
 
 function normalizeUrl(value: string | null): string | null {
@@ -160,6 +162,7 @@ export function getUser(username: string): Promise<Developer> {
       website: normalizeUrl(u.blog),
       twitter: u.twitter_username,
       location: u.location,
+      createdAt: u.created_at ?? "",
     };
   });
 }

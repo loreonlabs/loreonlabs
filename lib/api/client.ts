@@ -26,7 +26,7 @@ interface HttpOptions extends RequestInit {
 }
 
 async function rawFetch(url: string, options: HttpOptions = {}): Promise<Response> {
-  const { timeoutMs = 12_000, revalidate, headers, ...rest } = options;
+  const { timeoutMs = 9_000, revalidate, headers, ...rest } = options;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
