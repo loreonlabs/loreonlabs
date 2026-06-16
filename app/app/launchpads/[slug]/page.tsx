@@ -6,7 +6,8 @@ import { ExternalLinks } from "@/components/ui/ExternalLinks";
 import { getLaunchpad } from "@/lib/intel/launchpads";
 import { getSiteEnrichment } from "@/lib/intel/enrichment";
 import { EnrichmentSection } from "@/components/platform/EnrichmentSection";
-import { launchpadById } from "@/lib/intel/config";
+import { KeyContributors } from "@/components/platform/KeyContributors";
+import { launchpadById, teamForLaunchpad } from "@/lib/intel/config";
 import { faviconUrl, timeAgo, formatCompact, stageLabels } from "@/lib/format";
 import { ExternalIcon, StarIcon } from "@/components/icons";
 
@@ -54,6 +55,8 @@ export default async function LaunchpadDetailPage({ params }: { params: Promise<
       {enrich.status === "ok" && enrich.data && (
         <EnrichmentSection enrichment={enrich.data} title="About" />
       )}
+
+      {teamForLaunchpad(slug) && <KeyContributors team={teamForLaunchpad(slug)!} />}
 
       {narratives.length > 0 && (
         <section className="page-section">

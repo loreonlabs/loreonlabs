@@ -537,8 +537,227 @@ export const CURATED_BUILDERS: CuratedBuilder[] = [
   { slug: "0xdeployer", name: "0xDeployer", role: "Base builder", ecosystems: ["base"], x: "0xDeployer" },
 ];
 
+/* ----------------------- curated teams (enrichment) ----------------------- */
+
+export interface CuratedContributor {
+  name: string;
+  /** Exact X handle (no @). */
+  x: string;
+  /** The project's own account, not a person (no Builder page). */
+  isAccount?: boolean;
+}
+
+export type TeamKind = "ecosystem" | "launchpad" | "project";
+
+export interface CuratedTeam {
+  id: string;
+  name: string;
+  kind: TeamKind;
+  ecosystems: string[];
+  /** Official X profile URL. */
+  official: string;
+  website?: string;
+  /** Placement targets. */
+  ecosystemId?: string;
+  launchpadId?: string;
+  /** GitHub orgs whose project pages this team belongs to. */
+  repoOwners?: string[];
+  /** owner~~repo used for the "related project" link on cards. */
+  primaryProjectSlug?: string;
+  contributors: CuratedContributor[];
+}
+
+/**
+ * Curated contributor teams — additive enrichment. Each team is attached to the
+ * single entity it belongs to (an ecosystem, a launchpad, or a project), so
+ * people never appear under unrelated projects.
+ */
+export const CURATED_TEAMS: CuratedTeam[] = [
+  {
+    id: "base",
+    name: "Base",
+    kind: "ecosystem",
+    ecosystems: ["base"],
+    ecosystemId: "base",
+    official: "https://x.com/base",
+    website: "https://base.org/",
+    contributors: [
+      { name: "Jesse Pollak", x: "jessepollak" },
+      { name: "Xen", x: "XenBH" },
+      { name: "Ahaan Raizada", x: "AhaanRaizada" },
+      { name: "Mvines", x: "mvines" },
+      { name: "Youssef", x: "0xyoussea" },
+    ],
+  },
+  {
+    id: "bankr",
+    name: "Bankr",
+    kind: "launchpad",
+    ecosystems: ["base"],
+    launchpadId: "bankr",
+    official: "https://x.com/bankrbot",
+    website: "https://bankr.bot/",
+    contributors: [
+      { name: "Igor Yuzo", x: "igoryuzo" },
+      { name: "0xDeployer", x: "0xDeployer" },
+      { name: "Saltorious", x: "saltorious1" },
+      { name: "Facu", x: "facuserif" },
+      { name: "Danny Brown Wolf", x: "Dannyhbrown" },
+    ],
+  },
+  {
+    id: "flaunch",
+    name: "Flaunch",
+    kind: "launchpad",
+    ecosystems: ["base"],
+    launchpadId: "flaunch",
+    official: "https://x.com/flaunchgg",
+    website: "https://flaunch.gg/",
+    contributors: [
+      { name: "Caps", x: "0xCaps" },
+      { name: "Nobi", x: "0xnobi" },
+    ],
+  },
+  {
+    id: "virtuals",
+    name: "Virtuals",
+    kind: "launchpad",
+    ecosystems: ["base", "ai"],
+    launchpadId: "virtuals",
+    official: "https://x.com/virtuals_io",
+    website: "https://www.virtuals.io/",
+    contributors: [
+      { name: "Jansen Teng", x: "jansenteng" },
+      { name: "Virtuals", x: "virtuals_io", isAccount: true },
+    ],
+  },
+  {
+    id: "clanker",
+    name: "Clanker",
+    kind: "launchpad",
+    ecosystems: ["base"],
+    launchpadId: "clanker",
+    official: "https://x.com/clankeronbase",
+    website: "https://www.clanker.world/",
+    contributors: [
+      { name: "0xDeployer", x: "0xDeployer" },
+      { name: "Clanker", x: "clankeronbase", isAccount: true },
+    ],
+  },
+  {
+    id: "aerodrome",
+    name: "Aerodrome",
+    kind: "project",
+    ecosystems: ["base"],
+    repoOwners: ["aerodrome-finance", "velodrome-finance"],
+    primaryProjectSlug: "velodrome-finance~~contracts",
+    official: "https://x.com/aerodromefi",
+    website: "https://aerodrome.finance/",
+    contributors: [
+      { name: "Alex Cutler", x: "acutler" },
+      { name: "Aerodrome", x: "aerodromefi", isAccount: true },
+    ],
+  },
+  {
+    id: "farcaster",
+    name: "Farcaster",
+    kind: "project",
+    ecosystems: ["base"],
+    repoOwners: ["farcasterxyz"],
+    primaryProjectSlug: "farcasterxyz~~protocol",
+    official: "https://x.com/farcaster_xyz",
+    website: "https://www.farcaster.xyz/",
+    contributors: [
+      { name: "Dan Romero", x: "dwr" },
+      { name: "Varun Srinivasan", x: "varunsrin" },
+      { name: "Farcaster", x: "farcaster_xyz", isAccount: true },
+    ],
+  },
+  {
+    id: "zora",
+    name: "Zora",
+    kind: "project",
+    ecosystems: ["base"],
+    repoOwners: ["ourzora"],
+    primaryProjectSlug: "ourzora~~zora-protocol",
+    official: "https://x.com/zora",
+    website: "https://zora.co/",
+    contributors: [
+      { name: "Jacob Horne", x: "jacob" },
+      { name: "Zora", x: "zora", isAccount: true },
+    ],
+  },
+];
+
+export const teamForLaunchpad = (id: string): CuratedTeam | undefined =>
+  CURATED_TEAMS.find((t) => t.kind === "launchpad" && t.launchpadId === id);
+export const teamForEcosystem = (id: string): CuratedTeam | undefined =>
+  CURATED_TEAMS.find((t) => t.kind === "ecosystem" && t.ecosystemId === id);
+export const teamForRepoOwner = (owner: string): CuratedTeam | undefined =>
+  CURATED_TEAMS.find((t) => t.repoOwners?.some((o) => o.toLowerCase() === owner.toLowerCase()));
+
+export interface ContributorCard {
+  name: string;
+  handle: string;
+  xUrl: string;
+  avatar: string;
+  isAccount: boolean;
+  builderSlug?: string;
+  ecosystems: string[];
+  projectName: string;
+  projectHref: string;
+}
+
+export function teamProjectHref(team: CuratedTeam): string {
+  if (team.kind === "launchpad" && team.launchpadId) return `/launchpads/${team.launchpadId}`;
+  if (team.kind === "ecosystem" && team.ecosystemId) return `/ecosystems/${team.ecosystemId}`;
+  if (team.primaryProjectSlug) return `/projects/${team.primaryProjectSlug}`;
+  return `/ecosystems/${team.ecosystems[0] ?? "base"}`;
+}
+
+/** Resolve a team into renderable contributor cards (pure — no API). */
+export function resolveTeam(team: CuratedTeam): ContributorCard[] {
+  const projectHref = teamProjectHref(team);
+  return team.contributors.map((c) => ({
+    name: c.name,
+    handle: c.x,
+    xUrl: `https://x.com/${c.x}`,
+    avatar: `https://unavatar.io/x/${c.x}`,
+    isAccount: Boolean(c.isAccount),
+    builderSlug: c.isAccount ? undefined : c.x.toLowerCase(),
+    ecosystems: team.ecosystems,
+    projectName: team.name,
+    projectHref,
+  }));
+}
+
+/** Curated people derived from teams (accounts excluded) → builder profiles. */
+const TEAM_BUILDERS: CuratedBuilder[] = (() => {
+  const seen = new Set<string>();
+  const out: CuratedBuilder[] = [];
+  for (const team of CURATED_TEAMS) {
+    for (const c of team.contributors) {
+      if (c.isAccount) continue;
+      const slug = c.x.toLowerCase();
+      if (seen.has(slug)) continue;
+      seen.add(slug);
+      out.push({ slug, name: c.name, role: `${team.name} contributor`, ecosystems: team.ecosystems, x: c.x });
+    }
+  }
+  return out;
+})();
+
+/** All curated builders — the originals plus team-derived people (deduped). */
+export const ALL_CURATED_BUILDERS: CuratedBuilder[] = (() => {
+  const bySlug = new Map<string, CuratedBuilder>();
+  for (const b of [...CURATED_BUILDERS, ...TEAM_BUILDERS]) {
+    if (!bySlug.has(b.slug)) bySlug.set(b.slug, b);
+  }
+  return [...bySlug.values()];
+})();
+
 export const curatedBySlug = (slug: string): CuratedBuilder | undefined =>
-  CURATED_BUILDERS.find((b) => b.slug === slug || b.github === slug);
+  ALL_CURATED_BUILDERS.find((b) => b.slug === slug || b.github === slug);
 
 export const launchpadById = (id: string): LaunchpadConfig | undefined =>
   LAUNCHPADS.find((l) => l.id === id);

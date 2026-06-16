@@ -5,7 +5,7 @@ import {
   ECOSYSTEMS,
   ecosystemById,
   themeById,
-  CURATED_BUILDERS,
+  ALL_CURATED_BUILDERS,
   curatedBySlug,
 } from "./config";
 import { intel, type Intel } from "./result";
@@ -87,7 +87,7 @@ function unavatar(x: string): string {
 
 /** Curated personalities, hydrated from GitHub when a login is available. */
 async function featuredBuilders(ecosystem?: string): Promise<IntelBuilder[]> {
-  const curated = CURATED_BUILDERS.filter((b) => !ecosystem || b.ecosystems.includes(ecosystem));
+  const curated = ALL_CURATED_BUILDERS.filter((b) => !ecosystem || b.ecosystems.includes(ecosystem));
   const builders = await mapPool(curated, 5, async (c): Promise<IntelBuilder> => {
     if (c.github) {
       const u = await gh.getUser(c.github).catch(() => null);

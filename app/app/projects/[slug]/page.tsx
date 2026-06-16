@@ -6,6 +6,8 @@ import { ExternalLinks } from "@/components/ui/ExternalLinks";
 import { getProject, fromSlug } from "@/lib/intel/projects";
 import { getSiteEnrichment } from "@/lib/intel/enrichment";
 import { EnrichmentSection } from "@/components/platform/EnrichmentSection";
+import { KeyContributors } from "@/components/platform/KeyContributors";
+import { teamForRepoOwner } from "@/lib/intel/config";
 import { formatCompact, timeAgo, stageLabels } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +28,9 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  // Curated team is derived from the slug (no API) so it renders even if live
+  // GitHub discovery is unavailable — failsafe per the enrichment spec.
+  const team = teamForRepoOwner(fromSlug(slug).split("/")[0] ?? "");
   const { status, data } = await getProject(slug);
   if (status === "empty" || (status === "ok" && !data)) notFound();
 
@@ -36,6 +41,7 @@ export default async function ProjectDetailPage({
           <BackLink href="/ecosystems" label="Ecosystems" />
         </div>
         <PageHeader eyebrow="Project" title="Project unavailable" description="This repository is unavailable." />
+        {team && <KeyContributors team={team} />}
       </>
     );
   }
@@ -83,6 +89,8 @@ export default async function ProjectDetailPage({
       {enrich.status === "ok" && enrich.data && (
         <EnrichmentSection enrichment={enrich.data} title="About this project" />
       )}
+
+      {team && <KeyContributors team={team} />}
 
       <div className="page-section grid gap-6 lg:grid-cols-2">
         <div>

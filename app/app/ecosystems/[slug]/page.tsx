@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PageHeader, SectionHeader, StatCard, Badge, BackLink } from "@/components/ui";
 import { getEcosystem } from "@/lib/intel/ecosystems";
-import { ecosystemById } from "@/lib/intel/config";
+import { ecosystemById, teamForEcosystem } from "@/lib/intel/config";
+import { KeyContributors } from "@/components/platform/KeyContributors";
 import { formatCompact, timeAgo, stageLabels, faviconUrl } from "@/lib/format";
 import { StarIcon, ExternalIcon } from "@/components/icons";
 
@@ -36,6 +37,8 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
           <StatCard label="News this week" value={String(recentNews)} trend={recentNews > 0 ? "up" : "flat"} />
         </div>
       </PageHeader>
+
+      {teamForEcosystem(slug) && <KeyContributors team={teamForEcosystem(slug)!} />}
 
       {launchpads.length > 0 && (
         <section className="page-section">
