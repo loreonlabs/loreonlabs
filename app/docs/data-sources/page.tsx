@@ -9,9 +9,9 @@ export default function DataSourcesPage() {
     <DocArticle
       href="/data-sources"
       title="Data sources"
-      description="LoreonLabs draws on a diverse set of providers so that no single source dominates the signal. These integrations are planned for the data pipeline."
+      description="LoreonLabs draws on a diverse set of providers so that no single source dominates the signal. Each integration is implemented as a dedicated service in the data layer."
     >
-      <h2 id="planned-sources">Planned sources</h2>
+      <h2 id="sources">Sources</h2>
       <p>
         Each provider contributes a distinct kind of signal. Together they give
         Loreon a corroborated, multi-perspective view of where attention is
@@ -27,7 +27,7 @@ export default function DataSourcesPage() {
             <div className="flex items-center justify-between gap-3">
               <span className="text-sm font-semibold text-foreground">{i.name}</span>
               <span className="rounded-md border border-border/70 bg-background/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-muted">
-                {i.status}
+                {i.requiresKey ? "API key" : "Public"}
               </span>
             </div>
             <p className="mt-1.5 text-[13px] leading-relaxed text-muted">

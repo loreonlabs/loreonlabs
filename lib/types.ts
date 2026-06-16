@@ -13,7 +13,9 @@ export type SourceKey =
   | "jina"
   | "reddit"
   | "github"
-  | "coingecko";
+  | "coingecko"
+  | "hackernews"
+  | "rss";
 
 export type Trend = "up" | "down" | "flat";
 

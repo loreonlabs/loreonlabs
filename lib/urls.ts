@@ -12,10 +12,13 @@
  * Within a zone, links are zone-relative ("/discovery"). Links that cross zones
  * use the absolute URLs below so the browser changes host.
  *
- * The root domain is configurable for custom domains and previews via
- * NEXT_PUBLIC_ROOT_DOMAIN. Locally, the *.localhost subdomains resolve to
- * 127.0.0.1 in all modern browsers, so the same model works in development.
+ * Zone URLs come from the validated public env (NEXT_PUBLIC_SITE_URL /
+ * NEXT_PUBLIC_APP_URL / NEXT_PUBLIC_DOCS_URL). The root domain is derived from
+ * the site URL. Locally, the *.localhost subdomains resolve to 127.0.0.1 in all
+ * modern browsers, so the same model works in development.
  */
+
+import { publicEnv, rootDomain } from "./env";
 
 export const ZONES = ["landing", "app", "docs"] as const;
 export type Zone = (typeof ZONES)[number];
@@ -26,23 +29,15 @@ export const ZONE_PREFIX: Record<Exclude<Zone, "landing">, string> = {
   docs: "/docs",
 };
 
-export const ROOT_DOMAIN =
-  process.env.NEXT_PUBLIC_ROOT_DOMAIN?.trim() || "loreonlabs.xyz";
+/** Root domain derived from NEXT_PUBLIC_SITE_URL. */
+export const ROOT_DOMAIN = rootDomain;
 
-const isProd = process.env.NODE_ENV === "production";
-
-/** Absolute base URL for each zone, environment-aware. */
-export const zoneUrls: Record<Zone, string> = isProd
-  ? {
-      landing: `https://${ROOT_DOMAIN}`,
-      app: `https://app.${ROOT_DOMAIN}`,
-      docs: `https://docs.${ROOT_DOMAIN}`,
-    }
-  : {
-      landing: "http://localhost:3000",
-      app: "http://app.localhost:3000",
-      docs: "http://docs.localhost:3000",
-    };
+/** Absolute base URL for each zone (from the public env). */
+export const zoneUrls: Record<Zone, string> = {
+  landing: publicEnv.siteUrl,
+  app: publicEnv.appUrl,
+  docs: publicEnv.docsUrl,
+};
 
 /**
  * Classify a request host into a zone. Works for production subdomains,

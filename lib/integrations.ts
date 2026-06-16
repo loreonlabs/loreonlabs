@@ -1,11 +1,10 @@
 /**
- * Integration registry — the contract for upstream data providers.
+ * Integration registry — describes the live data providers backing the service
+ * layer in lib/services/*. Used by the docs to document provenance and by the
+ * UI to reason about which sources are configured.
  *
- * This phase does NOT connect any APIs. The registry below documents the
- * planned sources, the environment variable each will read its credentials
- * from, and a single `DataProvider` interface that future client modules will
- * implement. Keeping this here lets the UI describe data provenance today and
- * gives the data layer a stable shape to grow into.
+ * Credentials are read from the server environment (see lib/env.ts). Sources
+ * marked `requiresKey: false` work without credentials (rate-limited).
  */
 
 import type { SourceKey } from "./types";
@@ -15,9 +14,8 @@ export type IntegrationCategory =
   | "extraction"
   | "social"
   | "developer"
-  | "market";
-
-export type IntegrationStatus = "planned" | "configured" | "live";
+  | "market"
+  | "news";
 
 export interface IntegrationConfig {
   key: SourceKey;
@@ -26,9 +24,12 @@ export interface IntegrationConfig {
   description: string;
   /** What this source contributes to the attention model. */
   contributes: string;
-  status: IntegrationStatus;
-  /** Environment variable that will hold the API credential. */
-  envVar: string;
+  /** Whether an API key/token is required to use the source. */
+  requiresKey: boolean;
+  /** Environment variable that holds the credential (if any). */
+  envVar?: string;
+  /** The service module that implements this integration. */
+  service: string;
   docsUrl: string;
 }
 
@@ -38,63 +39,67 @@ export const integrations: IntegrationConfig[] = [
     name: "Tavily",
     category: "search",
     description: "Real-time web search and retrieval tuned for research.",
-    contributes: "Narrative discovery and source expansion across the open web.",
-    status: "planned",
+    contributes: "Narrative discovery, ecosystem and project research.",
+    requiresKey: true,
     envVar: "TAVILY_API_KEY",
+    service: "lib/services/tavily.ts",
     docsUrl: "https://docs.tavily.com",
-  },
-  {
-    key: "jina",
-    name: "Jina AI",
-    category: "extraction",
-    description: "Web reading, content extraction, and embeddings.",
-    contributes: "Clean text extraction and semantic similarity for clustering.",
-    status: "planned",
-    envVar: "JINA_API_KEY",
-    docsUrl: "https://jina.ai",
-  },
-  {
-    key: "reddit",
-    name: "Reddit",
-    category: "social",
-    description: "Community discussion and early sentiment.",
-    contributes: "Social velocity and grassroots attention signals.",
-    status: "planned",
-    envVar: "REDDIT_CLIENT_ID",
-    docsUrl: "https://www.reddit.com/dev/api",
-  },
-  {
-    key: "github",
-    name: "GitHub",
-    category: "developer",
-    description: "Repositories, contributors, and release activity.",
-    contributes: "Developer momentum and shipping cadence for projects.",
-    status: "planned",
-    envVar: "GITHUB_TOKEN",
-    docsUrl: "https://docs.github.com/rest",
   },
   {
     key: "coingecko",
     name: "CoinGecko",
     category: "market",
-    description: "Market data, prices, and trading metrics.",
+    description: "Token data, market data, and trending assets.",
     contributes: "Market attention and liquidity context for narratives.",
-    status: "planned",
+    requiresKey: false,
     envVar: "COINGECKO_API_KEY",
+    service: "lib/services/coingecko.ts",
     docsUrl: "https://www.coingecko.com/en/api",
+  },
+  {
+    key: "github",
+    name: "GitHub",
+    category: "developer",
+    description: "Repositories, contributors, commits, and developer activity.",
+    contributes: "Developer momentum and shipping cadence for founders & projects.",
+    requiresKey: false,
+    envVar: "GITHUB_TOKEN",
+    service: "lib/services/github.ts",
+    docsUrl: "https://docs.github.com/rest",
+  },
+  {
+    key: "jina",
+    name: "Jina AI",
+    category: "extraction",
+    description: "Content extraction, webpage parsing, and article ingestion.",
+    contributes: "Clean text extraction for downstream analysis.",
+    requiresKey: true,
+    envVar: "JINA_API_KEY",
+    service: "lib/services/jina.ts",
+    docsUrl: "https://jina.ai/reader",
+  },
+  {
+    key: "hackernews",
+    name: "Hacker News",
+    category: "news",
+    description: "Top, best, and new stories plus item details.",
+    contributes: "Early technology and developer attention signals.",
+    requiresKey: false,
+    service: "lib/services/hackernews.ts",
+    docsUrl: "https://github.com/HackerNews/API",
+  },
+  {
+    key: "rss",
+    name: "RSS Aggregator",
+    category: "news",
+    description: "CoinDesk, Decrypt, Cointelegraph, and CryptoSlate feeds.",
+    contributes: "Mainstream coverage and emerging-story velocity.",
+    requiresKey: false,
+    envVar: "RSS_FEEDS",
+    service: "lib/services/rss.ts",
+    docsUrl: "https://en.wikipedia.org/wiki/RSS",
   },
 ];
 
 export const integrationsByKey: Record<string, IntegrationConfig> =
   Object.fromEntries(integrations.map((i) => [i.key, i]));
-
-/**
- * Contract that every future provider client will implement. Implementations
- * live in `lib/providers/*` once integration begins — none exist yet.
- */
-export interface DataProvider<TQuery, TResult> {
-  readonly key: SourceKey;
-  /** Whether credentials are present and the provider is enabled. */
-  isEnabled(): boolean;
-  fetch(query: TQuery): Promise<TResult>;
-}
