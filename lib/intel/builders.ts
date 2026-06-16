@@ -1,12 +1,14 @@
 import "server-only";
 
 import * as gh from "@/lib/api/github";
+import { HttpError } from "@/lib/api/client";
 import {
   ECOSYSTEMS,
   ecosystemById,
   themeById,
   ALL_CURATED_BUILDERS,
   curatedBySlug,
+  type CuratedBuilder,
 } from "./config";
 import { intel, type Intel } from "./result";
 import { formatCompact } from "@/lib/format";
@@ -270,6 +272,51 @@ export interface BuilderDetail {
   relatedNarratives: { id: string; name: string }[];
 }
 
+/** Synthesize a profile for a curated X-only builder (no GitHub). */
+function syntheticDeveloper(c: CuratedBuilder): gh.Developer {
+  return {
+    login: c.slug,
+    name: c.name,
+    bio: c.role,
+    avatarUrl: c.x ? `https://unavatar.io/x/${c.x}` : "",
+    url: c.x ? `https://x.com/${c.x}` : c.website ?? "",
+    followers: 0,
+    publicRepos: 0,
+    company: c.role,
+    website: c.website ?? null,
+    twitter: c.x ?? null,
+    location: null,
+    createdAt: "",
+  };
+}
+
+/**
+ * Minimal profile from a GitHub login when the live fetch is unavailable
+ * (e.g. rate-limited). The avatar resolves from github.com/<login>.png, which
+ * needs no API — so the profile is still real and the page never 404s.
+ */
+function minimalDeveloper(login: string, c?: CuratedBuilder): gh.Developer {
+  return {
+    login,
+    name: c?.name ?? login,
+    bio: c?.role ?? null,
+    avatarUrl: `https://github.com/${login}.png`,
+    url: `https://github.com/${login}`,
+    followers: 0,
+    publicRepos: 0,
+    company: c?.role ?? null,
+    website: c?.website ?? null,
+    twitter: c?.x ?? null,
+    location: null,
+    createdAt: "",
+  };
+}
+
+/**
+ * Resolve a builder across ALL sources (GitHub-discovered + curated). Never
+ * 404s on a transient GitHub failure — only when a non-curated slug genuinely
+ * does not exist on GitHub.
+ */
 export async function getBuilder(slug: string): Promise<Intel<BuilderDetail | null>> {
   const curated = curatedBySlug(slug);
 
@@ -277,48 +324,39 @@ export async function getBuilder(slug: string): Promise<Intel<BuilderDetail | nu
     empty: null,
     isEmpty: (v) => v == null,
     run: async () => {
-      // Curated personality with no GitHub login → synthesize a real profile
-      // from their X/website (avatar via unavatar). No fabricated metrics.
-      if (curated && !curated.github) {
-        const primaryEco = curated.ecosystems[0] ?? "base";
-        const related = await listBuilders({ ecosystem: primaryEco });
-        const narrativeIds = ecosystemById(primaryEco)?.narrativeIds ?? [];
-        return {
-          profile: {
-            login: curated.slug,
-            name: curated.name,
-            bio: curated.role,
-            avatarUrl: curated.x ? `https://unavatar.io/x/${curated.x}` : "",
-            url: curated.x ? `https://x.com/${curated.x}` : curated.website ?? "",
-            followers: 0,
-            publicRepos: 0,
-            company: curated.role,
-            website: curated.website ?? null,
-            twitter: curated.x ?? null,
-            location: null,
-            createdAt: "",
-          },
-          repos: [],
-          ecosystemIds: curated.ecosystems,
-          ecosystemNames: curated.ecosystems.map((id) => ecosystemById(id)?.name ?? id),
-          totalStars: 0,
-          relatedBuilders: related.data.filter((b) => b.login !== slug).slice(0, 6),
-          relatedNarratives: narrativeIds
-            .map((nid) => themeById(nid))
-            .filter((t): t is NonNullable<typeof t> => Boolean(t))
-            .slice(0, 6)
-            .map((t) => ({ id: t.id, name: t.name })),
-        };
+      // GitHub login to try: curated.github, or the slug itself (unless the
+      // curated entry is explicitly X-only).
+      const ghLogin = curated?.github ?? (curated ? undefined : slug);
+
+      let profile: gh.Developer | null = null;
+      let repos: gh.Repository[] = [];
+
+      if (ghLogin) {
+        try {
+          profile = await gh.getUser(ghLogin);
+          repos = await gh.listUserRepos(ghLogin, 12).catch(() => []);
+        } catch (err) {
+          // A real 404 for a non-curated slug → genuine not-found.
+          if (err instanceof HttpError && err.status === 404 && !curated) {
+            return null;
+          }
+          // Otherwise (rate limit / transient) → fall back to a minimal profile.
+          profile = null;
+        }
       }
 
-      const login = curated?.github ?? slug;
-      const profile = await gh.getUser(login);
-      if (curated) {
+      if (!profile) {
+        profile =
+          curated && !curated.github
+            ? syntheticDeveloper(curated)
+            : minimalDeveloper(ghLogin ?? slug, curated);
+      } else if (curated) {
         profile.name = curated.name;
         if (curated.x) profile.twitter = curated.x;
         if (curated.role) profile.company = curated.role;
+        if (curated.website && !profile.website) profile.website = curated.website;
       }
-      const repos = await gh.listUserRepos(login, 12).catch(() => []);
+
       const derived = ECOSYSTEMS.filter((e) => repos.some((r) => r.topics.includes(e.githubTopic)));
       const ecosystemIds = curated?.ecosystems.length ? curated.ecosystems : derived.map((e) => e.id);
       const primary = ecosystemIds[0] ?? "base";

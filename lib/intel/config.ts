@@ -535,6 +535,10 @@ export const CURATED_BUILDERS: CuratedBuilder[] = [
   { slug: "jessepollak", name: "Jesse Pollak", role: "Creator of Base", ecosystems: ["base"], github: "jessepollak", x: "jessepollak" },
   { slug: "mvines", name: "Michael Vines", role: "Solana core contributor", ecosystems: ["solana"], github: "mvines" },
   { slug: "0xdeployer", name: "0xDeployer", role: "Base builder", ecosystems: ["base"], x: "0xDeployer" },
+  { slug: "hwchase17", name: "Harrison Chase", role: "Co-founder, LangChain", ecosystems: ["ai"], github: "hwchase17", x: "hwchase17" },
+  { slug: "keonehd", name: "Keone Hon", role: "Co-founder, Monad", ecosystems: ["monad"], x: "keoneHD" },
+  { slug: "smokeythebera", name: "Smokey", role: "Co-founder, Berachain", ecosystems: ["berachain"], x: "SmokeyTheBera" },
+  { slug: "chameleon_jeff", name: "Jeff", role: "Founder, Hyperliquid", ecosystems: ["hyperliquid"], x: "chameleon_jeff" },
 ];
 
 /* ----------------------- curated teams (enrichment) ----------------------- */
