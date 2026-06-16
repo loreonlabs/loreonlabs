@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #10141a;
+  --surface: #161b22;
+  --border: #2a3342;
+  --foreground: #f8fafc;
+  --muted: #94a3b8;
+  --accent: #22d3ee;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgba(34, 211, 238, 0.25);
+    color: #f8fafc;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0b0e13;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #283142;
+    border-radius: 8px;
+    border: 2px solid #0b0e13;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #36425a;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-8;
+  }
+
+  /* Premium hairline-bordered surface */
+  .panel {
+    @apply rounded-2xl border border-border/80 bg-surface/70 backdrop-blur-xl;
+  }
+
+  /* Text gradient for headlines */
+  .text-gradient {
+    background: linear-gradient(180deg, #ffffff 0%, #b9c4d4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-accent {
+    background: linear-gradient(135deg, #f8fafc 0%, #67e8f9 60%, #22d3ee 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Subtle top hairline on cards */
+  .hairline-top {
+    position: relative;
+  }
+  .hairline-top::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.12),
+      transparent
+    );
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-2 rounded-full border border-border/80 bg-surface/60 px-3 py-1 text-xs font-medium text-muted backdrop-blur;
+  }
+
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-[#04222a] transition-all duration-300 hover:shadow-glow hover:brightness-110 active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/60 px-5 py-3 text-sm font-semibold text-foreground backdrop-blur transition-all duration-300 hover:border-accent/50 hover:bg-surface active:scale-[0.98];
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image: linear-gradient(
+        to right,
+        rgba(42, 51, 66, 0.5) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(42, 51, 66, 0.5) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(
+      rgba(148, 163, 184, 0.18) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  }
+
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
+  }
+
+  .mask-radial {
+    -webkit-mask-image: radial-gradient(
+      ellipse 80% 60% at 50% 40%,
+      #000 40%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 80% 60% at 50% 40%,
+      #000 40%,
+      transparent 100%
+    );
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.15),
+      0 0 60px -12px rgba(34, 211, 238, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
