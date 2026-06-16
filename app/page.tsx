@@ -1,11 +1,10 @@
 import { Backdrop } from "@/components/Backdrop";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
-import { NarrativePulse } from "@/components/sections/NarrativePulse";
-import { FounderSignals } from "@/components/sections/FounderSignals";
-import { ProjectDiscovery } from "@/components/sections/ProjectDiscovery";
-import { EcosystemIntelligence } from "@/components/sections/EcosystemIntelligence";
-import { HowItWorks } from "@/components/sections/HowItWorks";
+import { PlatformOverview } from "@/components/sections/PlatformOverview";
+import { KeyCapabilities } from "@/components/sections/KeyCapabilities";
+import { FeatureShowcase } from "@/components/sections/FeatureShowcase";
+import { MethodologyPreview } from "@/components/sections/MethodologyPreview";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Footer } from "@/components/Footer";
 import { site } from "@/lib/site";
@@ -32,11 +31,10 @@ export default function Home() {
       <Navbar />
       <main className="relative">
         <Hero />
-        <NarrativePulse />
-        <FounderSignals />
-        <ProjectDiscovery />
-        <EcosystemIntelligence />
-        <HowItWorks />
+        <PlatformOverview />
+        <KeyCapabilities />
+        <FeatureShowcase />
+        <MethodologyPreview />
         <FinalCta />
       </main>
       <Footer />

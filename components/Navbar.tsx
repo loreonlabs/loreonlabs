@@ -64,7 +64,7 @@ export function Navbar() {
               href={site.appUrl}
               className="btn-primary hidden px-4 py-2 text-[13px] sm:inline-flex"
             >
-              Open App
+              Open Platform
               <ArrowIcon />
             </a>
             <button

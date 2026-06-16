@@ -31,11 +31,11 @@ export function FinalCta() {
 
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <a href={site.appUrl} className="btn-primary w-full sm:w-auto">
-                  Open App
+                  Open Platform
                   <ArrowRight width={16} height={16} />
                 </a>
                 <a href={site.docsUrl} className="btn-secondary w-full sm:w-auto">
-                  Read Documentation
+                  Read Docs
                 </a>
               </div>
             </div>
