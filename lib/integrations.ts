@@ -79,6 +79,17 @@ export const integrations: IntegrationConfig[] = [
     docsUrl: "https://jina.ai/reader",
   },
   {
+    key: "firecrawl",
+    name: "Firecrawl",
+    category: "extraction",
+    description: "Website, docs, blog, and changelog crawling + extraction.",
+    contributes: "Project/builder/launchpad enrichment: summaries, docs, and updates.",
+    requiresKey: true,
+    envVar: "FIRECRAWL_API_KEY",
+    service: "lib/api/firecrawl.ts",
+    docsUrl: "https://docs.firecrawl.dev",
+  },
+  {
     key: "hackernews",
     name: "Hacker News",
     category: "news",

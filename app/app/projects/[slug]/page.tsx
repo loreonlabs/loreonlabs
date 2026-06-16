@@ -4,6 +4,8 @@ import Link from "next/link";
 import { PageHeader, SectionHeader, StatCard, Badge, BackLink } from "@/components/ui";
 import { ExternalLinks } from "@/components/ui/ExternalLinks";
 import { getProject, fromSlug } from "@/lib/intel/projects";
+import { getSiteEnrichment } from "@/lib/intel/enrichment";
+import { EnrichmentSection } from "@/components/platform/EnrichmentSection";
 import { formatCompact, timeAgo, stageLabels } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -39,6 +41,7 @@ export default async function ProjectDetailPage({
   }
 
   const { project, commits, contributors } = data;
+  const enrich = await getSiteEnrichment(project.website);
 
   return (
     <>
@@ -76,6 +79,10 @@ export default async function ProjectDetailPage({
           <StatCard label="Last push" value={timeAgo(project.pushedAt) || "—"} />
         </div>
       </section>
+
+      {enrich.status === "ok" && enrich.data && (
+        <EnrichmentSection enrichment={enrich.data} title="About this project" />
+      )}
 
       <div className="page-section grid gap-6 lg:grid-cols-2">
         <div>

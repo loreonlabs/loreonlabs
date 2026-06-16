@@ -78,6 +78,7 @@ export interface ServerEnv {
   readonly coingeckoApiKey?: string;
   readonly githubToken?: string;
   readonly jinaApiKey?: string;
+  readonly firecrawlApiKey?: string;
   readonly hackerNewsApiUrl: string;
   readonly rssFeeds: string[];
   /** Bearer token guarding the internal health-check route. */
@@ -88,6 +89,7 @@ export interface ServerEnv {
     readonly coingecko: boolean;
     readonly github: boolean;
     readonly jina: boolean;
+    readonly firecrawl: boolean;
   };
 }
 
@@ -123,6 +125,7 @@ export function serverEnv(): ServerEnv {
   const coingeckoApiKey = clean(process.env.COINGECKO_API_KEY);
   const githubToken = clean(process.env.GITHUB_TOKEN);
   const jinaApiKey = clean(process.env.JINA_API_KEY);
+  const firecrawlApiKey = clean(process.env.FIRECRAWL_API_KEY);
 
   const rssFeeds = (clean(process.env.RSS_FEEDS)?.split(",") ?? DEFAULT_RSS_FEEDS)
     .map((s) => s.trim())
@@ -133,6 +136,7 @@ export function serverEnv(): ServerEnv {
     coingeckoApiKey,
     githubToken,
     jinaApiKey,
+    firecrawlApiKey,
     hackerNewsApiUrl: (
       clean(process.env.HACKERNEWS_API_URL) ?? DEFAULT_HACKERNEWS_API_URL
     ).replace(/\/+$/, ""),
@@ -143,6 +147,7 @@ export function serverEnv(): ServerEnv {
       coingecko: Boolean(coingeckoApiKey),
       github: Boolean(githubToken),
       jina: Boolean(jinaApiKey),
+      firecrawl: Boolean(firecrawlApiKey),
     },
   };
   return cached;

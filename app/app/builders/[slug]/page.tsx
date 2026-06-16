@@ -4,6 +4,8 @@ import Link from "next/link";
 import { PageHeader, SectionHeader, StatCard, Badge, BackLink } from "@/components/ui";
 import { ExternalLinks } from "@/components/ui/ExternalLinks";
 import { getBuilder } from "@/lib/intel/builders";
+import { getSiteEnrichment } from "@/lib/intel/enrichment";
+import { EnrichmentSection } from "@/components/platform/EnrichmentSection";
 import { ecosystemById } from "@/lib/intel/config";
 import { formatCompact, timeAgo } from "@/lib/format";
 import { toSlug } from "@/lib/intel/projects";
@@ -24,6 +26,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
 
   const { profile, repos, ecosystemIds, ecosystemNames, totalStars, relatedBuilders, relatedNarratives } = data;
   const recent = [...repos].sort((a, b) => Date.parse(b.pushedAt) - Date.parse(a.pushedAt)).slice(0, 4);
+  const enrich = await getSiteEnrichment(profile.website);
 
   return (
     <>
@@ -103,6 +106,10 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
           )}
         </div>
       </div>
+
+      {enrich.status === "ok" && enrich.data && (
+        <EnrichmentSection enrichment={enrich.data} title="From the web" />
+      )}
 
       {relatedNarratives.length > 0 && (
         <section className="page-section">

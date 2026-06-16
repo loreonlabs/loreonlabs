@@ -21,6 +21,7 @@ export const sourceLabels: Record<SourceKey, string> = {
   reddit: "Reddit",
   github: "GitHub",
   coingecko: "CoinGecko",
+  firecrawl: "Firecrawl",
   hackernews: "Hacker News",
   rss: "RSS",
 };

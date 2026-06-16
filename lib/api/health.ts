@@ -5,6 +5,7 @@ import { testTavily } from "./tavily";
 import { testCoinGecko } from "./coingecko";
 import { testGitHub } from "./github";
 import { testJina } from "./jina";
+import { testFirecrawl } from "./firecrawl";
 import { testHackerNews } from "./hackernews";
 import { testRss } from "./rss";
 
@@ -18,6 +19,7 @@ export type IntegrationKey =
   | "coingecko"
   | "github"
   | "jina"
+  | "firecrawl"
   | "hackernews"
   | "rss";
 
@@ -28,11 +30,12 @@ export interface IntegrationsHealth {
 }
 
 export async function runIntegrationsHealth(): Promise<IntegrationsHealth> {
-  const [tavily, coingecko, github, jina, hackernews, rss] = await Promise.all([
+  const [tavily, coingecko, github, jina, firecrawl, hackernews, rss] = await Promise.all([
     testTavily(),
     testCoinGecko(),
     testGitHub(),
     testJina(),
+    testFirecrawl(),
     testHackerNews(),
     testRss(),
   ]);
@@ -42,6 +45,7 @@ export async function runIntegrationsHealth(): Promise<IntegrationsHealth> {
     coingecko,
     github,
     jina,
+    firecrawl,
     hackernews,
     rss,
   };

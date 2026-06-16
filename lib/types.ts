@@ -14,6 +14,7 @@ export type SourceKey =
   | "reddit"
   | "github"
   | "coingecko"
+  | "firecrawl"
   | "hackernews"
   | "rss";
 

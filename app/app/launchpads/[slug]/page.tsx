@@ -4,6 +4,8 @@ import Link from "next/link";
 import { PageHeader, SectionHeader, Badge, BackLink } from "@/components/ui";
 import { ExternalLinks } from "@/components/ui/ExternalLinks";
 import { getLaunchpad } from "@/lib/intel/launchpads";
+import { getSiteEnrichment } from "@/lib/intel/enrichment";
+import { EnrichmentSection } from "@/components/platform/EnrichmentSection";
 import { launchpadById } from "@/lib/intel/config";
 import { faviconUrl, timeAgo, formatCompact, stageLabels } from "@/lib/format";
 import { ExternalIcon, StarIcon } from "@/components/icons";
@@ -22,6 +24,7 @@ export default async function LaunchpadDetailPage({ params }: { params: Promise<
   if (!data) notFound();
 
   const { launchpad: l, ecosystemName, narratives, projects, builders, news } = data;
+  const enrich = await getSiteEnrichment(l.website);
 
   return (
     <>
@@ -47,6 +50,10 @@ export default async function LaunchpadDetailPage({ params }: { params: Promise<
           />
         </div>
       </PageHeader>
+
+      {enrich.status === "ok" && enrich.data && (
+        <EnrichmentSection enrichment={enrich.data} title="About" />
+      )}
 
       {narratives.length > 0 && (
         <section className="page-section">
