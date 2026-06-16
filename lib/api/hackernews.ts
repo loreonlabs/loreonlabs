@@ -58,10 +58,12 @@ export function getItem(id: number): Promise<HNItem | null> {
   });
 }
 
-/** Fetch the top stories (hydrated). */
-export function getTopStories(limit = 20): Promise<HNItem[]> {
-  return withCache(`hn:top:${limit}`, TTL_LIST, async () => {
-    const ids = await httpJson<number[]>(`${base()}/topstories.json`);
+async function stories(
+  endpoint: "topstories" | "beststories" | "newstories",
+  limit: number,
+): Promise<HNItem[]> {
+  return withCache(`hn:${endpoint}:${limit}`, TTL_LIST, async () => {
+    const ids = await httpJson<number[]>(`${base()}/${endpoint}.json`);
     const slice = (ids ?? []).slice(0, limit);
     const items = await Promise.all(
       slice.map((id) =>
@@ -73,6 +75,13 @@ export function getTopStories(limit = 20): Promise<HNItem[]> {
     return items.filter((i): i is HNItem => i != null);
   });
 }
+
+/** Fetch the top stories (hydrated). */
+export const getTopStories = (limit = 20) => stories("topstories", limit);
+/** Fetch the best stories (hydrated). */
+export const getBestStories = (limit = 20) => stories("beststories", limit);
+/** Fetch the newest stories (hydrated). */
+export const getNewStories = (limit = 20) => stories("newstories", limit);
 
 /** Verify Hacker News connectivity. */
 export function testHackerNews(): Promise<ApiHealth> {

@@ -35,13 +35,13 @@ export async function getMarketsOverview(): Promise<Intel<MarketsOverview>> {
     isEmpty: (v) => v.topByMarketCap.length === 0,
     run: async () => {
       const [markets, trending] = await Promise.all([
-        cg.getMarketData({ perPage: 100 }),
+        cg.getMarketData({ perPage: 120 }),
         cg.getTrending().catch(() => []),
       ]);
       const byChange = [...markets].sort((a, b) => b.change24h - a.change24h);
       const byMcap = [...markets].sort((a, b) => b.marketCap - a.marketCap);
       return {
-        topByMarketCap: markets.slice(0, 25),
+        topByMarketCap: byMcap.slice(0, 100),
         gainers: byChange.slice(0, 10),
         losers: byChange.slice(-10).reverse(),
         volumeLeaders: byMcap.slice(0, 10),

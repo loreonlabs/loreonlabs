@@ -61,11 +61,21 @@ export const rootDomain: string = (() => {
 
 const DEFAULT_HACKERNEWS_API_URL = "https://hacker-news.firebaseio.com/v0";
 
+// A broad base set of crypto + tech feeds (fail-soft per feed). Any feeds set
+// in RSS_FEEDS are merged on top of these.
 const DEFAULT_RSS_FEEDS = [
   "https://www.coindesk.com/arc/outboundfeeds/rss/?outputType=xml",
   "https://decrypt.co/feed",
   "https://cointelegraph.com/rss",
   "https://cryptoslate.com/feed",
+  "https://www.theblock.co/rss.xml",
+  "https://blockworks.co/feed",
+  "https://www.dlnews.com/arc/outboundfeeds/rss/?outputType=xml",
+  "https://thedefiant.io/feed",
+  "https://bitcoinmagazine.com/feed",
+  "https://a16zcrypto.com/feed/",
+  "https://techcrunch.com/feed/",
+  "https://www.theverge.com/rss/index.xml",
 ];
 
 function clean(value: string | undefined): string | undefined {
@@ -127,9 +137,11 @@ export function serverEnv(): ServerEnv {
   const jinaApiKey = clean(process.env.JINA_API_KEY);
   const firecrawlApiKey = clean(process.env.FIRECRAWL_API_KEY);
 
-  const rssFeeds = (clean(process.env.RSS_FEEDS)?.split(",") ?? DEFAULT_RSS_FEEDS)
+  const envFeeds = (clean(process.env.RSS_FEEDS)?.split(",") ?? [])
     .map((s) => s.trim())
     .filter(Boolean);
+  // Merge the broad default set with any configured feeds (unique).
+  const rssFeeds = [...new Set([...DEFAULT_RSS_FEEDS, ...envFeeds])];
 
   cached = {
     tavilyApiKey,

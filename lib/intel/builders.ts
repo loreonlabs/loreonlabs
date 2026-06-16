@@ -1,7 +1,13 @@
 import "server-only";
 
 import * as gh from "@/lib/api/github";
-import { ECOSYSTEMS, ecosystemById, themeById } from "./config";
+import {
+  ECOSYSTEMS,
+  ecosystemById,
+  themeById,
+  CURATED_BUILDERS,
+  curatedBySlug,
+} from "./config";
 import { intel, type Intel } from "./result";
 import { formatCompact } from "@/lib/format";
 
@@ -46,7 +52,7 @@ async function contributorBuilders(ecosystem?: string): Promise<IntelBuilder[]> 
   const results = (
     await mapPool(repoTasks, 4, async ({ full, ecosystem: eid }) => {
       const [owner, repo] = full.split("/");
-      const contributors = await gh.getContributors(owner, repo, 15).catch(() => []);
+      const contributors = await gh.getContributors(owner, repo, 25).catch(() => []);
       return contributors.map((c) => ({ c, ecosystem: eid, repo: full }));
     })
   ).flat();
@@ -75,32 +81,45 @@ async function contributorBuilders(ecosystem?: string): Promise<IntelBuilder[]> 
     .map(({ repos, ...b }) => ({ ...b, repoCount: repos.size }));
 }
 
+function unavatar(x: string): string {
+  return `https://unavatar.io/x/${x}`;
+}
+
+/** Curated personalities, hydrated from GitHub when a login is available. */
 async function featuredBuilders(ecosystem?: string): Promise<IntelBuilder[]> {
-  const ecosystems = ecosystem ? ECOSYSTEMS.filter((e) => e.id === ecosystem) : ECOSYSTEMS;
-  const pairs = ecosystems.flatMap((e) => e.featuredBuilders.map((login) => ({ login, ecosystem: e.id })));
-  const seen = new Set<string>();
-  const builders = await Promise.all(
-    pairs
-      .filter((p) => (seen.has(p.login) ? false : seen.add(p.login)))
-      .map(async ({ login, ecosystem: eid }): Promise<IntelBuilder | null> => {
-        const u = await gh.getUser(login).catch(() => null);
-        if (!u) return null;
+  const curated = CURATED_BUILDERS.filter((b) => !ecosystem || b.ecosystems.includes(ecosystem));
+  const builders = await mapPool(curated, 5, async (c): Promise<IntelBuilder> => {
+    if (c.github) {
+      const u = await gh.getUser(c.github).catch(() => null);
+      if (u) {
         return {
-          login: u.login,
-          name: u.name ?? u.login,
+          login: c.slug,
+          name: c.name,
           avatarUrl: u.avatarUrl,
           github: u.url,
           contributions: u.followers,
-          ecosystems: [eid],
+          ecosystems: c.ecosystems,
           repoCount: u.publicRepos,
           featured: true,
           followers: u.followers,
           publicRepos: u.publicRepos,
           createdAt: u.createdAt,
         };
-      }),
-  );
-  return builders.filter((b): b is IntelBuilder => b != null);
+      }
+    }
+    // No GitHub (or fetch failed) → X-based card with a real avatar.
+    return {
+      login: c.slug,
+      name: c.name,
+      avatarUrl: c.x ? unavatar(c.x) : "",
+      github: c.x ? `https://x.com/${c.x}` : c.website ?? "",
+      contributions: 0,
+      ecosystems: c.ecosystems,
+      repoCount: 0,
+      featured: true,
+    };
+  });
+  return builders;
 }
 
 /** Lightweight builder list (no profile hydration) — used by embeds. */
@@ -120,7 +139,7 @@ export async function listBuilders(
       rest.sort((a, b) =>
         sort === "name" ? a.login.localeCompare(b.login) : b.contributions - a.contributions,
       );
-      return [...featured, ...rest].slice(0, 48);
+      return [...featured, ...rest].slice(0, 120);
     },
   });
 }
@@ -143,7 +162,7 @@ async function hydrate(builders: IntelBuilder[]): Promise<IntelBuilder[]> {
   });
 }
 
-export type BoardId = "top" | "referenced" | "connected" | "active" | "rising";
+export type BoardId = "featured" | "top" | "referenced" | "connected" | "active" | "rising";
 
 export interface BoardEntry {
   builder: IntelBuilder;
@@ -179,6 +198,15 @@ export async function getBuilderBoards(ecosystem?: string): Promise<Intel<Board[
       const now = Date.now();
 
       const boards: Board[] = [
+        {
+          id: "featured",
+          label: "Featured Builders",
+          description: "Notable founders and operators",
+          entries: featured.slice(0, 8).map((b) => ({
+            builder: b,
+            value: b.followers != null ? `${formatCompact(b.followers)} followers` : "Featured",
+          })),
+        },
         {
           id: "top",
           label: "Top Builders",
@@ -242,19 +270,61 @@ export interface BuilderDetail {
   relatedNarratives: { id: string; name: string }[];
 }
 
-export async function getBuilder(login: string): Promise<Intel<BuilderDetail | null>> {
+export async function getBuilder(slug: string): Promise<Intel<BuilderDetail | null>> {
+  const curated = curatedBySlug(slug);
+
   return intel<BuilderDetail | null>({
     empty: null,
     isEmpty: (v) => v == null,
     run: async () => {
+      // Curated personality with no GitHub login → synthesize a real profile
+      // from their X/website (avatar via unavatar). No fabricated metrics.
+      if (curated && !curated.github) {
+        const primaryEco = curated.ecosystems[0] ?? "base";
+        const related = await listBuilders({ ecosystem: primaryEco });
+        const narrativeIds = ecosystemById(primaryEco)?.narrativeIds ?? [];
+        return {
+          profile: {
+            login: curated.slug,
+            name: curated.name,
+            bio: curated.role,
+            avatarUrl: curated.x ? `https://unavatar.io/x/${curated.x}` : "",
+            url: curated.x ? `https://x.com/${curated.x}` : curated.website ?? "",
+            followers: 0,
+            publicRepos: 0,
+            company: curated.role,
+            website: curated.website ?? null,
+            twitter: curated.x ?? null,
+            location: null,
+            createdAt: "",
+          },
+          repos: [],
+          ecosystemIds: curated.ecosystems,
+          ecosystemNames: curated.ecosystems.map((id) => ecosystemById(id)?.name ?? id),
+          totalStars: 0,
+          relatedBuilders: related.data.filter((b) => b.login !== slug).slice(0, 6),
+          relatedNarratives: narrativeIds
+            .map((nid) => themeById(nid))
+            .filter((t): t is NonNullable<typeof t> => Boolean(t))
+            .slice(0, 6)
+            .map((t) => ({ id: t.id, name: t.name })),
+        };
+      }
+
+      const login = curated?.github ?? slug;
       const profile = await gh.getUser(login);
+      if (curated) {
+        profile.name = curated.name;
+        if (curated.x) profile.twitter = curated.x;
+        if (curated.role) profile.company = curated.role;
+      }
       const repos = await gh.listUserRepos(login, 12).catch(() => []);
-      const ecosystems = ECOSYSTEMS.filter((e) => repos.some((r) => r.topics.includes(e.githubTopic)));
-      const ecosystemIds = ecosystems.map((e) => e.id);
+      const derived = ECOSYSTEMS.filter((e) => repos.some((r) => r.topics.includes(e.githubTopic)));
+      const ecosystemIds = curated?.ecosystems.length ? curated.ecosystems : derived.map((e) => e.id);
       const primary = ecosystemIds[0] ?? "base";
 
       const related = await listBuilders({ ecosystem: primary });
-      const relatedBuilders = related.data.filter((b) => b.login !== login).slice(0, 6);
+      const relatedBuilders = related.data.filter((b) => b.login !== slug).slice(0, 6);
 
       const narrativeIds = ecosystemById(primary)?.narrativeIds ?? [];
       const relatedNarratives = narrativeIds
@@ -267,7 +337,7 @@ export async function getBuilder(login: string): Promise<Intel<BuilderDetail | n
         profile,
         repos,
         ecosystemIds,
-        ecosystemNames: ecosystems.map((e) => e.name).slice(0, 4),
+        ecosystemNames: ecosystemIds.map((id) => ecosystemById(id)?.name ?? id).slice(0, 4),
         totalStars: repos.reduce((sum, r) => sum + r.stars, 0),
         relatedBuilders,
         relatedNarratives,

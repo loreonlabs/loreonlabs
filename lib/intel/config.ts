@@ -43,8 +43,12 @@ export const ECOSYSTEMS: EcosystemConfig[] = [
       "coinbase/onchainkit",
       "coinbase/smart-wallet",
       "coinbase/build-onchain-apps",
+      "coinbase/agentkit",
       "farcasterxyz/protocol",
       "farcasterxyz/snapchain",
+      "ourzora/zora-protocol",
+      "wevm/wagmi",
+      "wevm/viem",
       "ethereum-optimism/optimism",
       "velodrome-finance/contracts",
     ],
@@ -98,11 +102,54 @@ export const ECOSYSTEMS: EcosystemConfig[] = [
     githubTopic: "ai-agents",
     seedRepos: ["langchain-ai/langchain", "run-llama/llama_index"],
     keywords: ["ai agents", "llm", "artificial intelligence", "openai", "agent"],
-    narrativeIds: ["ai-agents", "agent-commerce"],
+    narrativeIds: ["ai-agents", "agent-commerce", "ai-infrastructure", "autonomous-finance"],
     launchpadIds: ["virtuals"],
     featuredBuilders: [],
   },
+  eco("arbitrum", "Arbitrum", "A", "Leading Ethereum L2 for DeFi and apps.", "arbitrum", ["OffchainLabs/nitro"], ["arbitrum", "arb", "offchain labs"], ["defi", "l2-scaling", "developer-tools"]),
+  eco("optimism", "Optimism", "OP", "OP Stack L2 and the superchain.", "optimism", ["ethereum-optimism/optimism"], ["optimism", "op stack", "superchain"], ["l2-scaling", "developer-tools", "onchain-apps"]),
+  eco("polygon", "Polygon", "P", "Scaling Ethereum with zk and PoS chains.", "polygon", ["0xPolygon/polygon-edge", "maticnetwork/bor"], ["polygon", "matic", "zkevm"], ["l2-scaling", "payments", "rwas"]),
+  eco("bitcoin", "Bitcoin", "₿", "The original chain — and its growing app layer.", "bitcoin", ["bitcoin/bitcoin"], ["bitcoin", "btc", "ordinals", "lightning", "runes"], ["rwas", "payments"]),
+  eco("bnb", "BNB Chain", "BNB", "High-throughput chain with deep retail activity.", "bnb-chain", ["bnb-chain/bsc"], ["bnb", "binance", "bsc", "bnb chain"], ["defi", "memecoins"]),
+  eco("avalanche", "Avalanche", "AVAX", "Subnets and high-performance app chains.", "avalanche", ["ava-labs/avalanchego"], ["avalanche", "avax", "subnet"], ["defi", "gaming", "rwas"]),
+  eco("sui", "Sui", "SUI", "Object-centric L1 with a Move VM.", "sui", ["MystenLabs/sui"], ["sui", "mysten", "move"], ["consumer-crypto", "gaming"]),
+  eco("aptos", "Aptos", "APT", "Move-based L1 focused on safety and scale.", "aptos", ["aptos-labs/aptos-core"], ["aptos", "move", "aptos labs"], ["consumer-crypto", "payments"]),
+  eco("ton", "TON", "TON", "The Open Network — crypto inside Telegram.", "ton", ["ton-blockchain/ton"], ["ton", "the open network", "telegram"], ["consumer-crypto", "memecoins", "payments"]),
+  eco("near", "NEAR", "N", "Sharded L1 with an AI and abstraction focus.", "near", ["near/nearcore"], ["near protocol", "nearcore"], ["ai-agents", "developer-tools"]),
+  eco("cosmos", "Cosmos", "⚛", "App-chains and the inter-blockchain economy.", "cosmos", ["cosmos/cosmos-sdk"], ["cosmos", "ibc", "tendermint", "app chain"], ["defi", "developer-tools"]),
+  eco("celestia", "Celestia", "TIA", "Modular data availability for rollups.", "celestia", ["celestiaorg/celestia-node"], ["celestia", "modular", "data availability"], ["l2-scaling", "developer-tools"]),
+  eco("starknet", "Starknet", "STRK", "ZK L2 powered by Cairo.", "starknet", ["starkware-libs/cairo"], ["starknet", "cairo", "starkware"], ["l2-scaling", "developer-tools"]),
+  eco("zksync", "zkSync", "ZK", "ZK rollup and the Elastic chain stack.", "zksync", ["matter-labs/zksync-era"], ["zksync", "matter labs", "zk rollup"], ["l2-scaling", "payments"]),
+  eco("berachain", "Berachain", "BERA", "Proof-of-liquidity L1 with deep DeFi.", "berachain", [], ["berachain", "bera", "proof of liquidity"], ["defi", "memecoins"]),
+  eco("hyperliquid", "Hyperliquid", "HL", "High-performance onchain perps and its L1.", "hyperliquid", [], ["hyperliquid", "hype", "perp dex"], ["defi", "autonomous-finance"]),
+  eco("monad", "Monad", "M", "High-throughput parallel EVM L1.", "monad", [], ["monad", "parallel evm"], ["defi", "developer-tools"]),
 ];
+
+/** Compact ecosystem factory to keep the (large) list readable. */
+function eco(
+  id: string,
+  name: string,
+  symbol: string,
+  blurb: string,
+  githubTopic: string,
+  seedRepos: string[],
+  keywords: string[],
+  narrativeIds: string[],
+): EcosystemConfig {
+  return {
+    id,
+    name,
+    symbol,
+    blurb,
+    overview: `${name} — ${blurb} Loreon tracks its projects, builders, narratives, and news in real time.`,
+    githubTopic,
+    seedRepos,
+    keywords: [name.toLowerCase(), ...keywords],
+    narrativeIds,
+    launchpadIds: [],
+    featuredBuilders: [],
+  };
+}
 
 export const ecosystemById = (id: string): EcosystemConfig | undefined =>
   ECOSYSTEMS.find((e) => e.id === id);
@@ -227,8 +274,128 @@ export const NARRATIVE_THEMES: NarrativeTheme[] = [
     summary:
       "Rollups and L2s scaling Ethereum — throughput, fees, and the move onchain.",
     query: "ethereum layer 2 rollups scaling",
-    keywords: ["layer 2", "rollup", "optimism", "arbitrum", "l2"],
+    keywords: ["layer 2", "rollup", "optimism", "arbitrum", "l2", "zk rollup"],
     ecosystems: ["ethereum", "base"],
+  },
+  {
+    id: "base-ecosystem",
+    name: "Base Ecosystem",
+    category: "Ecosystem",
+    summary:
+      "Everything happening on Base — apps, agents, launchpads, and the builders behind them.",
+    query: "Base coinbase onchain ecosystem apps",
+    keywords: ["base", "coinbase", "onchain", "farcaster", "clanker", "bankr", "aerodrome"],
+    ecosystems: ["base"],
+  },
+  {
+    id: "defi",
+    name: "DeFi",
+    category: "DeFi",
+    summary:
+      "Lending, DEXs, perps, and yield — the financial primitives of onchain markets.",
+    query: "defi lending dex perpetuals yield",
+    keywords: ["defi", "lending", "dex", "perpetual", "perps", "yield", "aave", "uniswap", "liquidity"],
+    ecosystems: ["ethereum", "base", "solana"],
+  },
+  {
+    id: "payments",
+    name: "Payments",
+    category: "Payments",
+    summary:
+      "Crypto rails for real-world payments — merchants, remittances, and settlement.",
+    query: "crypto stablecoin payments merchants settlement",
+    keywords: ["payment", "remittance", "settlement", "merchant", "checkout", "visa", "mastercard", "paypal"],
+    ecosystems: ["base", "ethereum", "solana"],
+  },
+  {
+    id: "ai-infrastructure",
+    name: "AI Infrastructure",
+    category: "AI",
+    summary:
+      "The compute, models, and tooling powering the AI wave — and where crypto plugs in.",
+    query: "AI infrastructure GPU inference models",
+    keywords: ["ai infrastructure", "gpu", "inference", "training", "model", "openai", "anthropic", "nvidia", "llm", "datacenter"],
+    ecosystems: ["ai"],
+  },
+  {
+    id: "depin",
+    name: "DePIN",
+    category: "Infrastructure",
+    summary:
+      "Decentralized physical infrastructure — networks of real-world hardware, coordinated onchain.",
+    query: "decentralized physical infrastructure DePIN",
+    keywords: ["depin", "physical infrastructure", "helium", "hivemapper", "render", "wireless"],
+    ecosystems: ["solana", "ethereum"],
+  },
+  {
+    id: "gaming",
+    name: "Onchain Gaming",
+    category: "Consumer",
+    summary:
+      "Games with real onchain economies — assets, items, and player-owned worlds.",
+    query: "onchain web3 gaming gamefi",
+    keywords: ["gaming", "web3 game", "gamefi", "immutable", "ronin", "game studio", "onchain game"],
+    ecosystems: ["ethereum", "base", "solana"],
+  },
+  {
+    id: "onchain-identity",
+    name: "Onchain Identity",
+    category: "Infrastructure",
+    summary:
+      "Names, attestations, and verifiable credentials — identity primitives for onchain life.",
+    query: "onchain identity ENS attestations credentials",
+    keywords: ["identity", "ens", "attestation", "verifiable credential", "did", "passport", "worldcoin", "reputation"],
+    ecosystems: ["ethereum", "base"],
+  },
+  {
+    id: "rwas",
+    name: "Real World Assets",
+    category: "Markets",
+    summary:
+      "Tokenized treasuries, credit, and real-world value moving onchain.",
+    query: "real world assets tokenization treasuries",
+    keywords: ["rwa", "real world asset", "tokenized", "tokenization", "treasury", "ondo", "private credit"],
+    ecosystems: ["ethereum", "solana"],
+  },
+  {
+    id: "creator-economy",
+    name: "Creator Economy",
+    category: "Consumer",
+    summary:
+      "Mints, music, and media — creators monetizing directly onchain.",
+    query: "onchain creator economy mints zora",
+    keywords: ["creator", "zora", "mint", "nft", "music", "fan token", "media", "collect"],
+    ecosystems: ["base", "ethereum"],
+  },
+  {
+    id: "wallet-infrastructure",
+    name: "Wallet Infrastructure",
+    category: "Infrastructure",
+    summary:
+      "Smart wallets, passkeys, and account abstraction making crypto usable.",
+    query: "smart wallet account abstraction passkeys",
+    keywords: ["wallet", "smart wallet", "account abstraction", "passkey", "embedded wallet", "privy", "metamask", "erc-4337"],
+    ecosystems: ["ethereum", "base"],
+  },
+  {
+    id: "developer-tools",
+    name: "Developer Tools",
+    category: "Infrastructure",
+    summary:
+      "SDKs, frameworks, and infra that make building onchain faster.",
+    query: "crypto developer tools SDK framework",
+    keywords: ["developer tools", "sdk", "foundry", "hardhat", "viem", "wagmi", "rpc", "indexer", "framework"],
+    ecosystems: ["ethereum", "base"],
+  },
+  {
+    id: "autonomous-finance",
+    name: "Autonomous Finance",
+    category: "AI",
+    summary:
+      "AI agents that trade, manage, and move capital onchain — DeFAI.",
+    query: "AI agents autonomous finance defai trading",
+    keywords: ["autonomous finance", "defai", "ai trading", "agent finance", "trading agent"],
+    ecosystems: ["ai", "base", "solana"],
   },
 ];
 
@@ -343,6 +510,35 @@ export const LAUNCHPADS: LaunchpadConfig[] = [
     keywords: ["bonk.fun", "bonk fun", "letsbonk"],
   },
 ];
+
+/* ------------------------- curated builders ------------------------- */
+
+export interface CuratedBuilder {
+  /** Detail route slug (the GitHub login when available). */
+  slug: string;
+  name: string;
+  role: string;
+  ecosystems: string[];
+  /** Verifiable GitHub login (enables live hydration + avatar). */
+  github?: string;
+  /** Verifiable X handle (no @). Avatar resolved via unavatar when no GitHub. */
+  x?: string;
+  website?: string;
+}
+
+/**
+ * Notable ecosystem personalities with verifiable handles. Discovered builders
+ * (from repo contributor graphs) make up the bulk of the dataset; these are
+ * pinned so key founders surface regardless of recent commit volume.
+ */
+export const CURATED_BUILDERS: CuratedBuilder[] = [
+  { slug: "jessepollak", name: "Jesse Pollak", role: "Creator of Base", ecosystems: ["base"], github: "jessepollak", x: "jessepollak" },
+  { slug: "mvines", name: "Michael Vines", role: "Solana core contributor", ecosystems: ["solana"], github: "mvines" },
+  { slug: "0xdeployer", name: "0xDeployer", role: "Base builder", ecosystems: ["base"], x: "0xDeployer" },
+];
+
+export const curatedBySlug = (slug: string): CuratedBuilder | undefined =>
+  CURATED_BUILDERS.find((b) => b.slug === slug || b.github === slug);
 
 export const launchpadById = (id: string): LaunchpadConfig | undefined =>
   LAUNCHPADS.find((l) => l.id === id);

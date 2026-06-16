@@ -98,37 +98,51 @@ export const docsNav: NavGroup[] = [
     ],
   },
   {
-    label: "How it works",
+    label: "Platform",
     items: [
-      {
-        label: "Methodology",
-        href: "/methodology",
-        description: "From raw signal to intelligence",
-        icon: "network",
-      },
-      {
-        label: "Attention Score",
-        href: "/attention-score",
-        description: "How scoring works",
-        icon: "shield",
-      },
+      { label: "Methodology", href: "/methodology", description: "From raw signal to intelligence", icon: "network" },
+      { label: "Attention Engine", href: "/attention-engine", description: "How attention is computed", icon: "spark" },
+      { label: "Attention Score", href: "/attention-score", description: "How scoring works", icon: "shield" },
+    ],
+  },
+  {
+    label: "Discovery",
+    items: [
+      { label: "Builder Discovery", href: "/builder-discovery", description: "How builders are found", icon: "user" },
+      { label: "Ecosystem Discovery", href: "/ecosystem-discovery", description: "How ecosystems are tracked", icon: "layers" },
+      { label: "Launchpad Tracking", href: "/launchpad-tracking", description: "How launchpads are tracked", icon: "radar" },
+    ],
+  },
+  {
+    label: "Ranking",
+    items: [
+      { label: "Builder Ranking", href: "/builder-ranking", description: "Builder leaderboard metrics", icon: "user" },
+      { label: "Market Ranking", href: "/market-ranking", description: "How markets are ranked", icon: "chart" },
+      { label: "Research Ranking", href: "/research-ranking", description: "How narratives are ranked", icon: "pulse" },
+      { label: "Ecosystem Ranking", href: "/ecosystem-ranking", description: "How ecosystems are ranked", icon: "layers" },
+    ],
+  },
+  {
+    label: "Methodology",
+    items: [
+      { label: "Narrative Methodology", href: "/narrative-methodology", description: "Clustering real coverage", icon: "pulse" },
+      { label: "Builder Methodology", href: "/builder-methodology", description: "Profiling real people", icon: "user" },
+      { label: "Ecosystem Methodology", href: "/ecosystem-methodology", description: "Aggregating ecosystems", icon: "layers" },
+      { label: "Market Methodology", href: "/market-methodology", description: "Market data sourcing", icon: "chart" },
+    ],
+  },
+  {
+    label: "Operations",
+    items: [
+      { label: "Data Freshness", href: "/data-freshness", description: "Caching and refresh", icon: "shield" },
+      { label: "Source Validation", href: "/source-validation", description: "Trust and provenance", icon: "shield" },
     ],
   },
   {
     label: "Resources",
     items: [
-      {
-        label: "FAQ",
-        href: "/faq",
-        description: "Common questions",
-        icon: "book",
-      },
-      {
-        label: "Future Development",
-        href: "/future-development",
-        description: "Where Loreon is heading",
-        icon: "spark",
-      },
+      { label: "FAQ", href: "/faq", description: "Common questions", icon: "book" },
+      { label: "Future Development", href: "/future-development", description: "Where Loreon is heading", icon: "spark" },
     ],
   },
 ];

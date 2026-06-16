@@ -21,6 +21,8 @@ export interface Article {
   url: string;
   source: string;
   publishedAt: string; // ISO ("" if unknown)
+  /** Title + summary, used for keyword matching (not displayed). */
+  text?: string;
 }
 
 export interface IntelNarrative {
@@ -36,7 +38,7 @@ export interface IntelNarrative {
 }
 
 /** Minimum real articles for a narrative to be shown at all. */
-const MIN_ARTICLES = 4;
+const MIN_ARTICLES = 5;
 const WEEK = 7 * 24 * 60 * 60 * 1000;
 
 function hnToArticle(i: hn.HNItem): Article {
@@ -59,7 +61,7 @@ function dedupeByUrl(articles: Article[]): Article[] {
 }
 
 function clusterFor(theme: NarrativeTheme, pool: Article[]): IntelNarrative {
-  const sources = dedupeByUrl(pool.filter((a) => matches(theme, a.title)));
+  const sources = dedupeByUrl(pool.filter((a) => matches(theme, a.text ?? a.title)));
   const now = Date.now();
   const recentCount = sources.filter(
     (a) => a.publishedAt && now - Date.parse(a.publishedAt) < WEEK,
@@ -79,14 +81,27 @@ function clusterFor(theme: NarrativeTheme, pool: Article[]): IntelNarrative {
 }
 
 export async function buildPool(): Promise<Article[]> {
-  const [feed, stories] = await Promise.all([
-    rss.getAggregatedFeed(120).catch(() => []),
-    hn.getTopStories(60).catch(() => []),
+  const [feed, top, best] = await Promise.all([
+    rss.getAggregatedFeed(250).catch(() => []),
+    hn.getTopStories(80).catch(() => []),
+    hn.getBestStories(40).catch(() => []),
   ]);
+  const seen = new Set<string>();
   return [
-    ...feed.map((f) => ({ title: f.title, url: f.link, source: f.source, publishedAt: f.publishedAt })),
-    ...stories.map(hnToArticle),
-  ];
+    ...feed.map((f) => ({
+      title: f.title,
+      url: f.link,
+      source: f.source,
+      publishedAt: f.publishedAt,
+      text: `${f.title} ${f.summary}`,
+    })),
+    ...top.map(hnToArticle),
+    ...best.map(hnToArticle),
+  ].filter((a) => a.url && !seen.has(a.url) && seen.add(a.url));
+}
+
+function matchedSources(theme: NarrativeTheme, pool: Article[]): Article[] {
+  return dedupeByUrl(pool.filter((a) => matches(theme, a.text ?? a.title)));
 }
 
 export async function listNarratives(): Promise<Intel<IntelNarrative[]>> {
@@ -94,7 +109,36 @@ export async function listNarratives(): Promise<Intel<IntelNarrative[]>> {
     empty: [],
     run: async () => {
       const pool = await buildPool();
-      return NARRATIVE_THEMES.map((t) => clusterFor(t, pool))
+      const clusters = NARRATIVE_THEMES.map((t) => clusterFor(t, pool));
+
+      // Augment thin themes with real, cited web articles so well-defined
+      // narratives aren't hidden purely for lack of feed coverage.
+      if (serverEnv().has.tavily) {
+        const thin = clusters.filter((c) => c.articleCount < MIN_ARTICLES);
+        const augmented = await Promise.all(
+          thin.map(async (c) => {
+            const theme = themeById(c.id);
+            if (!theme) return c;
+            const search = await tavily.searchNarratives(theme.name).catch(() => null);
+            if (!search) return c;
+            const extra: Article[] = search.results.map((r) => ({
+              title: r.title,
+              url: r.url,
+              source: hostOf(r.url),
+              publishedAt: "",
+            }));
+            const merged = dedupeByUrl([...matchedSources(theme, pool), ...extra]);
+            return { ...c, articleCount: merged.length, sources: merged.slice(0, 4) };
+          }),
+        );
+        const byId = new Map(augmented.map((c) => [c.id, c] as const));
+        for (let i = 0; i < clusters.length; i++) {
+          const a = byId.get(clusters[i].id);
+          if (a) clusters[i] = a;
+        }
+      }
+
+      return clusters
         .filter((n) => n.articleCount >= MIN_ARTICLES) // hide thin narratives
         .sort((a, b) => b.recentCount - a.recentCount || b.articleCount - a.articleCount);
     },
@@ -137,7 +181,7 @@ export async function getNarrative(id: string): Promise<Intel<NarrativeDetail | 
         }
       }
 
-      const fromPool = dedupeByUrl(pool.filter((a) => matches(theme, a.title)));
+      const fromPool = dedupeByUrl(pool.filter((a) => matches(theme, a.text ?? a.title)));
       const allSources = dedupeByUrl([...fromPool, ...tavilySources]);
       const timeline = [...allSources]
         .filter((a) => a.publishedAt)

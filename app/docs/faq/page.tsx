@@ -6,27 +6,43 @@ export const metadata: Metadata = { title: "FAQ" };
 const faqs = [
   {
     q: "Is LoreonLabs a trading or portfolio tool?",
-    a: "No. LoreonLabs is an intelligence and discovery platform. It does not track wallets, manage portfolios, or execute trades. It surfaces emerging narratives, founders, projects, and signals.",
+    a: "No. LoreonLabs is an intelligence and discovery platform. It does not track wallets, manage portfolios, or execute trades — it surfaces emerging narratives, builders, projects, markets, and launchpads.",
+  },
+  {
+    q: "Is the data live or mock?",
+    a: "Everything is live. Markets come from a market-data provider, builders and projects from GitHub, narratives from news and developer feeds, and site enrichment from official websites. There is no mock data and there are no fabricated scores.",
   },
   {
     q: "Where does the data come from?",
-    a: "From a diverse set of sources spanning the open web, community discussion, developer activity, and market data. See the Data Sources page for the planned providers.",
+    a: "From official, attributed sources only: market data, GitHub, established crypto and tech news feeds, developer forums, and live extraction of official sites and docs. Every surfaced item links back to its source.",
   },
   {
-    q: "What does the attention score mean?",
-    a: "It is a 0–100 measure of emerging momentum, weighted toward acceleration. Read it alongside the momentum value and tier. See the Attention Score page for details.",
+    q: "How are things ranked?",
+    a: "By concrete, real metrics per surface — markets by price change and market cap, projects by stars and activity, builders by contributions and followers, and narratives by article momentum. There is no blended or invented influence score.",
   },
   {
-    q: "Does LoreonLabs require a wallet or login to browse?",
-    a: "This phase focuses on the product architecture and information architecture. There is no wallet connect or authentication yet.",
+    q: "How are builders chosen?",
+    a: "They are discovered live from the contributor graphs of each ecosystem's official repositories — real, verifiable people. A few notable founders are pinned, but only with verifiable handles.",
+  },
+  {
+    q: "Why are some narratives missing?",
+    a: "Narratives without enough real article coverage are hidden rather than shown empty. As coverage lands, they appear automatically.",
   },
   {
     q: "Which ecosystems are covered?",
-    a: "Coverage spans crypto, AI, and technology — including Base, Ethereum, Solana, AI, and DeFi, with room to expand.",
+    a: "The major L1s and L2s — Base, Ethereum, Solana, Arbitrum, Optimism, Polygon, Bitcoin, Avalanche, Sui, Aptos, TON, NEAR, Cosmos, and more — plus cross-cutting themes like AI and DeFi.",
   },
   {
-    q: "Is the data shown live yet?",
-    a: "Not in this phase. The platform currently uses realistic placeholder content to establish layout and structure ahead of connecting live data sources.",
+    q: "How fresh is the data?",
+    a: "Pages render on demand from live sources and are cached per source with a TTL tuned to how fast each signal changes. See Data Freshness.",
+  },
+  {
+    q: "Does LoreonLabs require a wallet or login?",
+    a: "No. There is no wallet connect, no authentication, and no token. It is a research and monitoring platform.",
+  },
+  {
+    q: "Can I see why something appeared?",
+    a: "Yes. Provenance is shown on everything — articles link to the publication, builders and projects to GitHub, tokens to the market source and official site. See Source Validation.",
   },
 ];
 
