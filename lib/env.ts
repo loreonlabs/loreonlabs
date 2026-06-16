@@ -89,6 +89,22 @@ export interface ServerEnv {
   };
 }
 
+/**
+ * Return a required server credential or throw a clear, server-side error.
+ * Used by API clients so a missing key fails loudly (and never silently sends
+ * an unauthenticated request). The error message contains only the variable
+ * name — never a value.
+ */
+export function requireKey(name: string, value: string | undefined): string {
+  if (!value || !value.trim()) {
+    throw new Error(
+      `[env] Missing required server environment variable: ${name}. ` +
+        `Add it to .env.local (never commit it).`,
+    );
+  }
+  return value;
+}
+
 let cached: ServerEnv | null = null;
 
 /**

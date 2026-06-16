@@ -1,6 +1,6 @@
 /**
  * Integration registry — describes the live data providers backing the service
- * layer in lib/services/*. Used by the docs to document provenance and by the
+ * layer in lib/api/*. Used by the docs to document provenance and by the
  * UI to reason about which sources are configured.
  *
  * Credentials are read from the server environment (see lib/env.ts). Sources
@@ -42,7 +42,7 @@ export const integrations: IntegrationConfig[] = [
     contributes: "Narrative discovery, ecosystem and project research.",
     requiresKey: true,
     envVar: "TAVILY_API_KEY",
-    service: "lib/services/tavily.ts",
+    service: "lib/api/tavily.ts",
     docsUrl: "https://docs.tavily.com",
   },
   {
@@ -53,7 +53,7 @@ export const integrations: IntegrationConfig[] = [
     contributes: "Market attention and liquidity context for narratives.",
     requiresKey: false,
     envVar: "COINGECKO_API_KEY",
-    service: "lib/services/coingecko.ts",
+    service: "lib/api/coingecko.ts",
     docsUrl: "https://www.coingecko.com/en/api",
   },
   {
@@ -64,7 +64,7 @@ export const integrations: IntegrationConfig[] = [
     contributes: "Developer momentum and shipping cadence for founders & projects.",
     requiresKey: false,
     envVar: "GITHUB_TOKEN",
-    service: "lib/services/github.ts",
+    service: "lib/api/github.ts",
     docsUrl: "https://docs.github.com/rest",
   },
   {
@@ -75,7 +75,7 @@ export const integrations: IntegrationConfig[] = [
     contributes: "Clean text extraction for downstream analysis.",
     requiresKey: true,
     envVar: "JINA_API_KEY",
-    service: "lib/services/jina.ts",
+    service: "lib/api/jina.ts",
     docsUrl: "https://jina.ai/reader",
   },
   {
@@ -85,7 +85,7 @@ export const integrations: IntegrationConfig[] = [
     description: "Top, best, and new stories plus item details.",
     contributes: "Early technology and developer attention signals.",
     requiresKey: false,
-    service: "lib/services/hackernews.ts",
+    service: "lib/api/hackernews.ts",
     docsUrl: "https://github.com/HackerNews/API",
   },
   {
@@ -96,7 +96,7 @@ export const integrations: IntegrationConfig[] = [
     contributes: "Mainstream coverage and emerging-story velocity.",
     requiresKey: false,
     envVar: "RSS_FEEDS",
-    service: "lib/services/rss.ts",
+    service: "lib/api/rss.ts",
     docsUrl: "https://en.wikipedia.org/wiki/RSS",
   },
 ];
