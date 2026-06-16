@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Data Sources" };
 export default function DataSourcesPage() {
   return (
     <DocArticle
-      href="/docs/data-sources"
+      href="/data-sources"
       title="Data sources"
       description="LoreonLabs draws on a diverse set of providers so that no single source dominates the signal. These integrations are planned for the data pipeline."
     >

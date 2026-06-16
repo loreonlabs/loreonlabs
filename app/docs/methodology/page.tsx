@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Methodology" };
 export default function MethodologyPage() {
   return (
     <DocArticle
-      href="/docs/methodology"
+      href="/methodology"
       title="Methodology"
       description="How LoreonLabs turns raw, noisy signals from across the open web into ranked, actionable intelligence."
     >
@@ -31,7 +31,7 @@ export default function MethodologyPage() {
         </li>
         <li>
           <strong>Score</strong> — compute an attention score and momentum for each
-          entity. See <a href="/docs/attention-score">Attention Score</a>.
+          entity. See <a href="/attention-score">Attention Score</a>.
         </li>
         <li>
           <strong>Surface</strong> — rank and present results across Discovery,

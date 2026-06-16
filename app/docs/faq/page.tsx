@@ -33,7 +33,7 @@ const faqs = [
 export default function FaqPage() {
   return (
     <DocArticle
-      href="/docs/faq"
+      href="/faq"
       title="Frequently asked questions"
       description="Quick answers to the most common questions about what LoreonLabs is and how it works."
     >

@@ -48,7 +48,7 @@ export default async function ProjectDetailPage({
   return (
     <>
       <div className="mb-4">
-        <BackLink href="/app/projects" label="Projects" />
+        <BackLink href="/projects" label="Projects" />
       </div>
 
       <PageHeader
@@ -90,7 +90,7 @@ export default async function ProjectDetailPage({
                 {relatedFounders.map((f) => (
                   <ContentCard
                     key={f.id}
-                    href={`/app/founders/${f.id}`}
+                    href={`/founders/${f.id}`}
                     title={f.name}
                     description={f.focus}
                     className="w-full sm:w-[280px]"
@@ -144,7 +144,7 @@ export default async function ProjectDetailPage({
             {relatedNarratives.map((n) => (
               <ContentCard
                 key={n.id}
-                href={`/app/narratives/${n.id}`}
+                href={`/narratives/${n.id}`}
                 title={n.name}
                 description={n.summary}
                 trailing={<TrendPill trend={n.trend} value={n.momentum} />}

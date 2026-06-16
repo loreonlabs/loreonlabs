@@ -13,19 +13,22 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-/** Product platform navigation (/app). */
+/**
+ * Product platform navigation. Hrefs are zone-relative to the app root so they
+ * stay clean on app.loreonlabs.xyz (middleware rewrites them under /app).
+ */
 export const appNav: NavGroup[] = [
   {
     items: [
       {
         label: "Overview",
-        href: "/app",
+        href: "/",
         description: "Platform home and today's signals",
         icon: "grid",
       },
       {
         label: "Discovery",
-        href: "/app/discovery",
+        href: "/discovery",
         description: "Find emerging opportunities",
         icon: "radar",
       },
@@ -36,31 +39,31 @@ export const appNav: NavGroup[] = [
     items: [
       {
         label: "Narratives",
-        href: "/app/narratives",
+        href: "/narratives",
         description: "Track growing narratives",
         icon: "pulse",
       },
       {
         label: "Founders",
-        href: "/app/founders",
+        href: "/founders",
         description: "Monitor founders and operators",
         icon: "user",
       },
       {
         label: "Projects",
-        href: "/app/projects",
+        href: "/projects",
         description: "Discover emerging projects",
         icon: "compass",
       },
       {
         label: "Ecosystems",
-        href: "/app/ecosystems",
+        href: "/ecosystems",
         description: "Explore ecosystems",
         icon: "layers",
       },
       {
         label: "Markets",
-        href: "/app/markets",
+        href: "/markets",
         description: "Monitor market attention",
         icon: "chart",
       },
@@ -70,7 +73,7 @@ export const appNav: NavGroup[] = [
     items: [
       {
         label: "Search",
-        href: "/app/search",
+        href: "/search",
         description: "Unified search",
         icon: "search",
       },
@@ -78,20 +81,23 @@ export const appNav: NavGroup[] = [
   },
 ];
 
-/** Documentation navigation (/docs). */
+/**
+ * Documentation navigation. Hrefs are zone-relative to the docs root so they
+ * stay clean on docs.loreonlabs.xyz (middleware rewrites them under /docs).
+ */
 export const docsNav: NavGroup[] = [
   {
     label: "Introduction",
     items: [
       {
         label: "Overview",
-        href: "/docs",
+        href: "/",
         description: "Documentation home",
         icon: "book",
       },
       {
         label: "What is Loreon",
-        href: "/docs/what-is-loreon",
+        href: "/what-is-loreon",
         description: "The platform and why it exists",
         icon: "spark",
       },
@@ -102,19 +108,19 @@ export const docsNav: NavGroup[] = [
     items: [
       {
         label: "Methodology",
-        href: "/docs/methodology",
+        href: "/methodology",
         description: "From raw signal to intelligence",
         icon: "network",
       },
       {
         label: "Data Sources",
-        href: "/docs/data-sources",
+        href: "/data-sources",
         description: "Where signals come from",
         icon: "layers",
       },
       {
         label: "Attention Score",
-        href: "/docs/attention-score",
+        href: "/attention-score",
         description: "How scoring works",
         icon: "shield",
       },
@@ -125,13 +131,13 @@ export const docsNav: NavGroup[] = [
     items: [
       {
         label: "FAQ",
-        href: "/docs/faq",
+        href: "/faq",
         description: "Common questions",
         icon: "book",
       },
       {
         label: "Future Development",
-        href: "/docs/future-development",
+        href: "/future-development",
         description: "Where Loreon is heading",
         icon: "spark",
       },

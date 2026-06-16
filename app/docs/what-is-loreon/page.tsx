@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "What is Loreon" };
 export default function WhatIsLoreonPage() {
   return (
     <DocArticle
-      href="/docs/what-is-loreon"
+      href="/what-is-loreon"
       title="What is LoreonLabs"
       description="LoreonLabs is an intelligence and discovery platform that surfaces emerging narratives, founders, projects, ecosystems, and market signals before they become mainstream."
     >

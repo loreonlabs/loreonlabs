@@ -51,7 +51,7 @@ export default async function EcosystemDetailPage({
   return (
     <>
       <div className="mb-4">
-        <BackLink href="/app/ecosystems" label="Ecosystems" />
+        <BackLink href="/ecosystems" label="Ecosystems" />
       </div>
 
       <PageHeader
@@ -87,7 +87,7 @@ export default async function EcosystemDetailPage({
             {relatedNarratives.map((n) => (
               <ContentCard
                 key={n.id}
-                href={`/app/narratives/${n.id}`}
+                href={`/narratives/${n.id}`}
                 title={n.name}
                 description={n.summary}
                 trailing={<TrendPill trend={n.trend} value={n.momentum} />}
@@ -106,7 +106,7 @@ export default async function EcosystemDetailPage({
             {relatedProjects.map((p) => (
               <ContentCard
                 key={p.id}
-                href={`/app/projects/${p.id}`}
+                href={`/projects/${p.id}`}
                 title={p.name}
                 description={p.summary}
                 trailing={<TrendPill trend={p.trend} value={p.momentum} />}
@@ -125,7 +125,7 @@ export default async function EcosystemDetailPage({
             {relatedFounders.map((f) => (
               <ContentCard
                 key={f.id}
-                href={`/app/founders/${f.id}`}
+                href={`/founders/${f.id}`}
                 title={f.name}
                 description={f.focus}
                 trailing={

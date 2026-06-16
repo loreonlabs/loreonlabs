@@ -1,13 +1,15 @@
+import { ROOT_DOMAIN, zoneUrls } from "./urls";
+
 export const site = {
   name: "LoreonLabs",
-  domain: "loreonlabs.com",
-  url: "https://loreonlabs.com",
+  domain: ROOT_DOMAIN,
+  url: zoneUrls.landing,
   tagline: "Discover what gains attention before consensus.",
   description:
     "LoreonLabs tracks emerging narratives, founders, projects, and market signals across crypto, AI, and technology — an intelligence and discovery platform for what gains attention before consensus.",
-  // Internal routes within this Next.js app (the platform and docs now live here).
-  appUrl: "/app",
-  docsUrl: "/docs",
+  // Cross-zone destinations — absolute subdomain URLs (see lib/urls.ts).
+  appUrl: zoneUrls.app,
+  docsUrl: zoneUrls.docs,
   twitterUrl: "https://x.com/loreonlabs",
 };
 

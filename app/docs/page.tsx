@@ -4,7 +4,7 @@ import { docsNav } from "@/lib/navigation";
 import { ArrowRight, iconByName } from "@/components/icons";
 
 export default function DocsOverviewPage() {
-  const sections = docsNav.flatMap((g) => g.items).filter((i) => i.href !== "/docs");
+  const sections = docsNav.flatMap((g) => g.items).filter((i) => i.href !== "/");
 
   return (
     <>
@@ -13,7 +13,7 @@ export default function DocsOverviewPage() {
         title="LoreonLabs documentation"
         description="Understand what LoreonLabs is, why it exists, how it turns raw signals into intelligence, and where it's heading."
         actions={
-          <Link href="/docs/what-is-loreon" className="btn-primary px-4 py-2 text-[13px]">
+          <Link href="/what-is-loreon" className="btn-primary px-4 py-2 text-[13px]">
             Start reading
             <ArrowRight width={15} height={15} />
           </Link>

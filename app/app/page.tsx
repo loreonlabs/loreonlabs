@@ -99,7 +99,7 @@ export default function AppOverviewPage() {
         title="Overview"
         description="A live read on where attention is forming — narratives, founders, projects, ecosystems, and markets, in one dashboard."
         actions={
-          <Link href="/app/discovery" className="btn-primary px-4 py-2 text-[13px]">
+          <Link href="/discovery" className="btn-primary px-4 py-2 text-[13px]">
             Open Discovery
             <ArrowRight width={15} height={15} />
           </Link>
@@ -149,12 +149,12 @@ export default function AppOverviewPage() {
 
       {/* Two-column panels */}
       <section className="page-section grid gap-5 lg:grid-cols-2">
-        <Panel title="Active Narratives" href="/app/narratives">
+        <Panel title="Active Narratives" href="/narratives">
           <div className="space-y-0.5">
             {topNarratives.map((n) => (
               <Row
                 key={n.id}
-                href={`/app/narratives/${n.id}`}
+                href={`/narratives/${n.id}`}
                 title={n.name}
                 subtitle={`${n.category} · ${tierLabels[n.tier]}`}
                 score={n.attentionScore}
@@ -165,12 +165,12 @@ export default function AppOverviewPage() {
           </div>
         </Panel>
 
-        <Panel title="Emerging Projects" href="/app/projects">
+        <Panel title="Emerging Projects" href="/projects">
           <div className="space-y-0.5">
             {emergingProjects.map((p) => (
               <Row
                 key={p.id}
-                href={`/app/projects/${p.id}`}
+                href={`/projects/${p.id}`}
                 title={p.name}
                 subtitle={`${p.ecosystem} · ${stageLabels[p.stage]}`}
                 score={p.attentionScore}
@@ -181,12 +181,12 @@ export default function AppOverviewPage() {
           </div>
         </Panel>
 
-        <Panel title="Top Founders" href="/app/founders">
+        <Panel title="Top Founders" href="/founders">
           <div className="space-y-0.5">
             {topFounders.map((f) => (
               <Row
                 key={f.id}
-                href={`/app/founders/${f.id}`}
+                href={`/founders/${f.id}`}
                 title={f.name}
                 subtitle={f.focus}
                 score={f.signalScore}
@@ -197,12 +197,12 @@ export default function AppOverviewPage() {
           </div>
         </Panel>
 
-        <Panel title="Ecosystem Signals" href="/app/ecosystems">
+        <Panel title="Ecosystem Signals" href="/ecosystems">
           <div className="space-y-3 pt-1">
             {topEcosystems.map((e) => (
               <Link
                 key={e.id}
-                href={`/app/ecosystems/${e.id}`}
+                href={`/ecosystems/${e.id}`}
                 className="block rounded-lg px-2 py-1.5 transition-colors hover:bg-surface"
               >
                 <div className="mb-1 flex items-center justify-between">
@@ -222,7 +222,7 @@ export default function AppOverviewPage() {
           title="Market Activity"
           description="Where attention is concentrating across sectors."
           actions={
-            <Link href="/app/markets" className="text-sm font-medium text-accent hover:underline">
+            <Link href="/markets" className="text-sm font-medium text-accent hover:underline">
               Open Markets
             </Link>
           }

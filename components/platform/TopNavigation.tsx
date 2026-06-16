@@ -42,15 +42,21 @@ export function TopNavigation({ section, links, onMenuClick }: TopNavigationProp
         </div>
 
         <nav className="ml-auto flex items-center gap-1">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) => {
+            // Cross-zone links are absolute (different subdomain) → full nav.
+            const isExternal = /^https?:\/\//.test(link.href);
+            const className =
+              "rounded-lg px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:text-foreground";
+            return isExternal ? (
+              <a key={link.href} href={link.href} className={className}>
+                {link.label}
+              </a>
+            ) : (
+              <Link key={link.href} href={link.href} className={className}>
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </header>

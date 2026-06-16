@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Future Development" };
 export default function FutureDevelopmentPage() {
   return (
     <DocArticle
-      href="/docs/future-development"
+      href="/future-development"
       title="Future development"
       description="Where LoreonLabs is heading — from a structured foundation to a fully connected intelligence platform."
     >

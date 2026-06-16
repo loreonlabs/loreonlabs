@@ -52,7 +52,7 @@ export default async function FounderDetailPage({
   return (
     <>
       <div className="mb-4">
-        <BackLink href="/app/founders" label="Founders" />
+        <BackLink href="/founders" label="Founders" />
       </div>
 
       <PageHeader
@@ -121,7 +121,7 @@ export default async function FounderDetailPage({
             {relatedProjects.map((p) => (
               <ContentCard
                 key={p.id}
-                href={`/app/projects/${p.id}`}
+                href={`/projects/${p.id}`}
                 title={p.name}
                 description={p.summary}
                 trailing={<TrendPill trend={p.trend} value={p.momentum} />}

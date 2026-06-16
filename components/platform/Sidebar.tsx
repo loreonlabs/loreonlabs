@@ -12,7 +12,9 @@ interface SidebarProps {
 }
 
 function isActive(pathname: string, href: string): boolean {
-  if (href === "/app" || href === "/docs") return pathname === href;
+  // Zone-relative hrefs ("/", "/discovery", …). The zone root is only active
+  // on an exact match; deeper routes match the section prefix.
+  if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 

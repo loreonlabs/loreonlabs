@@ -56,16 +56,30 @@ export function Shell({ section, groups, links, children }: ShellProps) {
               </div>
               <Sidebar groups={groups} onNavigate={() => setOpen(false)} />
               <div className="border-t border-border/70 p-4">
-                {links.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="block rounded-lg px-3 py-2 text-sm font-medium text-muted hover:bg-surface hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {links.map((link) => {
+                  const isExternal = /^https?:\/\//.test(link.href);
+                  const className =
+                    "block rounded-lg px-3 py-2 text-sm font-medium text-muted hover:bg-surface hover:text-foreground";
+                  return isExternal ? (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className={className}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className={className}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>

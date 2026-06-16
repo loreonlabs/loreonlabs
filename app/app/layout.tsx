@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Shell } from "@/components/platform/Shell";
 import { appNav } from "@/lib/navigation";
+import { zoneUrls } from "@/lib/urls";
 
 export const metadata: Metadata = {
   title: {
@@ -12,8 +13,8 @@ export const metadata: Metadata = {
 };
 
 const crossLinks = [
-  { label: "Docs", href: "/docs" },
-  { label: "Home", href: "/" },
+  { label: "Docs", href: zoneUrls.docs },
+  { label: "Home", href: zoneUrls.landing },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

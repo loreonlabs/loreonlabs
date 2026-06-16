@@ -22,7 +22,7 @@ export default function EcosystemsPage() {
           {ecosystems.map((eco) => (
             <ContentCard
               key={eco.id}
-              href={`/app/ecosystems/${eco.id}`}
+              href={`/ecosystems/${eco.id}`}
               title={eco.name}
               description={eco.description}
               leading={

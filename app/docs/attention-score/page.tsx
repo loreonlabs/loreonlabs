@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Attention Score" };
 export default function AttentionScorePage() {
   return (
     <DocArticle
-      href="/docs/attention-score"
+      href="/attention-score"
       title="Attention Score"
       description="The attention score is a single 0–100 measure of how much momentum an entity is gaining. It is the backbone of ranking across the platform."
     >

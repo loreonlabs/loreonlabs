@@ -43,7 +43,7 @@ export default async function NarrativeDetailPage({
   return (
     <>
       <div className="mb-4">
-        <BackLink href="/app/narratives" label="Narratives" />
+        <BackLink href="/narratives" label="Narratives" />
       </div>
 
       <PageHeader
@@ -109,7 +109,7 @@ export default async function NarrativeDetailPage({
             {relatedProjects.map((p) => (
               <ContentCard
                 key={p.id}
-                href={`/app/projects/${p.id}`}
+                href={`/projects/${p.id}`}
                 title={p.name}
                 description={p.summary}
                 trailing={<TrendPill trend={p.trend} value={p.momentum} />}
