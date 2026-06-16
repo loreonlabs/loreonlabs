@@ -8,8 +8,8 @@ const XIcon = () => (
 );
 
 const footerLinks = [
-  { label: "App", href: site.appUrl, external: true },
-  { label: "Docs", href: site.docsUrl, external: true },
+  { label: "App", href: site.appUrl, external: false },
+  { label: "Docs", href: site.docsUrl, external: false },
   { label: "X / Twitter", href: site.twitterUrl, external: true },
 ];
 

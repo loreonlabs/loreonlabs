@@ -55,6 +55,80 @@
     @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-8;
   }
 
+  /* ----------------------------------------------------------------
+   * Platform layout + spacing system
+   * Shared by /app and /docs. Keeps spacing consistent across pages.
+   * ---------------------------------------------------------------- */
+  .platform-container {
+    @apply mx-auto w-full max-w-[1100px] px-5 py-8 sm:px-8 sm:py-10;
+  }
+  .page-section {
+    @apply mt-10 first:mt-0;
+  }
+  .card-grid {
+    @apply grid gap-4 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  .card-grid-2 {
+    @apply grid gap-4 sm:grid-cols-2;
+  }
+
+  /* ----------------------------------------------------------------
+   * Typography scale
+   * ---------------------------------------------------------------- */
+  .t-eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-accent;
+  }
+  .t-page-title {
+    @apply text-2xl font-semibold tracking-tight text-foreground sm:text-3xl;
+  }
+  .t-section-title {
+    @apply text-lg font-semibold tracking-tight text-foreground;
+  }
+  .t-card-title {
+    @apply text-[15px] font-semibold tracking-tight text-foreground;
+  }
+  .t-body {
+    @apply text-sm leading-relaxed text-muted;
+  }
+  .t-meta {
+    @apply font-mono text-[11px] text-muted;
+  }
+
+  /* ----------------------------------------------------------------
+   * Documentation prose
+   * ---------------------------------------------------------------- */
+  .prose-docs {
+    @apply max-w-none text-[15px] leading-7 text-muted;
+  }
+  .prose-docs h2 {
+    @apply mt-12 scroll-mt-24 text-xl font-semibold tracking-tight text-foreground;
+  }
+  .prose-docs h3 {
+    @apply mt-8 scroll-mt-24 text-base font-semibold tracking-tight text-foreground;
+  }
+  .prose-docs p {
+    @apply mt-4;
+  }
+  .prose-docs ul {
+    @apply mt-4 space-y-2 pl-1;
+  }
+  .prose-docs li {
+    @apply relative pl-5;
+  }
+  .prose-docs li::before {
+    content: "";
+    @apply absolute left-0 top-[0.6rem] h-1.5 w-1.5 rounded-full bg-accent/70;
+  }
+  .prose-docs a {
+    @apply text-accent underline-offset-4 hover:underline;
+  }
+  .prose-docs code {
+    @apply rounded-md border border-border/70 bg-surface px-1.5 py-0.5 font-mono text-[13px] text-foreground;
+  }
+  .prose-docs strong {
+    @apply font-semibold text-foreground;
+  }
+
   /* Premium hairline-bordered surface */
   .panel {
     @apply rounded-2xl border border-border/80 bg-surface/70 backdrop-blur-xl;

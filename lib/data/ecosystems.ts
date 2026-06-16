@@ -1,0 +1,55 @@
+import type { Ecosystem } from "@/lib/types";
+
+/** Placeholder ecosystems. Static, realistic content for layout and structure. */
+export const ecosystems: Ecosystem[] = [
+  {
+    id: "base",
+    name: "Base",
+    symbol: "B",
+    description: "Onchain consumer apps and infrastructure gaining velocity.",
+    attentionScore: 91,
+    activeNarratives: 142,
+    trackedProjects: 318,
+    trend: "up",
+  },
+  {
+    id: "ethereum",
+    name: "Ethereum",
+    symbol: "Ξ",
+    description: "Core protocol, L2s, and restaking activity.",
+    attentionScore: 76,
+    activeNarratives: 318,
+    trackedProjects: 1240,
+    trend: "flat",
+  },
+  {
+    id: "solana",
+    name: "Solana",
+    symbol: "S",
+    description: "High-throughput apps and consumer momentum.",
+    attentionScore: 83,
+    activeNarratives: 205,
+    trackedProjects: 540,
+    trend: "up",
+  },
+  {
+    id: "ai",
+    name: "AI",
+    symbol: "AI",
+    description: "Agents, models, and AI-native infrastructure.",
+    attentionScore: 95,
+    activeNarratives: 264,
+    trackedProjects: 410,
+    trend: "up",
+  },
+  {
+    id: "defi",
+    name: "DeFi",
+    symbol: "D",
+    description: "Liquidity, lending, and structured products.",
+    attentionScore: 68,
+    activeNarratives: 176,
+    trackedProjects: 720,
+    trend: "down",
+  },
+];

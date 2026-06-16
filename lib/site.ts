@@ -5,8 +5,9 @@ export const site = {
   tagline: "Discover what gains attention before consensus.",
   description:
     "LoreonLabs tracks emerging narratives, founders, projects, and market signals across crypto, AI, and technology — an intelligence and discovery platform for what gains attention before consensus.",
-  appUrl: "https://app.loreonlabs.com",
-  docsUrl: "https://docs.loreonlabs.com",
+  // Internal routes within this Next.js app (the platform and docs now live here).
+  appUrl: "/app",
+  docsUrl: "/docs",
   twitterUrl: "https://x.com/loreonlabs",
 };
 

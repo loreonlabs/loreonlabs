@@ -1,0 +1,58 @@
+"use client";
+
+import Link from "next/link";
+import { Logo } from "@/components/Logo";
+import { MenuIcon } from "@/components/icons";
+
+interface TopNavigationProps {
+  /** Section label shown next to the logo, e.g. "Platform" or "Docs". */
+  section: string;
+  /** Cross-links to the other top-level areas. */
+  links: { label: string; href: string }[];
+  onMenuClick: () => void;
+}
+
+/**
+ * Top navigation bar shared by the product platform and documentation shells.
+ * Holds the logo, section label, cross-area links, and the mobile menu toggle.
+ */
+export function TopNavigation({ section, links, onMenuClick }: TopNavigationProps) {
+  return (
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-xl">
+      <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Open navigation"
+          className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-surface/60 text-foreground lg:hidden"
+        >
+          <MenuIcon width={18} height={18} />
+        </button>
+
+        <div className="flex items-center gap-2.5">
+          <Logo size={28} withWordmark={false} />
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold tracking-tight text-foreground">
+              Loreon<span className="text-muted">Labs</span>
+            </span>
+            <span className="hidden rounded-md border border-border/70 bg-surface/60 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted sm:inline">
+              {section}
+            </span>
+          </div>
+        </div>
+
+        <nav className="ml-auto flex items-center gap-1">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:text-foreground"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    </header>
+  );
+}

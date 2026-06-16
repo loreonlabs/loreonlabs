@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { ComponentType, SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
 
@@ -118,3 +118,108 @@ export const BoltIcon = (p: IconProps) => (
     <path d="M13 3 5 13h6l-1 8 8-10h-6l1-8Z" />
   </svg>
 );
+
+export const SearchIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+);
+
+export const HomeIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M4 11.5 12 4l8 7.5" />
+    <path d="M6 10v9h12v-9" />
+  </svg>
+);
+
+export const BookIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2V4Z" />
+    <path d="M18 16H7a2 2 0 0 0-2 2" />
+  </svg>
+);
+
+export const GridIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <rect x="4" y="4" width="7" height="7" rx="1.5" />
+    <rect x="13" y="4" width="7" height="7" rx="1.5" />
+    <rect x="4" y="13" width="7" height="7" rx="1.5" />
+    <rect x="13" y="13" width="7" height="7" rx="1.5" />
+  </svg>
+);
+
+export const MenuIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M4 7h16M4 12h16M4 17h16" />
+  </svg>
+);
+
+export const CloseIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M6 6l12 12M18 6 6 18" />
+  </svg>
+);
+
+export const TrendUpIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M4 17 10 11l4 4 6-7" />
+    <path d="M16 8h4v4" />
+  </svg>
+);
+
+export const TrendDownIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M4 7 10 13l4-4 6 7" />
+    <path d="M16 16h4v-4" />
+  </svg>
+);
+
+export const ExternalIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M14 5h5v5" />
+    <path d="M19 5l-8 8" />
+    <path d="M18 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4" />
+  </svg>
+);
+
+export const ClockIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </svg>
+);
+
+/**
+ * String-keyed icon registry. Used by navigation config so that nav items can
+ * reference an icon by name (a serializable string) instead of a component
+ * function — required because nav config crosses the Server → Client boundary.
+ */
+export type IconName =
+  | "grid"
+  | "radar"
+  | "pulse"
+  | "user"
+  | "compass"
+  | "layers"
+  | "chart"
+  | "search"
+  | "book"
+  | "spark"
+  | "network"
+  | "shield";
+
+export const iconByName: Record<IconName, ComponentType<IconProps>> = {
+  grid: GridIcon,
+  radar: RadarIcon,
+  pulse: PulseIcon,
+  user: UserSignalIcon,
+  compass: CompassIcon,
+  layers: LayersIcon,
+  chart: ChartIcon,
+  search: SearchIcon,
+  book: BookIcon,
+  spark: SparkIcon,
+  network: NetworkIcon,
+  shield: ShieldCheck,
+};
