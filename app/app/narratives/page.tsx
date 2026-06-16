@@ -1,49 +1,53 @@
 import type { Metadata } from "next";
-import { PageHeader, SectionHeader, ContentCard, Badge, ScoreBar, TrendPill } from "@/components/ui";
-import { narratives } from "@/lib/data";
-import { tierLabels } from "@/lib/format";
+import { PageHeader, ContentCard, Badge } from "@/components/ui";
+import { IntelFallback } from "@/components/ui/States";
+import { listNarratives } from "@/lib/intel/narratives";
+import { timeAgo } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Narratives" };
+export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
-export default function NarrativesPage() {
+export default async function NarrativesPage() {
+  const { status, data, error } = await listNarratives();
+
   return (
     <>
       <PageHeader
         eyebrow="Narratives"
         title="Track growing narratives"
-        description="Themes ranked by momentum across crypto, AI, and technology — so you see what's accelerating while it's still early."
+        description="Themes clustered from live Hacker News and crypto news feeds. Article count and momentum (stories in the last 7 days) are computed from real, dated articles — no invented scores."
       />
 
       <section className="page-section">
-        <SectionHeader
-          title="Tracked narratives"
-          description="Attention score blends social velocity, developer activity, and market signals."
-        />
-        <div className="card-grid">
-          {narratives.map((n) => (
-            <ContentCard
-              key={n.id}
-              href={`/narratives/${n.id}`}
-              title={n.name}
-              description={n.summary}
-              trailing={<TrendPill trend={n.trend} value={n.momentum} />}
-              tags={
-                <>
-                  <Badge tone="accent">{n.category}</Badge>
-                  <Badge>{tierLabels[n.tier]}</Badge>
-                </>
-              }
-              footer={
-                <div className="w-full">
-                  <ScoreBar score={n.attentionScore} />
-                  <p className="mt-2 truncate text-[11px] text-muted">
-                    {n.ecosystems.join(" · ")}
-                  </p>
-                </div>
-              }
-            />
-          ))}
-        </div>
+        {status !== "ok" ? (
+          <IntelFallback status={status} error={error} service="News feeds" />
+        ) : (
+          <div className="card-grid">
+            {data.map((n) => (
+              <ContentCard
+                key={n.id}
+                href={`/narratives/${n.id}`}
+                title={n.name}
+                description={
+                  n.sources[0]?.title ?? "Monitoring sources for new coverage."
+                }
+                tags={
+                  <>
+                    <Badge tone="accent">{n.category}</Badge>
+                    {n.recentCount > 0 && <Badge>{n.recentCount} this week</Badge>}
+                  </>
+                }
+                footer={
+                  <>
+                    <span>{n.articleCount} article{n.articleCount === 1 ? "" : "s"}</span>
+                    <span>{n.latestDate ? timeAgo(n.latestDate) : "—"}</span>
+                  </>
+                }
+              />
+            ))}
+          </div>
+        )}
       </section>
     </>
   );

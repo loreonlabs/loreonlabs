@@ -16,6 +16,7 @@ export interface Repository {
   fullName: string;
   description: string;
   url: string;
+  homepage: string | null;
   stars: number;
   forks: number;
   openIssues: number;
@@ -33,6 +34,9 @@ export interface Developer {
   followers: number;
   publicRepos: number;
   company: string | null;
+  website: string | null;
+  twitter: string | null;
+  location: string | null;
 }
 
 export interface Contributor {
@@ -63,6 +67,7 @@ interface RawRepo {
   full_name: string;
   description: string | null;
   html_url: string;
+  homepage: string | null;
   stargazers_count: number;
   forks_count: number;
   open_issues_count: number;
@@ -72,10 +77,16 @@ interface RawRepo {
 }
 
 function mapRepo(r: RawRepo): Repository {
+  const homepage = r.homepage?.trim();
   return {
     fullName: r.full_name,
     description: r.description ?? "",
     url: r.html_url,
+    homepage: homepage
+      ? /^https?:\/\//i.test(homepage)
+        ? homepage
+        : `https://${homepage}`
+      : null,
     stars: r.stargazers_count,
     forks: r.forks_count,
     openIssues: r.open_issues_count,
@@ -119,9 +130,19 @@ interface RawUser {
   followers: number;
   public_repos: number;
   company: string | null;
+  blog: string | null;
+  twitter_username: string | null;
+  location: string | null;
 }
 
-/** A founder / operator profile. */
+function normalizeUrl(value: string | null): string | null {
+  if (!value) return null;
+  const v = value.trim();
+  if (!v) return null;
+  return /^https?:\/\//i.test(v) ? v : `https://${v}`;
+}
+
+/** A founder / operator / builder profile. */
 export function getUser(username: string): Promise<Developer> {
   return withCache(`gh:user:${username}`, TTL, async () => {
     const u = await httpJson<RawUser>(`${BASE}/users/${username}`, {
@@ -136,6 +157,9 @@ export function getUser(username: string): Promise<Developer> {
       followers: u.followers,
       publicRepos: u.public_repos,
       company: u.company,
+      website: normalizeUrl(u.blog),
+      twitter: u.twitter_username,
+      location: u.location,
     };
   });
 }
@@ -189,6 +213,37 @@ export function getCommits(
       date: c.commit.author?.date ?? "",
       url: c.html_url,
     }));
+  });
+}
+
+/** Repos owned by a user, most recently pushed first. */
+export function listUserRepos(login: string, perPage = 6): Promise<Repository[]> {
+  return withCache(`gh:userrepos:${login}:${perPage}`, TTL, async () => {
+    const raw = await httpJson<RawRepo[]>(
+      `${BASE}/users/${login}/repos?sort=pushed&per_page=${perPage}&type=owner`,
+      { headers: headers() },
+    );
+    return raw.map(mapRepo);
+  });
+}
+
+export interface UserHit {
+  login: string;
+  avatarUrl: string;
+  url: string;
+}
+
+/** Search users (for global search). */
+export function searchUsers(query: string, perPage = 8): Promise<UserHit[]> {
+  const params = new URLSearchParams({ q: query, per_page: String(perPage) });
+  return withCache(`gh:usersearch:${params}`, TTL, async () => {
+    const raw = await httpJson<{ items?: Array<{ login: string; avatar_url: string; html_url: string; type?: string }> }>(
+      `${BASE}/search/users?${params}`,
+      { headers: headers() },
+    );
+    return (raw.items ?? [])
+      .filter((u) => u.type !== "Organization")
+      .map((u) => ({ login: u.login, avatarUrl: u.avatar_url, url: u.html_url }));
   });
 }
 

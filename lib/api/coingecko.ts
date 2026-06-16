@@ -146,6 +146,30 @@ export function getTrending(): Promise<TrendingCoin[]> {
   });
 }
 
+export interface CoinHit {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  thumb: string;
+}
+
+/** Search coins by name/symbol (for global search). */
+export function search(query: string): Promise<CoinHit[]> {
+  return withCache(`cg:search:${query}`, TTL_TOKEN, async () => {
+    const raw = await httpJson<{
+      coins?: Array<{ id: string; name: string; symbol: string; market_cap_rank: number | null; thumb: string }>;
+    }>(`${BASE}/search?query=${encodeURIComponent(query)}`, { headers: headers() });
+    return (raw.coins ?? []).slice(0, 8).map((c) => ({
+      id: c.id,
+      name: c.name,
+      symbol: c.symbol.toUpperCase(),
+      rank: c.market_cap_rank ?? 0,
+      thumb: c.thumb,
+    }));
+  });
+}
+
 /** Verify CoinGecko connectivity (and the key, when set). */
 export function testCoinGecko(): Promise<ApiHealth> {
   return health(async () => {

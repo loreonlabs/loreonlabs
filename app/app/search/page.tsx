@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui";
-import { SearchExperience } from "@/components/platform/SearchExperience";
+import { FullSearch } from "@/components/platform/FullSearch";
 
 export const metadata: Metadata = { title: "Search" };
+export const dynamic = "force-dynamic";
 
 export default function SearchPage() {
   return (
@@ -10,10 +11,10 @@ export default function SearchPage() {
       <PageHeader
         eyebrow="Search"
         title="Unified search"
-        description="One query across narratives, founders, projects, ecosystems, and market signals."
+        description="One live query across projects, founders, markets, narratives, and ecosystems. Press ⌘K anywhere to search."
       />
       <section className="page-section">
-        <SearchExperience />
+        <FullSearch />
       </section>
     </>
   );

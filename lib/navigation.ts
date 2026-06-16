@@ -124,6 +124,12 @@ export const docsNav: NavGroup[] = [
         description: "How scoring works",
         icon: "shield",
       },
+      {
+        label: "Ranking System",
+        href: "/ranking-system",
+        description: "How items are ranked",
+        icon: "chart",
+      },
     ],
   },
   {

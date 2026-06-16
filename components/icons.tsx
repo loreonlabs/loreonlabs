@@ -190,6 +190,25 @@ export const ClockIcon = (p: IconProps) => (
   </svg>
 );
 
+export const StarIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="m12 3 2.6 5.6 6 .8-4.4 4.2 1.1 6L12 17l-5.3 2.6 1.1-6L3.4 9.4l6-.8L12 3Z" />
+  </svg>
+);
+
+export const XSocialIcon = (p: IconProps) => (
+  <svg
+    width={p.width ?? 16}
+    height={p.height ?? 16}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={p.className}
+    aria-hidden="true"
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
+  </svg>
+);
+
 /**
  * String-keyed icon registry. Used by navigation config so that nav items can
  * reference an icon by name (a serializable string) instead of a component

@@ -1,23 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  PageHeader,
-  SectionHeader,
-  ContentCard,
-  Badge,
-  ScoreBar,
-  TrendPill,
-  BackLink,
-} from "@/components/ui";
-import { narratives } from "@/lib/data";
-import { getNarrative, projectsByNarrative } from "@/lib/data/queries";
-import { tierLabels, sourceLabels, stageLabels } from "@/lib/format";
+import Link from "next/link";
+import { PageHeader, SectionHeader, StatCard, Badge, BackLink } from "@/components/ui";
+import { getNarrative } from "@/lib/intel/narratives";
+import { themeById, ecosystemById } from "@/lib/intel/config";
+import { timeAgo } from "@/lib/format";
+import { ExternalIcon } from "@/components/icons";
 
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return narratives.map((n) => ({ slug: n.id }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
 export async function generateMetadata({
   params,
@@ -25,8 +16,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const n = getNarrative(slug);
-  return { title: n ? n.name : "Narrative" };
+  return { title: themeById(slug)?.name ?? "Narrative" };
 }
 
 export default async function NarrativeDetailPage({
@@ -35,10 +25,9 @@ export default async function NarrativeDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const narrative = getNarrative(slug);
-  if (!narrative) notFound();
-
-  const relatedProjects = projectsByNarrative(narrative.id);
+  const { status, data } = await getNarrative(slug);
+  if (status === "empty" || (status === "ok" && !data)) notFound();
+  if (!data) notFound();
 
   return (
     <>
@@ -47,84 +36,62 @@ export default async function NarrativeDetailPage({
       </div>
 
       <PageHeader
-        eyebrow={narrative.category}
-        title={narrative.name}
-        description={narrative.summary}
-        actions={<TrendPill trend={narrative.trend} value={narrative.momentum} />}
+        eyebrow={data.category}
+        title={data.name}
+        description={data.aiSummary || "Live coverage clustered from real news and developer sources."}
       >
         <div className="flex flex-wrap items-center gap-2">
-          <Badge tone="accent">{tierLabels[narrative.tier]}</Badge>
-          {narrative.ecosystems.map((e) => (
-            <Badge key={e}>{e}</Badge>
+          {data.ecosystems.map((e) => (
+            <Link key={e} href={`/ecosystems/${e}`}>
+              <Badge tone="accent">{ecosystemById(e)?.name ?? e}</Badge>
+            </Link>
           ))}
-          <span className="t-meta ml-1">
-            Sources: {narrative.sources.map((s) => sourceLabels[s]).join(" · ")}
-          </span>
         </div>
       </PageHeader>
 
-      <div className="page-section grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <SectionHeader title="Thesis" />
-          <p className="t-body text-[15px]">{narrative.thesis}</p>
-
-          <div className="mt-8">
-            <SectionHeader title="What's driving attention" />
-            <ul className="space-y-2">
-              {narrative.drivers.map((d) => (
-                <li key={d} className="flex gap-2.5 text-sm text-muted">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                  {d}
-                </li>
-              ))}
-            </ul>
-          </div>
+      <section className="page-section">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <StatCard label="Articles" value={String(data.allSources.length)} />
+          <StatCard label="This week" value={String(data.recentCount)} trend={data.recentCount > 0 ? "up" : "flat"} />
+          <StatCard label="Latest" value={data.latestDate ? timeAgo(data.latestDate) : "—"} />
         </div>
+      </section>
 
-        <aside className="rounded-2xl border border-border/70 bg-surface/50 p-5">
-          <div className="flex items-end justify-between">
-            <div>
-              <div className="font-mono text-3xl font-semibold text-foreground">
-                {narrative.attentionScore}
-              </div>
-              <div className="t-meta">attention score</div>
-            </div>
-            <TrendPill trend={narrative.trend} value={narrative.momentum} />
-          </div>
-          <div className="mt-5 space-y-3 border-t border-border/60 pt-5">
-            {narrative.signalBreakdown.map((s) => (
-              <ScoreBar key={s.label} score={s.score} label={s.label} />
-            ))}
-          </div>
-        </aside>
-      </div>
-
-      {relatedProjects.length > 0 && (
+      {data.aiSummary && (
         <section className="page-section">
-          <SectionHeader
-            title="Related projects"
-            description="Projects associated with this narrative."
-          />
-          <div className="card-grid">
-            {relatedProjects.map((p) => (
-              <ContentCard
-                key={p.id}
-                href={`/projects/${p.id}`}
-                title={p.name}
-                description={p.summary}
-                trailing={<TrendPill trend={p.trend} value={p.momentum} />}
-                tags={
-                  <>
-                    <Badge tone="accent">{p.ecosystem}</Badge>
-                    <Badge tone="muted">{stageLabels[p.stage]}</Badge>
-                  </>
-                }
-                footer={<ScoreBar score={p.attentionScore} className="w-full" />}
-              />
-            ))}
-          </div>
+          <SectionHeader title="Summary" description="Synthesized by Tavily from current web sources." />
+          <p className="t-body max-w-2xl text-[15px]">{data.aiSummary}</p>
         </section>
       )}
+
+      <section className="page-section">
+        <SectionHeader title="Sources" description="Every source links to the original article." />
+        {data.allSources.length === 0 ? (
+          <p className="t-body">No recent sources matched this narrative.</p>
+        ) : (
+          <ul className="space-y-2">
+            {data.allSources.slice(0, 30).map((s) => (
+              <li key={s.url}>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 p-3.5 transition-colors hover:border-accent/40"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[13px] font-medium text-foreground">{s.title}</div>
+                    <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted">
+                      <span className="text-accent">{s.source}</span>
+                      {s.publishedAt && <span>{timeAgo(s.publishedAt)}</span>}
+                    </div>
+                  </div>
+                  <ExternalIcon width={15} height={15} className="shrink-0 text-muted group-hover:text-accent" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </>
   );
 }

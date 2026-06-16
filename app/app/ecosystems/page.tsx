@@ -1,54 +1,50 @@
 import type { Metadata } from "next";
-import { PageHeader, SectionHeader, ContentCard, ScoreBar, TrendPill } from "@/components/ui";
-import { ecosystems } from "@/lib/data";
+import { PageHeader, ContentCard, Badge } from "@/components/ui";
+import { IntelFallback } from "@/components/ui/States";
+import { listEcosystems } from "@/lib/intel/ecosystems";
 
 export const metadata: Metadata = { title: "Ecosystems" };
+export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
-export default function EcosystemsPage() {
+export default async function EcosystemsPage() {
+  const { status, data, error } = await listEcosystems();
+
   return (
     <>
       <PageHeader
         eyebrow="Ecosystems"
         title="Explore ecosystems"
-        description="A live read on every ecosystem that matters — Base, Ethereum, Solana, AI, and DeFi — normalized into one comparable attention layer."
+        description="Base, Ethereum, Solana, AI, and DeFi — each page is built live from real GitHub projects, real builders, narrative themes, and current news momentum."
       />
 
       <section className="page-section">
-        <SectionHeader
-          title="Tracked ecosystems"
-          description="Compare attention, active narratives, and tracked projects."
-        />
-        <div className="card-grid">
-          {ecosystems.map((eco) => (
-            <ContentCard
-              key={eco.id}
-              href={`/ecosystems/${eco.id}`}
-              title={eco.name}
-              description={eco.description}
-              leading={
-                <span className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-background/60 font-mono text-sm font-semibold text-accent">
-                  {eco.symbol}
-                </span>
-              }
-              trailing={<TrendPill trend={eco.trend} />}
-              footer={
-                <div className="w-full">
-                  <ScoreBar score={eco.attentionScore} />
-                  <div className="mt-3 flex items-center justify-between text-[11px] text-muted">
-                    <span>
-                      <span className="font-mono text-foreground">{eco.activeNarratives}</span>{" "}
-                      narratives
-                    </span>
-                    <span>
-                      <span className="font-mono text-foreground">{eco.trackedProjects}</span>{" "}
-                      projects
-                    </span>
-                  </div>
-                </div>
-              }
-            />
-          ))}
-        </div>
+        {status !== "ok" ? (
+          <IntelFallback status={status} error={error} service="News feeds" />
+        ) : (
+          <div className="card-grid">
+            {data.map((e) => (
+              <ContentCard
+                key={e.id}
+                href={`/ecosystems/${e.id}`}
+                title={e.name}
+                description={e.blurb}
+                leading={
+                  <span className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-background/60 font-mono text-sm font-semibold text-accent">
+                    {e.symbol}
+                  </span>
+                }
+                tags={e.recentNews > 0 ? <Badge tone="accent">{e.recentNews} news this week</Badge> : undefined}
+                footer={
+                  <>
+                    <span>{e.newsCount} recent articles</span>
+                    <span className="text-accent">Explore →</span>
+                  </>
+                }
+              />
+            ))}
+          </div>
+        )}
       </section>
     </>
   );

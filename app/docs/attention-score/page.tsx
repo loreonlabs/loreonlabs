@@ -8,14 +8,20 @@ export default function AttentionScorePage() {
     <DocArticle
       href="/attention-score"
       title="Attention Score"
-      description="The attention score is a single 0–100 measure of how much momentum an entity is gaining. It is the backbone of ranking across the platform."
+      description="Attention is measured from real, live signals — not a fabricated number. Each surface is ranked by a concrete metric drawn from its source data."
     >
       <h2 id="what-it-measures">What it measures</h2>
       <p>
-        The attention score estimates <strong>emerging interest</strong> in a
-        narrative, founder, project, or signal. It is weighted toward acceleration,
-        so a smaller entity gaining momentum quickly can outrank a larger but flat
-        one.
+        Attention reflects <strong>emerging interest</strong> in a narrative,
+        founder, project, or market — computed live from the underlying sources.
+        It is weighted toward acceleration, so something small but fast-moving can
+        outrank something large but flat. For the exact metric behind each surface,
+        see the <a href="/ranking-system">Ranking System</a>.
+      </p>
+      <p>
+        Importantly, LoreonLabs does <strong>not</strong> invent 0–100 scores or
+        place entities by hand. Every number shown — stars, 24h change, article
+        counts, contributions, momentum — comes from a real source.
       </p>
 
       <h2 id="inputs">Inputs</h2>

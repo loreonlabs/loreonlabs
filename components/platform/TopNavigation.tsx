@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { MenuIcon } from "@/components/icons";
+import { CommandSearch } from "./CommandSearch";
 
 interface TopNavigationProps {
   /** Section label shown next to the logo, e.g. "Platform" or "Docs". */
@@ -29,19 +30,23 @@ export function TopNavigation({ section, links, onMenuClick }: TopNavigationProp
           <MenuIcon width={18} height={18} />
         </button>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex shrink-0 items-center gap-2.5">
           <Logo size={28} withWordmark={false} />
-          <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-2 sm:flex">
             <span className="text-sm font-semibold tracking-tight text-foreground">
               Loreon<span className="text-muted">Labs</span>
             </span>
-            <span className="hidden rounded-md border border-border/70 bg-surface/60 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted sm:inline">
+            <span className="hidden rounded-md border border-border/70 bg-surface/60 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted md:inline">
               {section}
             </span>
           </div>
         </div>
 
-        <nav className="ml-auto flex items-center gap-1">
+        <div className="flex min-w-0 flex-1 justify-center px-2">
+          <CommandSearch />
+        </div>
+
+        <nav className="flex shrink-0 items-center gap-1">
           {links.map((link) => {
             // Cross-zone links are absolute (different subdomain) → full nav.
             const isExternal = /^https?:\/\//.test(link.href);

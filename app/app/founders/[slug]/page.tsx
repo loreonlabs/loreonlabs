@@ -1,23 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  PageHeader,
-  SectionHeader,
-  ContentCard,
-  Badge,
-  ScoreBar,
-  TrendPill,
-  BackLink,
-} from "@/components/ui";
-import { founders } from "@/lib/data";
-import { getFounder, projectsByIds } from "@/lib/data/queries";
-import { stageLabels } from "@/lib/format";
+import Link from "next/link";
+import { PageHeader, SectionHeader, StatCard, Badge, BackLink } from "@/components/ui";
+import { ExternalLinks } from "@/components/ui/ExternalLinks";
+import { getBuilder } from "@/lib/intel/founders";
+import { formatCompact, timeAgo } from "@/lib/format";
+import { toSlug } from "@/lib/intel/projects";
+import { StarIcon } from "@/components/icons";
 
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return founders.map((f) => ({ slug: f.id }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
 export async function generateMetadata({
   params,
@@ -25,17 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const f = getFounder(slug);
-  return { title: f ? f.name : "Founder" };
-}
-
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .map((p) => p[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  return { title: `${slug} · Builder` };
 }
 
 export default async function FounderDetailPage({
@@ -44,99 +26,83 @@ export default async function FounderDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const founder = getFounder(slug);
-  if (!founder) notFound();
+  const { status, data } = await getBuilder(slug);
+  if (status === "empty" || (status === "ok" && !data)) notFound();
 
-  const relatedProjects = projectsByIds(founder.projectIds);
+  if (!data) {
+    return (
+      <>
+        <div className="mb-4">
+          <BackLink href="/founders" label="Founders & Builders" />
+        </div>
+        <PageHeader eyebrow="Builder" title="Profile unavailable" description="GitHub did not return this user." />
+      </>
+    );
+  }
+
+  const { profile, repos, ecosystemNames } = data;
 
   return (
     <>
       <div className="mb-4">
-        <BackLink href="/founders" label="Founders" />
+        <BackLink href="/founders" label="Founders & Builders" />
       </div>
 
       <PageHeader
-        eyebrow={founder.handle}
-        title={founder.name}
-        description={founder.focus}
-        actions={<TrendPill trend={founder.trend} value={founder.momentum} />}
+        eyebrow={profile.company ?? "GitHub builder"}
+        title={profile.name || profile.login}
+        description={profile.bio || `@${profile.login}${profile.location ? ` · ${profile.location}` : ""}`}
       >
-        <div className="flex flex-wrap items-center gap-2">
-          {founder.ecosystems.map((e) => (
-            <Badge key={e}>{e}</Badge>
-          ))}
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {ecosystemNames.map((e) => (
+              <Badge key={e} tone="accent">{e}</Badge>
+            ))}
+          </div>
+          <ExternalLinks
+            links={[
+              { kind: "github", label: "GitHub", href: profile.url },
+              { kind: "twitter", label: profile.twitter ? `@${profile.twitter}` : "", href: profile.twitter ? `https://x.com/${profile.twitter}` : "" },
+              { kind: "website", label: "Website", href: profile.website ?? "" },
+            ]}
+          />
         </div>
       </PageHeader>
 
-      <div className="page-section grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <div className="flex items-start gap-4">
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-accent/15 font-mono text-base font-semibold text-accent">
-              {initials(founder.name)}
-            </span>
-            <div>
-              <SectionHeader title="About" />
-              <p className="t-body text-[15px]">{founder.bio}</p>
-            </div>
-          </div>
-
-          <div className="mt-8">
-            <SectionHeader title="Why they're on the radar" />
-            <ul className="space-y-2">
-              {founder.highlights.map((h) => (
-                <li key={h} className="flex gap-2.5 text-sm text-muted">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                  {h}
-                </li>
-              ))}
-            </ul>
-          </div>
+      <section className="page-section">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <StatCard label="Followers" value={formatCompact(profile.followers)} />
+          <StatCard label="Public repos" value={formatCompact(profile.publicRepos)} />
+          <StatCard label="Ecosystems" value={String(ecosystemNames.length || "—")} />
         </div>
+      </section>
 
-        <aside className="rounded-2xl border border-border/70 bg-surface/50 p-5">
-          <div className="flex items-end justify-between">
-            <div>
-              <div className="font-mono text-3xl font-semibold text-foreground">
-                {founder.signalScore}
-              </div>
-              <div className="t-meta">signal score</div>
-            </div>
-            <TrendPill trend={founder.trend} value={founder.momentum} />
-          </div>
-          <div className="mt-5 space-y-3 border-t border-border/60 pt-5">
-            {founder.signalBreakdown.map((s) => (
-              <ScoreBar key={s.label} score={s.score} label={s.label} />
-            ))}
-          </div>
-        </aside>
-      </div>
-
-      {relatedProjects.length > 0 && (
-        <section className="page-section">
-          <SectionHeader
-            title="Projects"
-            description="Projects this founder is associated with."
-          />
+      <section className="page-section">
+        <SectionHeader title="Recent repositories" description="Most recently pushed, live from GitHub." />
+        {repos.length === 0 ? (
+          <p className="t-body">No public repositories.</p>
+        ) : (
           <div className="card-grid">
-            {relatedProjects.map((p) => (
-              <ContentCard
-                key={p.id}
-                href={`/projects/${p.id}`}
-                title={p.name}
-                description={p.summary}
-                trailing={<TrendPill trend={p.trend} value={p.momentum} />}
-                tags={
-                  <>
-                    <Badge tone="accent">{p.ecosystem}</Badge>
-                    <Badge tone="muted">{stageLabels[p.stage]}</Badge>
-                  </>
-                }
-                footer={<ScoreBar score={p.attentionScore} className="w-full" />}
-              />
+            {repos.map((r) => (
+              <Link
+                key={r.fullName}
+                href={`/projects/${toSlug(r.fullName)}`}
+                className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface"
+              >
+                <div className="truncate text-sm font-semibold text-foreground">{r.fullName.split("/")[1]}</div>
+                <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{r.description || "No description."}</p>
+                <div className="mt-auto flex items-center justify-between pt-3 text-[11px] text-muted">
+                  <span className="inline-flex items-center gap-1">
+                    <StarIcon width={12} height={12} className="text-accent" />
+                    {formatCompact(r.stars)}
+                  </span>
+                  <span>updated {timeAgo(r.pushedAt) || "recently"}</span>
+                </div>
+              </Link>
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
     </>
   );
 }

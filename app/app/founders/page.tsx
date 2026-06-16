@@ -1,73 +1,80 @@
 import type { Metadata } from "next";
-import { PageHeader, SectionHeader, ContentCard, Badge, TrendPill } from "@/components/ui";
-import { founders } from "@/lib/data";
+import Link from "next/link";
+import { PageHeader, Badge } from "@/components/ui";
+import { IntelFallback } from "@/components/ui/States";
+import { listBuilders } from "@/lib/intel/founders";
+import { ECOSYSTEMS } from "@/lib/intel/config";
+import { formatCompact } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Founders" };
+export const metadata: Metadata = { title: "Founders & Builders" };
+export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .map((p) => p[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+function chip(active: boolean) {
+  return `rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+    active
+      ? "border-accent/40 bg-accent/10 text-foreground"
+      : "border-border bg-surface/40 text-muted hover:text-foreground"
+  }`;
 }
 
-export default function FoundersPage() {
+export default async function FoundersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ecosystem?: string }>;
+}) {
+  const sp = await searchParams;
+  const ecosystem = ECOSYSTEMS.find((e) => e.id === sp.ecosystem)?.id;
+  const { status, data, error } = await listBuilders({ ecosystem });
+
   return (
     <>
       <PageHeader
-        eyebrow="Founders"
-        title="Monitor founders and operators"
-        description="Builders and operators gaining attention across the ecosystem — mapped by reputation, shipping cadence, and emerging signal."
+        eyebrow="Founders & Builders"
+        title="Monitor builders gaining attention"
+        description="Real builders sourced from GitHub — the most active contributors across each ecosystem's core repositories. Every profile is live and clickable."
       />
 
       <section className="page-section">
-        <SectionHeader
-          title="Rising founders"
-          description="Signal score reflects momentum across communities and developer activity."
-        />
-        <div className="card-grid">
-          {founders.map((f) => (
-            <ContentCard
-              key={f.id}
-              href={`/founders/${f.id}`}
-              title={f.name}
-              description={f.focus}
-              leading={
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-accent/15 font-mono text-xs font-semibold text-accent">
-                  {initials(f.name)}
-                </span>
-              }
-              trailing={
-                <div>
-                  <div className="font-mono text-sm font-semibold text-foreground">
-                    {f.signalScore}
-                  </div>
-                  <div className="text-[9px] uppercase tracking-wide text-muted">signal</div>
-                </div>
-              }
-              tags={
-                <>
-                  <Badge tone="accent">{f.handle}</Badge>
-                  <TrendPill trend={f.trend} value={f.momentum} />
-                </>
-              }
-              footer={
-                <div className="w-full">
-                  <ul className="space-y-1">
-                    {f.highlights.map((h) => (
-                      <li key={h} className="flex gap-2 text-[11px] text-muted">
-                        <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-accent" />
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              }
-            />
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/founders" className={chip(!ecosystem)}>All ecosystems</Link>
+          {ECOSYSTEMS.map((e) => (
+            <Link key={e.id} href={`/founders?ecosystem=${e.id}`} className={chip(ecosystem === e.id)}>
+              {e.name}
+            </Link>
           ))}
         </div>
+      </section>
+
+      <section className="page-section">
+        {status !== "ok" ? (
+          <IntelFallback status={status} error={error} service="GitHub" />
+        ) : (
+          <div className="card-grid">
+            {data.map((b) => (
+              <Link
+                key={b.login}
+                href={`/founders/${b.login}`}
+                className="hairline-top group flex items-center gap-3 rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={b.avatarUrl} alt="" width={44} height={44} className="h-11 w-11 rounded-full" />
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-semibold text-foreground">{b.login}</div>
+                  <div className="mt-0.5 flex flex-wrap gap-1">
+                    {b.ecosystems.slice(0, 3).map((e) => (
+                      <Badge key={e}>{ECOSYSTEMS.find((x) => x.id === e)?.name ?? e}</Badge>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono text-sm font-semibold text-accent">{formatCompact(b.contributions)}</div>
+                  <div className="text-[9px] uppercase tracking-wide text-muted">commits</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
     </>
   );
