@@ -8,6 +8,8 @@ import {
   themeById,
   ALL_CURATED_BUILDERS,
   curatedBySlug,
+  CURATED_TEAMS,
+  teamProjectHref,
   type CuratedBuilder,
 } from "./config";
 import { intel, type Intel } from "./result";
@@ -262,6 +264,8 @@ export async function getBuilderBoards(ecosystem?: string): Promise<Intel<Board[
 
 /* ----------------------------- detail ------------------------------ */
 
+export type BuilderType = "github" | "curated-x" | "curated";
+
 export interface BuilderDetail {
   profile: gh.Developer;
   repos: gh.Repository[];
@@ -270,6 +274,14 @@ export interface BuilderDetail {
   totalStars: number;
   relatedBuilders: IntelBuilder[];
   relatedNarratives: { id: string; name: string }[];
+  /** Detected builder type. */
+  type: BuilderType;
+  /** Whether this builder has a curated profile (role, ecosystem, teams). */
+  isCurated: boolean;
+  /** True when real GitHub data was fetched (so stats are meaningful). */
+  hasLiveGithub: boolean;
+  /** Curated projects/teams this person belongs to (for non-GitHub builders). */
+  relatedProjects: { name: string; href: string }[];
 }
 
 /** Synthesize a profile for a curated X-only builder (no GitHub). */
@@ -330,10 +342,12 @@ export async function getBuilder(slug: string): Promise<Intel<BuilderDetail | nu
 
       let profile: gh.Developer | null = null;
       let repos: gh.Repository[] = [];
+      let liveGithub = false;
 
       if (ghLogin) {
         try {
           profile = await gh.getUser(ghLogin);
+          liveGithub = true;
           repos = await gh.listUserRepos(ghLogin, 12).catch(() => []);
         } catch (err) {
           // A real 404 for a non-curated slug → genuine not-found.
@@ -371,11 +385,24 @@ export async function getBuilder(slug: string): Promise<Intel<BuilderDetail | nu
         .slice(0, 6)
         .map((t) => ({ id: t.id, name: t.name }));
 
+      // Builder type — never inferred from X; GitHub only when explicit.
+      const type: BuilderType =
+        curated?.github || !curated ? "github" : curated.x ? "curated-x" : "curated";
+
+      // Curated teams/projects this person belongs to (pure curated data).
+      const relatedProjects = CURATED_TEAMS.filter((t) =>
+        t.contributors.some((c) => !c.isAccount && c.x.toLowerCase() === slug.toLowerCase()),
+      ).map((t) => ({ name: t.name, href: teamProjectHref(t) }));
+
       return {
         profile,
         repos,
         ecosystemIds,
         ecosystemNames: ecosystemIds.map((id) => ecosystemById(id)?.name ?? id).slice(0, 4),
+        type,
+        isCurated: Boolean(curated),
+        hasLiveGithub: liveGithub,
+        relatedProjects,
         totalStars: repos.reduce((sum, r) => sum + r.stars, 0),
         relatedBuilders,
         relatedNarratives,

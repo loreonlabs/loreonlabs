@@ -24,7 +24,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
   const { data } = await getBuilder(slug);
   if (!data) notFound();
 
-  const { profile, repos, ecosystemIds, ecosystemNames, totalStars, relatedBuilders, relatedNarratives } = data;
+  const { profile, repos, ecosystemIds, ecosystemNames, totalStars, relatedBuilders, relatedNarratives, hasLiveGithub, isCurated, relatedProjects } = data;
   const recent = [...repos].sort((a, b) => Date.parse(b.pushedAt) - Date.parse(a.pushedAt)).slice(0, 4);
   const enrich = await getSiteEnrichment(profile.website);
 
@@ -57,21 +57,45 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
         </div>
       </PageHeader>
 
-      <section className="page-section">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatCard label="Followers" value={formatCompact(profile.followers)} />
-          <StatCard label="Public repos" value={formatCompact(profile.publicRepos)} />
-          <StatCard label="Stars (recent)" value={formatCompact(totalStars)} />
-          <StatCard label="Ecosystems" value={String(ecosystemIds.length || "—")} />
-        </div>
-      </section>
+      {hasLiveGithub ? (
+        // Real GitHub builder — show live GitHub metrics.
+        <section className="page-section">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <StatCard label="Followers" value={formatCompact(profile.followers)} />
+            <StatCard label="Public repos" value={formatCompact(profile.publicRepos)} />
+            <StatCard label="Stars (recent)" value={formatCompact(totalStars)} />
+            <StatCard label="Ecosystems" value={String(ecosystemIds.length || 1)} />
+          </div>
+        </section>
+      ) : isCurated ? (
+        // Curated builder — show useful curated metrics, never "—".
+        <section className="page-section">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <StatCard label="Ecosystem" value={ecosystemNames[0] ?? "Crypto"} />
+            <StatCard label="Role" value={profile.company ?? "Builder"} />
+            <StatCard label="Projects" value={String(relatedProjects.length || ecosystemIds.length || 1)} />
+            <StatCard label="Narratives" value={String(relatedNarratives.length)} />
+          </div>
+        </section>
+      ) : (
+        // GitHub builder whose live data is momentarily unavailable — no empty
+        // stat cards; link straight to the GitHub profile instead.
+        <section className="page-section">
+          <a
+            href={profile.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent/40"
+          >
+            View full profile on GitHub
+          </a>
+        </section>
+      )}
 
-      <div className="page-section grid gap-6 lg:grid-cols-2">
-        <div>
-          <SectionHeader title="Projects" description="Repositories this builder owns." />
-          {repos.length === 0 ? (
-            <p className="t-body">No public repositories.</p>
-          ) : (
+      {hasLiveGithub && repos.length > 0 ? (
+        <div className="page-section grid gap-6 lg:grid-cols-2">
+          <div>
+            <SectionHeader title="Projects" description="Repositories this builder owns." />
             <div className="space-y-2">
               {repos.slice(0, 8).map((r) => (
                 <Link key={r.fullName} href={`/projects/${toSlug(r.fullName)}`} className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 p-3 transition-colors hover:border-accent/40">
@@ -85,14 +109,10 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
                 </Link>
               ))}
             </div>
-          )}
-        </div>
+          </div>
 
-        <div>
-          <SectionHeader title="Recent activity" description="Most recently pushed work." />
-          {recent.length === 0 ? (
-            <p className="t-body">No recent activity.</p>
-          ) : (
+          <div>
+            <SectionHeader title="Recent activity" description="Most recently pushed work." />
             <ul className="space-y-2">
               {recent.map((r) => (
                 <li key={r.fullName}>
@@ -103,9 +123,22 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
                 </li>
               ))}
             </ul>
-          )}
+          </div>
         </div>
-      </div>
+      ) : (
+        relatedProjects.length > 0 && (
+          <section className="page-section">
+            <SectionHeader title="Related projects" description="Projects this builder is associated with." />
+            <div className="flex flex-wrap gap-2">
+              {relatedProjects.map((p) => (
+                <Link key={p.href + p.name} href={p.href}>
+                  <Badge tone="accent">{p.name}</Badge>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )
+      )}
 
       {enrich.status === "ok" && enrich.data && (
         <EnrichmentSection enrichment={enrich.data} title="From the web" />
