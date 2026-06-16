@@ -34,6 +34,12 @@ export interface Metric {
   context?: string;
 }
 
+/** A single weighted input to an attention score. */
+export interface SignalBreakdown {
+  label: string;
+  score: number;
+}
+
 export interface Narrative {
   id: string;
   name: string;
@@ -47,6 +53,12 @@ export interface Narrative {
   tier: AttentionTier;
   ecosystems: string[];
   sources: SourceKey[];
+  /** Longer-form context shown on the detail page. */
+  thesis: string;
+  /** What is driving attention right now. */
+  drivers: string[];
+  /** Per-input score breakdown that rolls up into attentionScore. */
+  signalBreakdown: SignalBreakdown[];
 }
 
 export interface Founder {
@@ -59,6 +71,12 @@ export interface Founder {
   trend: Trend;
   highlights: string[];
   ecosystems: string[];
+  /** Short profile shown on the detail page. */
+  bio: string;
+  /** Per-input score breakdown that rolls up into signalScore. */
+  signalBreakdown: SignalBreakdown[];
+  /** Project ids this founder is associated with. */
+  projectIds: string[];
 }
 
 export interface Project {
@@ -71,6 +89,13 @@ export interface Project {
   attentionScore: number;
   momentum: string;
   trend: Trend;
+  /** Longer description shown on the detail page. */
+  about: string;
+  /** Notable signals about the project. */
+  highlights: string[];
+  /** Narrative ids this project relates to. */
+  narrativeIds: string[];
+  sources: SourceKey[];
 }
 
 export interface Ecosystem {
@@ -82,6 +107,10 @@ export interface Ecosystem {
   activeNarratives: number;
   trackedProjects: number;
   trend: Trend;
+  /** Longer overview shown on the detail page. */
+  overview: string;
+  /** Notable highlights for the ecosystem. */
+  highlights: string[];
 }
 
 export interface MarketSignal {
@@ -104,6 +133,8 @@ export interface DiscoveryItem {
   tier: AttentionTier;
   tags: string[];
   sources: SourceKey[];
+  /** Destination for the card — an entity detail page or a section. */
+  href: string;
 }
 
 export type SearchResultType = DiscoveryType | "ecosystem";

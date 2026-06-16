@@ -1,12 +1,22 @@
-/** Central re-export for all placeholder data. */
+/** Central re-export for all placeholder data and query helpers. */
 export { narratives } from "./narratives";
 export { founders } from "./founders";
 export { projects } from "./projects";
 export { ecosystems } from "./ecosystems";
 export { marketMetrics, marketSignals } from "./markets";
 export { discoveryMetrics, discoveryItems } from "./discovery";
+export { searchSuggestions, searchScopes } from "./search";
 export {
-  sampleSearchResults,
-  searchSuggestions,
-  searchScopes,
-} from "./search";
+  getNarrative,
+  getFounder,
+  getProject,
+  getEcosystem,
+  narrativesByEcosystem,
+  projectsByEcosystem,
+  foundersByEcosystem,
+  projectsByIds,
+  narrativesByIds,
+  foundersByProject,
+  projectsByNarrative,
+  searchIndex,
+} from "./queries";

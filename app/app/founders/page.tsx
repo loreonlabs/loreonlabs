@@ -31,6 +31,7 @@ export default function FoundersPage() {
           {founders.map((f) => (
             <ContentCard
               key={f.id}
+              href={`/app/founders/${f.id}`}
               title={f.name}
               description={f.focus}
               leading={

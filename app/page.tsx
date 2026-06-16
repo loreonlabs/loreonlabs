@@ -8,7 +8,6 @@ import { EcosystemIntelligence } from "@/components/sections/EcosystemIntelligen
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Footer } from "@/components/Footer";
-import { LoadingScreen } from "@/components/LoadingScreen";
 import { site } from "@/lib/site";
 
 const jsonLd = {
@@ -29,7 +28,6 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LoadingScreen />
       <Backdrop />
       <Navbar />
       <main className="relative">

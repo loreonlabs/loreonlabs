@@ -8,11 +8,19 @@ export const projects: Project[] = [
     category: "Infrastructure",
     ecosystem: "Base",
     stage: "emerging",
-    summary:
-      "Onchain coordination layer for autonomous agents and services.",
+    summary: "Onchain coordination layer for autonomous agents and services.",
     attentionScore: 88,
     momentum: "+22%",
     trend: "up",
+    about:
+      "Helix Protocol provides a coordination layer that lets autonomous agents and services discover, pay, and transact with one another onchain. It is surfacing early across builder channels on Base.",
+    highlights: [
+      "Fast-growing SDK adoption among agent developers",
+      "Active contributor graph expanding week over week",
+      "Frequently referenced in the AI Agents narrative",
+    ],
+    narrativeIds: ["ai-agents", "base-consumer"],
+    sources: ["web", "github"],
   },
   {
     id: "vantage-ai",
@@ -24,6 +32,15 @@ export const projects: Project[] = [
     attentionScore: 81,
     momentum: "+17%",
     trend: "up",
+    about:
+      "Vantage AI is a stealth verifiable-inference network aiming to make model outputs provable and payable onchain. Despite limited public presence, its contributor graph is unusually strong for its stage.",
+    highlights: [
+      "Strong early contributor graph for a stealth project",
+      "Technical writing gaining traction in AI circles",
+      "Tied to the Onchain AI narrative",
+    ],
+    narrativeIds: ["onchain-ai", "ai-agents"],
+    sources: ["web", "github"],
   },
   {
     id: "mesh-finance",
@@ -35,6 +52,15 @@ export const projects: Project[] = [
     attentionScore: 74,
     momentum: "+11%",
     trend: "up",
+    about:
+      "Mesh Finance is building a cross-margin liquidity layer that makes structured products more capital-efficient. It is gaining attention among DeFi operators and liquidity providers.",
+    highlights: [
+      "Capital-efficient cross-margin design",
+      "Backed by an experienced DeFi operator",
+      "Aligned with the Restaking and DeFi themes",
+    ],
+    narrativeIds: ["restaking"],
+    sources: ["web", "github", "coingecko"],
   },
   {
     id: "orbit-markets",
@@ -46,6 +72,15 @@ export const projects: Project[] = [
     attentionScore: 69,
     momentum: "+14%",
     trend: "up",
+    about:
+      "Orbit Markets is a prediction-market protocol focused on deep liquidity and trustworthy resolution. It sits at the center of the fast-accelerating Prediction Markets narrative.",
+    highlights: [
+      "Liquidity-first market design",
+      "Improved resolution mechanism",
+      "Central to the Prediction Markets narrative",
+    ],
+    narrativeIds: ["prediction-markets"],
+    sources: ["web", "reddit"],
   },
   {
     id: "drift-labs",
@@ -57,6 +92,15 @@ export const projects: Project[] = [
     attentionScore: 63,
     momentum: "+4%",
     trend: "flat",
+    about:
+      "Drift Labs offers a polished consumer trading experience on Solana with steadily growing daily activity and promising early retention.",
+    highlights: [
+      "Growing daily active users",
+      "Strong consumer UX on Solana",
+      "Early but durable retention signals",
+    ],
+    narrativeIds: ["base-consumer"],
+    sources: ["web", "coingecko"],
   },
   {
     id: "ledgerline",
@@ -68,5 +112,14 @@ export const projects: Project[] = [
     attentionScore: 57,
     momentum: "+8%",
     trend: "up",
+    about:
+      "Ledgerline is building stablecoin settlement rails for cross-border merchants, lowering fees and settlement times for real-world payments.",
+    highlights: [
+      "Focused on real merchant settlement",
+      "Led by an experienced payments operator",
+      "Aligned with the Stablecoin Payments narrative",
+    ],
+    narrativeIds: ["stablecoin-payments"],
+    sources: ["web", "coingecko"],
   },
 ];

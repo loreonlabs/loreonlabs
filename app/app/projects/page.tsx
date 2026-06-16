@@ -24,6 +24,7 @@ export default function ProjectsPage() {
           {projects.map((p) => (
             <ContentCard
               key={p.id}
+              href={`/app/projects/${p.id}`}
               title={p.name}
               description={p.summary}
               leading={

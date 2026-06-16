@@ -23,6 +23,7 @@ export default function NarrativesPage() {
           {narratives.map((n) => (
             <ContentCard
               key={n.id}
+              href={`/app/narratives/${n.id}`}
               title={n.name}
               description={n.summary}
               trailing={<TrendPill trend={n.trend} value={n.momentum} />}

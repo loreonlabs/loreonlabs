@@ -20,6 +20,7 @@ export const discoveryItems: DiscoveryItem[] = [
     tier: "accelerating",
     tags: ["AI", "Infrastructure"],
     sources: ["web", "github", "reddit"],
+    href: "/app/narratives/ai-agents",
   },
   {
     id: "d-helix",
@@ -31,6 +32,7 @@ export const discoveryItems: DiscoveryItem[] = [
     tier: "emerging",
     tags: ["Base", "Infrastructure"],
     sources: ["web", "github"],
+    href: "/app/projects/helix-protocol",
   },
   {
     id: "d-quill",
@@ -42,6 +44,7 @@ export const discoveryItems: DiscoveryItem[] = [
     tier: "accelerating",
     tags: ["Founder", "Base"],
     sources: ["reddit", "github"],
+    href: "/app/founders/0xquill",
   },
   {
     id: "d-prediction",
@@ -53,6 +56,7 @@ export const discoveryItems: DiscoveryItem[] = [
     tier: "emerging",
     tags: ["Markets", "Ethereum"],
     sources: ["web", "coingecko"],
+    href: "/app/narratives/prediction-markets",
   },
   {
     id: "d-vantage",
@@ -64,6 +68,7 @@ export const discoveryItems: DiscoveryItem[] = [
     tier: "emerging",
     tags: ["AI", "Stealth"],
     sources: ["web", "github"],
+    href: "/app/projects/vantage-ai",
   },
   {
     id: "d-stablecoins",
@@ -75,5 +80,6 @@ export const discoveryItems: DiscoveryItem[] = [
     tier: "mainstream",
     tags: ["Stablecoins", "Payments"],
     sources: ["web", "coingecko"],
+    href: "/app/narratives/stablecoin-payments",
   },
 ];

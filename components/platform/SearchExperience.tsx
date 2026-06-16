@@ -4,14 +4,14 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { SearchIcon, ArrowRight } from "@/components/icons";
-import { sampleSearchResults, searchSuggestions, searchScopes } from "@/lib/data";
+import { searchIndex, searchSuggestions, searchScopes } from "@/lib/data";
 import { typeLabel } from "@/lib/format";
 import type { SearchResultType } from "@/lib/types";
 
 /**
- * Unified search experience. Filters static placeholder results client-side —
- * no API is connected in this phase. The query and scope state model the shape
- * the live search will adopt later.
+ * Unified search experience. Filters the real search index (built from
+ * narratives, projects, founders, and ecosystems) entirely client-side —
+ * no API is connected in this phase. Each result links to its detail page.
  */
 export function SearchExperience() {
   const [query, setQuery] = useState("");
@@ -19,12 +19,13 @@ export function SearchExperience() {
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return sampleSearchResults.filter((r) => {
+    return searchIndex.filter((r) => {
       const matchesScope = scope === "all" || r.type === scope;
       const matchesQuery =
         q.length === 0 ||
         r.title.toLowerCase().includes(q) ||
-        r.description.toLowerCase().includes(q);
+        r.description.toLowerCase().includes(q) ||
+        r.type.toLowerCase().includes(q);
       return matchesScope && matchesQuery;
     });
   }, [query, scope]);
@@ -37,13 +38,20 @@ export function SearchExperience() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search narratives, founders, projects, ecosystems, signals…"
+          placeholder="Search narratives, projects, founders, ecosystems…"
           className="w-full bg-transparent text-sm text-foreground placeholder:text-muted/70 focus:outline-none"
           aria-label="Search"
+          autoFocus
         />
-        <kbd className="hidden rounded border border-border/70 bg-background/60 px-1.5 py-0.5 font-mono text-[10px] text-muted sm:inline">
-          /
-        </kbd>
+        {query && (
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            className="text-[11px] font-medium text-muted hover:text-foreground"
+          >
+            Clear
+          </button>
+        )}
       </div>
 
       {/* Scope filters */}
@@ -94,8 +102,14 @@ export function SearchExperience() {
         </div>
       )}
 
+      {/* Result count */}
+      <p className="mt-6 t-meta">
+        {results.length} result{results.length === 1 ? "" : "s"}
+        {scope !== "all" ? ` in ${scope}s` : ""}
+      </p>
+
       {/* Results */}
-      <div className="mt-6 space-y-2">
+      <div className="mt-3 space-y-2">
         {results.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border/70 bg-surface/30 p-8 text-center text-sm text-muted">
             No results for “{query}”. Try a different term or scope.

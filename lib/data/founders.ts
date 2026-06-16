@@ -15,6 +15,14 @@ export const founders: Founder[] = [
       "Rising mentions across builder communities",
     ],
     ecosystems: ["Base", "Ethereum"],
+    bio: "Infrastructure founder focused on coordination tooling for autonomous agents. Known for a fast shipping cadence and strong developer-first instincts.",
+    signalBreakdown: [
+      { label: "Community mentions", score: 94 },
+      { label: "Developer activity", score: 98 },
+      { label: "Shipping cadence", score: 95 },
+      { label: "Source diversity", score: 92 },
+    ],
+    projectIds: ["helix-protocol"],
   },
   {
     id: "mira-eth",
@@ -29,6 +37,14 @@ export const founders: Founder[] = [
       "Consistent technical writing gaining traction",
     ],
     ecosystems: ["AI", "Solana"],
+    bio: "Building a verifiable inference network in stealth. Respected for clear technical writing and a quietly growing contributor base.",
+    signalBreakdown: [
+      { label: "Community mentions", score: 88 },
+      { label: "Developer activity", score: 93 },
+      { label: "Shipping cadence", score: 90 },
+      { label: "Source diversity", score: 89 },
+    ],
+    projectIds: ["vantage-ai"],
   },
   {
     id: "danwood",
@@ -43,6 +59,14 @@ export const founders: Founder[] = [
       "Active in liquidity and structured-product circles",
     ],
     ecosystems: ["Ethereum", "DeFi"],
+    bio: "Serial DeFi operator on a second venture after a prior exit. Deep network across liquidity and structured-product circles.",
+    signalBreakdown: [
+      { label: "Community mentions", score: 85 },
+      { label: "Developer activity", score: 82 },
+      { label: "Shipping cadence", score: 86 },
+      { label: "Source diversity", score: 88 },
+    ],
+    projectIds: ["mesh-finance"],
   },
   {
     id: "sol-kade",
@@ -57,6 +81,14 @@ export const founders: Founder[] = [
       "Growing footprint in Solana developer channels",
     ],
     ecosystems: ["Solana"],
+    bio: "Consumer-focused builder shipping a Solana trading experience with promising early retention. Increasingly active across Solana developer channels.",
+    signalBreakdown: [
+      { label: "Community mentions", score: 80 },
+      { label: "Developer activity", score: 79 },
+      { label: "Shipping cadence", score: 84 },
+      { label: "Source diversity", score: 78 },
+    ],
+    projectIds: ["drift-labs"],
   },
   {
     id: "lena-r",
@@ -71,5 +103,13 @@ export const founders: Founder[] = [
       "Quiet but steady shipping cadence",
     ],
     ecosystems: ["Stablecoins", "Base"],
+    bio: "Payments operator with a fintech and settlement background. Building stablecoin rails for cross-border merchants with a steady, understated cadence.",
+    signalBreakdown: [
+      { label: "Community mentions", score: 72 },
+      { label: "Developer activity", score: 76 },
+      { label: "Shipping cadence", score: 80 },
+      { label: "Source diversity", score: 75 },
+    ],
+    projectIds: ["ledgerline"],
   },
 ];

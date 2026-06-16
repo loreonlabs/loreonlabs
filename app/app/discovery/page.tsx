@@ -29,6 +29,7 @@ export default function DiscoveryPage() {
           {discoveryItems.map((item) => (
             <ContentCard
               key={item.id}
+              href={item.href}
               title={item.title}
               description={item.summary}
               trailing={
