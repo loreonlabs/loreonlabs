@@ -80,6 +80,8 @@ export interface ServerEnv {
   readonly jinaApiKey?: string;
   readonly hackerNewsApiUrl: string;
   readonly rssFeeds: string[];
+  /** Bearer token guarding the internal health-check route. */
+  readonly healthcheckToken?: string;
   /** Availability flags for conditional behaviour + safe fallbacks. */
   readonly has: {
     readonly tavily: boolean;
@@ -135,6 +137,7 @@ export function serverEnv(): ServerEnv {
       clean(process.env.HACKERNEWS_API_URL) ?? DEFAULT_HACKERNEWS_API_URL
     ).replace(/\/+$/, ""),
     rssFeeds,
+    healthcheckToken: clean(process.env.HEALTHCHECK_TOKEN),
     has: {
       tavily: Boolean(tavilyApiKey),
       coingecko: Boolean(coingeckoApiKey),
