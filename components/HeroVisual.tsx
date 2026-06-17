@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import {
   PulseIcon,
   UserSignalIcon,
@@ -75,13 +74,10 @@ export function HeroVisual() {
         className="absolute left-1/2 top-1/2 grid h-28 w-28 -translate-x-1/2 -translate-y-1/2 place-items-center"
       >
         <div className="absolute inset-0 rounded-3xl bg-accent/20 blur-2xl animate-pulse-soft" />
-        <Image
-          src="/loreon-logo.jpg"
-          alt="LoreonLabs"
-          width={96}
-          height={96}
-          priority
-          className="relative rounded-3xl ring-1 ring-white/10"
+        {/* Temporary neutral placeholder — same 96x96 size as the removed logo. */}
+        <div
+          aria-hidden
+          className="relative h-24 w-24 rounded-3xl bg-white/5 ring-1 ring-white/10"
         />
       </motion.div>
 

@@ -37,23 +37,20 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: site.name }],
   creator: site.name,
-  icons: {
-    icon: [{ url: "/loreon-logo.jpg", type: "image/jpeg" }],
-    apple: [{ url: "/loreon-logo.jpg" }],
-  },
+  // Logo-based icons (favicon / app icon / apple-touch) intentionally removed.
   openGraph: {
     type: "website",
     url: site.url,
     siteName: site.name,
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
-    images: [{ url: "/loreon-logo.jpg", width: 500, height: 500, alt: site.name }],
+    // Logo-based OG image intentionally removed.
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
-    images: ["/loreon-logo.jpg"],
+    // Logo-based Twitter image intentionally removed.
     creator: "@loreonlabs",
   },
   robots: {

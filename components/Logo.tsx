@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 type LogoProps = {
@@ -14,20 +13,14 @@ export function Logo({
   href = "/",
   className = "",
 }: LogoProps) {
+  // Temporary neutral placeholder — same size/ring/rounding as the logo mark,
+  // so layout and spacing are unchanged while the Loreon logo is removed.
   const mark = (
     <span
-      className="relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[26%] ring-1 ring-white/10"
+      className="relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[26%] bg-white/5 ring-1 ring-white/10"
       style={{ width: size, height: size }}
-    >
-      <Image
-        src="/loreon-logo.jpg"
-        alt="LoreonLabs logo"
-        width={size}
-        height={size}
-        priority
-        className="h-full w-full object-cover"
-      />
-    </span>
+      aria-hidden
+    />
   );
 
   const content = (
