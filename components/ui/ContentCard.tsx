@@ -33,7 +33,7 @@ export function ContentCard({
 }: ContentCardProps) {
   const inner = (
     <div
-      className={`hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface p-5 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:bg-surface-2 hover:shadow-elevate ${className}`}
+      className={`discovery-card hairline-top group flex h-full flex-col p-5 hover:bg-surface-2 ${className}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">

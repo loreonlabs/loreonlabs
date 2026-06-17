@@ -217,11 +217,26 @@
   }
 
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-[#04121f] shadow-glow-sm transition-all duration-300 hover:shadow-glow hover:brightness-105 active:scale-[0.98];
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-[#04121f] shadow-glow-sm transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:shadow-glow hover:brightness-105 active:translate-y-0 active:scale-[0.98];
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground shadow-card transition-all duration-300 hover:border-accent/50 hover:bg-surface-2 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground shadow-card transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-accent/50 hover:bg-surface-2 hover:shadow-elevate active:translate-y-0 active:scale-[0.98];
+  }
+
+  /* ----------------------------------------------------------------
+   * Loreon visual language — reusable surfaces & cards
+   * ---------------------------------------------------------------- */
+  .research-surface {
+    @apply rounded-2xl border border-border bg-surface shadow-card;
+  }
+  /* Discovery card: research surface + premium hover elevation + glow. */
+  .discovery-card {
+    @apply rounded-2xl border border-border bg-surface shadow-card transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-elevate;
+  }
+  /* Interactive chip: soft cyan focus response. */
+  .chip-interactive {
+    @apply transition-all duration-200 ease-premium hover:border-accent/40 hover:text-foreground;
   }
 }
 
@@ -282,6 +297,27 @@
   .glow-accent {
     box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.18),
       0 18px 48px -16px rgba(0, 180, 235, 0.4);
+  }
+
+  /* Soft intelligence gradient wash for surfaces. */
+  .intelligence-gradient {
+    background-image: linear-gradient(
+      135deg,
+      rgba(0, 212, 255, 0.1),
+      rgba(79, 140, 255, 0.05) 55%,
+      transparent
+    );
+  }
+
+  /* Signal divider — a thin cyan-cored hairline between sections. */
+  .signal-divider {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 212, 255, 0.28),
+      transparent
+    );
   }
 }
 

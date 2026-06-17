@@ -42,7 +42,7 @@ export function DocArticle({
         {prev ? (
           <Link
             href={prev.href}
-            className="group rounded-xl border border-border/70 bg-surface p-4 shadow-card transition-all duration-200 hover:border-accent/40 hover:bg-surface-2"
+            className="group rounded-xl border border-border/70 bg-surface p-4 shadow-card transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-accent/40 hover:bg-surface-2"
           >
             <span className="text-[11px] uppercase tracking-wide text-muted">Previous</span>
             <span className="mt-1 flex items-center gap-2 text-sm font-medium text-foreground">

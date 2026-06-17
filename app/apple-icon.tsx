@@ -1,8 +1,8 @@
 import { ImageResponse } from "next/og";
 
 /**
- * Apple touch icon — the LoreonLabs signal-flow mark on a premium navy tile,
- * rendered to PNG (SVG is unsupported for apple-icon).
+ * Apple touch icon — the LoreonLabs converging-signals mark on a premium navy
+ * tile, rendered to PNG (SVG is unsupported for apple-icon).
  */
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
@@ -20,18 +20,36 @@ export default function AppleIcon() {
           background: "#07101F",
         }}
       >
-        <svg width="120" height="103" viewBox="0 0 28 24" fill="none">
-          <path
-            d="M3.5 18.5 L11 13 L17.5 15 L24 5.5"
-            stroke="#25C9FF"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <circle cx="3.5" cy="18.5" r="2" fill="#25C9FF" />
-          <circle cx="11" cy="13" r="2" fill="#4FD8FF" />
-          <circle cx="17.5" cy="15" r="2" fill="#25C9FF" />
-          <circle cx="24" cy="5.5" r="2.9" fill="#00D4FF" />
+        <svg width="112" height="112" viewBox="0 0 32 32" fill="none">
+          <defs>
+            <linearGradient
+              id="s"
+              x1="6"
+              y1="6"
+              x2="26"
+              y2="26"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#3DD8FF" />
+              <stop offset="1" stopColor="#4F8CFF" />
+            </linearGradient>
+            <radialGradient id="c" cx="0.5" cy="0.5" r="0.5">
+              <stop stopColor="#5FE0FF" />
+              <stop offset="1" stopColor="#00C4F0" />
+            </radialGradient>
+          </defs>
+          <g stroke="url(#s)" strokeWidth="2.1" strokeLinecap="round" fill="none">
+            <path d="M16 3.4 C 12.4 7.6, 12.9 12.2, 15.7 14.2" />
+            <path
+              d="M16 3.4 C 12.4 7.6, 12.9 12.2, 15.7 14.2"
+              transform="rotate(120 16 16)"
+            />
+            <path
+              d="M16 3.4 C 12.4 7.6, 12.9 12.2, 15.7 14.2"
+              transform="rotate(240 16 16)"
+            />
+          </g>
+          <circle cx="16" cy="16" r="2.7" fill="url(#c)" />
         </svg>
       </div>
     ),

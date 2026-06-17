@@ -40,6 +40,9 @@ const config: Config = {
       maxWidth: {
         container: "1200px",
       },
+      transitionTimingFunction: {
+        premium: "cubic-bezier(0.21, 0.47, 0.32, 0.98)",
+      },
       boxShadow: {
         // Soft, premium light-theme shadows.
         glow: "0 12px 32px -10px rgba(0, 180, 235, 0.5)",

@@ -30,7 +30,7 @@ export default async function OverviewPage() {
       ) : (
         <>
           <section className="page-section grid gap-5 lg:grid-cols-2">
-            <div className="rounded-2xl border border-border/70 bg-surface shadow-card p-4">
+            <div className="research-surface p-4">
               <SectionHeader title="Trending markets" actions={<Link href="/markets" className="text-sm font-medium text-accent-ink hover:underline">Markets</Link>} />
               <div className="space-y-0.5">
                 {data.gainers.slice(0, 6).map((a) => (
@@ -45,7 +45,7 @@ export default async function OverviewPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border/70 bg-surface shadow-card p-4">
+            <div className="research-surface p-4">
               <SectionHeader title="Accelerating narratives" actions={<Link href="/research" className="text-sm font-medium text-accent-ink hover:underline">Research</Link>} />
               <div className="space-y-0.5">
                 {data.narratives.slice(0, 6).map((n) => (

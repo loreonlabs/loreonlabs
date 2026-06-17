@@ -1,8 +1,8 @@
 /**
- * LoreonLabs mark — an abstract "signal flow" glyph (no container, no frame).
- * A discovery path ascending through intelligence nodes to a bright signal,
- * reading as information networks / discovery. Minimal and geometric in the
- * spirit of Stripe / Linear / Vercel, but unique to Loreon. Aspect ~7:6.
+ * LoreonLabs mark — "signals converge → intelligence emerges."
+ * Three signal paths spiral inward from 120°-symmetry and resolve into a
+ * single bright insight point. No container, no text, no chart motifs —
+ * geometric, minimal, and built to read from favicon up to social avatar.
  */
 export function LogoMark({
   height = 24,
@@ -13,12 +13,11 @@ export function LogoMark({
   className?: string;
   title?: string;
 }) {
-  const width = Math.round((height * 28) / 24);
   return (
     <svg
-      width={width}
+      width={height}
       height={height}
-      viewBox="0 0 28 24"
+      viewBox="0 0 32 32"
       fill="none"
       role="img"
       aria-label={title}
@@ -26,31 +25,40 @@ export function LogoMark({
     >
       <defs>
         <linearGradient
-          id="loreon-flow"
-          x1="3"
-          y1="20"
-          x2="25"
-          y2="5"
+          id="loreon-sig"
+          x1="5"
+          y1="5"
+          x2="27"
+          y2="27"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#00B4D8" />
+          <stop stopColor="#25C9FF" />
           <stop offset="1" stopColor="#4F8CFF" />
         </linearGradient>
+        <radialGradient id="loreon-core" cx="0.5" cy="0.5" r="0.5">
+          <stop stopColor="#25C9FF" />
+          <stop offset="1" stopColor="#00B4D8" />
+        </radialGradient>
       </defs>
-      {/* discovery path */}
-      <path
-        d="M3.5 18.5 L11 13 L17.5 15 L24 5.5"
-        stroke="url(#loreon-flow)"
-        strokeWidth="2.2"
+      {/* three converging signal paths (120° rotational symmetry) */}
+      <g
+        stroke="url(#loreon-sig)"
+        strokeWidth="2.1"
         strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* intelligence nodes */}
-      <circle cx="3.5" cy="18.5" r="2" fill="#0E7490" />
-      <circle cx="11" cy="13" r="2" fill="#00B4D8" />
-      <circle cx="17.5" cy="15" r="2" fill="#25C9FF" />
-      {/* signal node — brightest */}
-      <circle cx="24" cy="5.5" r="2.9" fill="#00D4FF" />
+        fill="none"
+      >
+        <path d="M16 3.4 C 12.4 7.6, 12.9 12.2, 15.7 14.2" />
+        <path
+          d="M16 3.4 C 12.4 7.6, 12.9 12.2, 15.7 14.2"
+          transform="rotate(120 16 16)"
+        />
+        <path
+          d="M16 3.4 C 12.4 7.6, 12.9 12.2, 15.7 14.2"
+          transform="rotate(240 16 16)"
+        />
+      </g>
+      {/* insight point */}
+      <circle cx="16" cy="16" r="2.7" fill="url(#loreon-core)" />
     </svg>
   );
 }

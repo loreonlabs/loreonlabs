@@ -16,6 +16,7 @@ const footerLinks = [
 export function Footer() {
   return (
     <footer className="relative border-t border-border/70">
+      <div className="signal-divider absolute inset-x-0 top-0" />
       <div className="container-page py-12">
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <div className="max-w-xs">
