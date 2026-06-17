@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 
 export function FinalCta() {
   return (
-    <section className="relative py-24 sm:py-32">
+    <section className="relative py-16 sm:py-24 lg:py-32">
       <div className="container-page">
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl border border-border bg-background-tertiary px-6 py-16 text-center shadow-card sm:px-12 sm:py-20">

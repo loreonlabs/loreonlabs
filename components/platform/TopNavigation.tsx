@@ -24,15 +24,15 @@ export function TopNavigation({ section, links, onMenuClick }: TopNavigationProp
           type="button"
           onClick={onMenuClick}
           aria-label="Open navigation"
-          className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-surface text-foreground lg:hidden"
+          className="grid h-10 w-10 place-items-center rounded-lg border border-border bg-surface text-foreground lg:hidden"
         >
           <MenuIcon width={18} height={18} />
         </button>
 
         <div className="flex shrink-0 items-center gap-2.5">
-          <Logo size={34} withWordmark={false} />
+          <Logo size={36} withWordmark={false} />
           <div className="hidden items-center gap-2 sm:flex">
-            <span className="font-display text-sm font-semibold tracking-tight text-foreground">
+            <span className="font-display text-[15px] font-semibold tracking-tight text-foreground">
               Loreon<span className="text-muted">Labs</span>
             </span>
             <span className="hidden rounded-md border border-border/70 bg-surface px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted md:inline">

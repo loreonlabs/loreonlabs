@@ -96,7 +96,7 @@ export function Navbar() {
               : "border-transparent bg-transparent"
           }`}
         >
-          <Logo size={38} />
+          <Logo size={36} />
 
           <nav className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => renderItem(link, DESKTOP_ITEM))}

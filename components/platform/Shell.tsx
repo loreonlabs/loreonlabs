@@ -46,7 +46,7 @@ export function Shell({ section, groups, links, children }: ShellProps) {
             />
             <div className="absolute left-0 top-0 h-full w-72 max-w-[80%] overflow-y-auto border-r border-border bg-background-secondary">
               <div className="flex h-14 items-center justify-between border-b border-border/70 px-4">
-                <Logo size={34} />
+                <Logo size={36} />
                 <button
                   type="button"
                   aria-label="Close navigation"

@@ -22,7 +22,7 @@ const coverage = ["Crypto", "AI", "Base", "Ethereum", "Solana", "DeFi", "Stablec
 
 export function Hero({ stats }: { stats: Stat[] }) {
   return (
-    <section className="relative overflow-hidden pt-36 sm:pt-40 lg:pt-44">
+    <section className="relative overflow-hidden pt-28 sm:pt-36 lg:pt-44">
       <div className="container-page">
         <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] lg:gap-10">
           {/* Copy */}
@@ -42,7 +42,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-7 text-balance text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.5rem]"
+              className="mt-7 text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl sm:leading-[1.02] lg:text-[4.5rem]"
             >
               <span className="text-gradient">Discover what gains attention</span>{" "}
               <span className="text-gradient-accent">before consensus.</span>

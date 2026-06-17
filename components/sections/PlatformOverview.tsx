@@ -22,7 +22,7 @@ const pillars = [
 
 export function PlatformOverview() {
   return (
-    <section className="relative py-24 sm:py-28">
+    <section className="relative py-16 sm:py-24 lg:py-28">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute right-[6%] top-16 h-72 w-72 rounded-full bg-accent/[0.06] blur-[120px]"
