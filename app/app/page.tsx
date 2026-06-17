@@ -2,6 +2,8 @@ import Link from "next/link";
 import { PageHeader, SectionHeader, TrendPill } from "@/components/ui";
 import { IntelFallback } from "@/components/ui/States";
 import { getDiscovery } from "@/lib/intel/discovery";
+import { listBuilders } from "@/lib/intel/builders";
+import { listEcosystems } from "@/lib/intel/ecosystems";
 import { formatUsd, formatPct, formatCompact, timeAgo } from "@/lib/format";
 import { StarIcon, ExternalIcon } from "@/components/icons";
 
@@ -13,7 +15,11 @@ function trend(c: number): "up" | "down" | "flat" {
 }
 
 export default async function OverviewPage() {
-  const { status, data, error } = await getDiscovery();
+  const [{ status, data, error }, buildersRes, ecosystemsRes] = await Promise.all([
+    getDiscovery(),
+    listBuilders({}),
+    listEcosystems(),
+  ]);
 
   return (
     <>
@@ -74,6 +80,42 @@ export default async function OverviewPage() {
               ))}
             </div>
           </section>
+
+          {ecosystemsRes.status === "ok" && ecosystemsRes.data.length > 0 && (
+            <section className="page-section">
+              <SectionHeader title="Ecosystem momentum" actions={<Link href="/ecosystems" className="text-sm font-medium text-accent-ink hover:underline">Ecosystems</Link>} />
+              <div className="card-grid">
+                {ecosystemsRes.data.slice(0, 6).map((e) => (
+                  <Link key={e.id} href={`/ecosystems/${e.id}`} className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface shadow-card p-4 transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:border-accent/40 hover:bg-surface-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="truncate text-sm font-semibold text-foreground">{e.name}</span>
+                      {e.recentNews > 0 && <TrendPill trend="up" value={`+${e.recentNews}`} />}
+                    </div>
+                    <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{e.blurb}</p>
+                    <div className="mt-auto pt-3 text-[11px] text-muted">{e.newsCount} signals tracked</div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {buildersRes.status === "ok" && buildersRes.data.length > 0 && (
+            <section className="page-section">
+              <SectionHeader title="Builder activity" actions={<Link href="/builders" className="text-sm font-medium text-accent-ink hover:underline">Builders</Link>} />
+              <div className="card-grid">
+                {buildersRes.data.slice(0, 6).map((b) => (
+                  <Link key={b.login} href={`/builders/${b.login}`} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface p-3.5 shadow-card transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:border-accent/40">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={b.avatarUrl} alt="" width={36} height={36} className="h-9 w-9 rounded-full" />
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium text-foreground">{b.name ?? b.login}</div>
+                      <div className="text-[11px] text-muted">{formatCompact(b.contributions)} {b.featured ? "followers" : "commits"}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section className="page-section">
             <SectionHeader title="Latest news" actions={<Link href="/research" className="text-sm font-medium text-accent-ink hover:underline">Research</Link>} />

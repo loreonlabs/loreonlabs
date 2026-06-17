@@ -1,50 +1,84 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import type { IntelStatus } from "@/lib/intel/result";
+import { RadarIcon, PulseIcon, ShieldCheck } from "@/components/icons";
 
-/** Empty / error / disabled state blocks. No blank screens, ever. */
+/** Premium empty / error / disabled state blocks. No blank screens, ever. */
 
-function Frame({ children }: { children: ReactNode }) {
+type Action = { label: string; href: string };
+
+function Frame({
+  icon,
+  title,
+  message,
+  action,
+}: {
+  icon: ReactNode;
+  title: string;
+  message: string;
+  action?: Action;
+}) {
   return (
-    <div className="rounded-2xl border border-dashed border-border/70 bg-surface shadow-card p-10 text-center">
-      {children}
+    <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-surface px-6 py-12 text-center shadow-card">
+      <span className="grid h-11 w-11 place-items-center rounded-xl border border-accent/20 bg-accent/10 text-accent-ink">
+        {icon}
+      </span>
+      <p className="mt-4 text-sm font-semibold text-foreground">{title}</p>
+      <p className="mx-auto mt-1.5 max-w-md text-[13px] leading-relaxed text-muted">
+        {message}
+      </p>
+      {action && (
+        <Link
+          href={action.href}
+          className="mt-5 inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3.5 py-2 text-[13px] font-medium text-foreground shadow-card transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:border-accent/40 hover:bg-surface-2"
+        >
+          {action.label}
+        </Link>
+      )}
     </div>
   );
 }
 
 export function EmptyState({
-  title = "Nothing here yet",
-  message = "No results matched. Try again shortly — data refreshes continuously.",
+  title = "No matching intelligence found yet.",
+  message = "Loreon is still monitoring this signal — check back shortly as new coverage lands.",
+  icon,
+  action,
 }: {
   title?: string;
   message?: string;
+  icon?: ReactNode;
+  action?: Action;
 }) {
   return (
-    <Frame>
-      <p className="text-sm font-medium text-foreground">{title}</p>
-      <p className="mx-auto mt-1.5 max-w-md text-[13px] text-muted">{message}</p>
-    </Frame>
+    <Frame
+      icon={icon ?? <RadarIcon width={20} height={20} />}
+      title={title}
+      message={message}
+      action={action}
+    />
   );
 }
 
 export function ErrorState({ message }: { message?: string }) {
   return (
-    <Frame>
-      <p className="text-sm font-medium text-foreground">Couldn&apos;t load live data</p>
-      <p className="mx-auto mt-1.5 max-w-md text-[13px] text-muted">
-        {message ?? "The upstream source is temporarily unavailable. Please retry."}
-      </p>
-    </Frame>
+    <Frame
+      icon={<ShieldCheck width={20} height={20} />}
+      title="Couldn't load live data"
+      message={
+        message ?? "The upstream source is temporarily unavailable. Please retry in a moment."
+      }
+    />
   );
 }
 
 export function DisabledState({ service }: { service: string }) {
   return (
-    <Frame>
-      <p className="text-sm font-medium text-foreground">{service} is not configured</p>
-      <p className="mx-auto mt-1.5 max-w-md text-[13px] text-muted">
-        Add the API key to enable this source. No placeholder data is shown.
-      </p>
-    </Frame>
+    <Frame
+      icon={<PulseIcon width={20} height={20} />}
+      title={`${service} is not configured`}
+      message="No verified sources are available for this topic yet — add the provider key to enable it. No placeholder data is shown."
+    />
   );
 }
 
@@ -61,10 +95,12 @@ export function IntelFallback({
   status: IntelStatus;
   error?: string;
   service?: string;
-  empty?: { title?: string; message?: string };
+  empty?: { title?: string; message?: string; action?: Action };
 }) {
   if (status === "ok") return null;
   if (status === "disabled") return <DisabledState service={service ?? "This source"} />;
   if (status === "error") return <ErrorState message={error} />;
-  return <EmptyState title={empty?.title} message={empty?.message} />;
+  return (
+    <EmptyState title={empty?.title} message={empty?.message} action={empty?.action} />
+  );
 }

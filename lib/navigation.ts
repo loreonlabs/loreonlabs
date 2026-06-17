@@ -50,6 +50,12 @@ export const appNav: NavGroup[] = [
         icon: "pulse",
       },
       {
+        label: "Narratives",
+        href: "/narratives",
+        description: "Attention momentum across themes",
+        icon: "spark",
+      },
+      {
         label: "Ecosystems",
         href: "/ecosystems",
         description: "Explore ecosystems",
@@ -60,6 +66,23 @@ export const appNav: NavGroup[] = [
         href: "/launchpads",
         description: "The launchpad layer",
         icon: "spark",
+      },
+    ],
+  },
+  {
+    label: "Discover",
+    items: [
+      {
+        label: "Search",
+        href: "/search",
+        description: "Search across all intelligence",
+        icon: "search",
+      },
+      {
+        label: "Sources",
+        href: "/sources",
+        description: "Where Loreon gets its data",
+        icon: "shield",
       },
     ],
   },
