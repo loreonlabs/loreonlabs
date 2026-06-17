@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { MenuIcon } from "@/components/icons";
-import { CommandSearch } from "./CommandSearch";
 
 interface TopNavigationProps {
   /** Section label shown next to the logo, e.g. "Platform" or "Docs". */
@@ -42,11 +41,7 @@ export function TopNavigation({ section, links, onMenuClick }: TopNavigationProp
           </div>
         </div>
 
-        <div className="flex min-w-0 flex-1 justify-center px-2">
-          <CommandSearch />
-        </div>
-
-        <nav className="flex shrink-0 items-center gap-1">
+        <nav className="ml-auto flex shrink-0 items-center gap-1">
           {links.map((link) => {
             // Cross-zone links are absolute (different subdomain) → full nav.
             const isExternal = /^https?:\/\//.test(link.href);

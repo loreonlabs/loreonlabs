@@ -63,16 +63,6 @@ export const appNav: NavGroup[] = [
       },
     ],
   },
-  {
-    items: [
-      {
-        label: "Search",
-        href: "/search",
-        description: "Search everything",
-        icon: "search",
-      },
-    ],
-  },
 ];
 
 /**
