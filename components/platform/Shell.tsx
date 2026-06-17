@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Sidebar } from "./Sidebar";
 import { TopNavigation } from "./TopNavigation";
 import { Logo } from "@/components/Logo";
+import { SignalField } from "@/components/SignalField";
 import { CloseIcon } from "@/components/icons";
 import type { NavGroup } from "@/lib/navigation";
 
@@ -25,6 +26,7 @@ export function Shell({ section, groups, links, children }: ShellProps) {
 
   return (
     <div className="min-h-screen">
+      <SignalField subtle />
       <TopNavigation section={section} links={links} onMenuClick={() => setOpen(true)} />
 
       <div className="mx-auto flex w-full max-w-[1400px]">

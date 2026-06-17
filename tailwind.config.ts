@@ -65,6 +65,18 @@ const config: Config = {
           "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1)" },
           "50%": { transform: "translate3d(2%, -2%, 0) scale(1.06)" },
         },
+        "mesh-drift-2": {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1.04)" },
+          "50%": { transform: "translate3d(-3%, 2%, 0) scale(1)" },
+        },
+        "signal-sweep": {
+          "0%": { transform: "translate3d(-12%, 0, 0)" },
+          "100%": { transform: "translate3d(12%, 0, 0)" },
+        },
+        wave: {
+          "0%, 100%": { transform: "translate3d(0, 0, 0)" },
+          "50%": { transform: "translate3d(-1.5%, -2.2%, 0)" },
+        },
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
@@ -81,6 +93,9 @@ const config: Config = {
         float: "float 7s ease-in-out infinite",
         "pulse-soft": "pulse-soft 4s ease-in-out infinite",
         "mesh-drift": "mesh-drift 18s ease-in-out infinite",
+        "mesh-drift-2": "mesh-drift-2 22s ease-in-out infinite",
+        "signal-sweep": "signal-sweep 20s ease-in-out infinite alternate",
+        wave: "wave 16s ease-in-out infinite",
         "spin-slow": "spin-slow 24s linear infinite",
         marquee: "marquee 38s linear infinite",
       },

@@ -32,7 +32,7 @@ const steps = [
 
 export function MethodologyPreview() {
   return (
-    <section id="methodology" className="relative scroll-mt-24 py-24 sm:py-28">
+    <section id="methodology" className="relative scroll-mt-24 border-y border-border/60 bg-background-secondary/80 py-24 backdrop-blur-sm sm:py-28">
       <div className="container-page">
         <SectionHeading
           eyebrow="Methodology"
