@@ -13,7 +13,7 @@ function Chip({ href, label, icon }: { href: string; label: string; icon?: React
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-surface/60 px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-foreground"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-surface px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-foreground"
     >
       {icon}
       {label}
@@ -53,7 +53,7 @@ export function EnrichmentSection({
           <div className="mb-2 flex items-center justify-between">
             <p className="t-meta uppercase tracking-wide">Latest updates</p>
             {updatesUrl && (
-              <a href={updatesUrl} target="_blank" rel="noopener noreferrer" className="text-[11px] font-medium text-accent hover:underline">
+              <a href={updatesUrl} target="_blank" rel="noopener noreferrer" className="text-[11px] font-medium text-accent-ink hover:underline">
                 View all
               </a>
             )}

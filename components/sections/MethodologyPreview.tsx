@@ -45,9 +45,9 @@ export function MethodologyPreview() {
             const Icon = s.icon;
             return (
               <StaggerItem key={s.step}>
-                <div className="hairline-top relative h-full rounded-2xl border border-border/70 bg-surface/60 p-5">
+                <div className="hairline-top relative h-full rounded-2xl border border-border/70 bg-surface p-5">
                   <div className="flex items-center justify-between">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-background/60 text-accent">
+                    <span className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-background/60 text-accent-ink">
                       <Icon width={18} height={18} />
                     </span>
                     <span className="font-mono text-xs text-muted/70">{s.step}</span>

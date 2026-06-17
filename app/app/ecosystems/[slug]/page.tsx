@@ -42,10 +42,10 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
 
       {launchpads.length > 0 && (
         <section className="page-section">
-          <SectionHeader title="Launchpads" actions={<Link href={`/launchpads?ecosystem=${slug}`} className="text-sm font-medium text-accent hover:underline">All</Link>} />
+          <SectionHeader title="Launchpads" actions={<Link href={`/launchpads?ecosystem=${slug}`} className="text-sm font-medium text-accent-ink hover:underline">All</Link>} />
           <div className="card-grid">
             {launchpads.map((l) => (
-              <Link key={l.id} href={`/launchpads/${l.id}`} className="hairline-top group flex items-center gap-3 rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface">
+              <Link key={l.id} href={`/launchpads/${l.id}`} className="hairline-top group flex items-center gap-3 rounded-2xl border border-border/70 bg-surface shadow-card p-4 transition-colors hover:border-accent/40 hover:bg-surface-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={faviconUrl(l.website)} alt="" width={32} height={32} className="h-8 w-8 rounded-lg bg-background/60" />
                 <div className="min-w-0">
@@ -60,10 +60,10 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
 
       {narratives.length > 0 && (
         <section className="page-section">
-          <SectionHeader title="Narratives" actions={<Link href="/research" className="text-sm font-medium text-accent hover:underline">Research</Link>} />
+          <SectionHeader title="Narratives" actions={<Link href="/research" className="text-sm font-medium text-accent-ink hover:underline">Research</Link>} />
           <div className="card-grid">
             {narratives.map((n) => (
-              <Link key={n.id} href={`/research/${n.id}`} className="hairline-top group h-full rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface">
+              <Link key={n.id} href={`/research/${n.id}`} className="hairline-top group h-full rounded-2xl border border-border/70 bg-surface shadow-card p-4 transition-colors hover:border-accent/40 hover:bg-surface-2">
                 <div className="text-sm font-semibold text-foreground">{n.name}</div>
                 <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{n.summary}</p>
               </Link>
@@ -77,11 +77,11 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
           <SectionHeader title="Top projects" />
           <div className="card-grid">
             {projects.map((p) => (
-              <Link key={p.fullName} href={`/projects/${p.slug}`} className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface">
+              <Link key={p.fullName} href={`/projects/${p.slug}`} className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface shadow-card p-4 transition-colors hover:border-accent/40 hover:bg-surface-2">
                 <div className="truncate text-sm font-semibold text-foreground">{p.name}</div>
                 <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{p.description || "No description."}</p>
                 <div className="mt-auto flex items-center justify-between pt-3 text-[11px] text-muted">
-                  <span className="inline-flex items-center gap-1"><StarIcon width={12} height={12} className="text-accent" />{formatCompact(p.stars)}</span>
+                  <span className="inline-flex items-center gap-1"><StarIcon width={12} height={12} className="text-accent-ink" />{formatCompact(p.stars)}</span>
                   <Badge tone="muted">{stageLabels[p.stage]}</Badge>
                 </div>
               </Link>
@@ -92,10 +92,10 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
 
       {builders.length > 0 && (
         <section className="page-section">
-          <SectionHeader title="Top builders" actions={<Link href={`/builders?ecosystem=${slug}`} className="text-sm font-medium text-accent hover:underline">All builders</Link>} />
+          <SectionHeader title="Top builders" actions={<Link href={`/builders?ecosystem=${slug}`} className="text-sm font-medium text-accent-ink hover:underline">All builders</Link>} />
           <div className="card-grid">
             {builders.map((b) => (
-              <Link key={b.login} href={`/builders/${b.login}`} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface/60 p-3.5 transition-colors hover:border-accent/40">
+              <Link key={b.login} href={`/builders/${b.login}`} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface shadow-card p-3.5 transition-colors hover:border-accent/40">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={b.avatarUrl} alt="" width={36} height={36} className="h-9 w-9 rounded-full" />
                 <div className="min-w-0 flex-1">
@@ -114,15 +114,15 @@ export default async function EcosystemDetailPage({ params }: { params: Promise<
           <ul className="space-y-2">
             {news.map((a) => (
               <li key={a.url}>
-                <a href={a.url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 p-3.5 transition-colors hover:border-accent/40">
+                <a href={a.url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-xl border border-border/60 bg-surface p-3.5 transition-colors hover:border-accent/40">
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[13px] font-medium text-foreground">{a.title}</div>
                     <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted">
-                      <span className="text-accent">{a.source}</span>
+                      <span className="text-accent-ink">{a.source}</span>
                       {a.publishedAt && <span>{timeAgo(a.publishedAt)}</span>}
                     </div>
                   </div>
-                  <ExternalIcon width={15} height={15} className="shrink-0 text-muted group-hover:text-accent" />
+                  <ExternalIcon width={15} height={15} className="shrink-0 text-muted group-hover:text-accent-ink" />
                 </a>
               </li>
             ))}

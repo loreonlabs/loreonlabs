@@ -8,12 +8,12 @@ import { site } from "@/lib/site";
 const ease = [0.21, 0.47, 0.32, 0.98] as const;
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.7, delay: 0.1 + i * 0.1, ease },
+    transition: { duration: 0.3, delay: 0.06 + i * 0.06, ease },
   }),
 };
 
@@ -23,7 +23,7 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden pt-36 sm:pt-40 lg:pt-44">
       <div className="container-page">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
+        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] lg:gap-10">
           {/* Copy */}
           <div className="text-center lg:text-left">
             <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible">
@@ -41,7 +41,7 @@ export function Hero() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl"
+              className="mt-7 text-balance text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.5rem]"
             >
               <span className="text-gradient">Discover what gains attention</span>{" "}
               <span className="text-gradient-accent">before consensus.</span>
@@ -52,7 +52,7 @@ export function Hero() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted sm:text-lg lg:mx-0"
+              className="mx-auto mt-7 max-w-xl text-pretty text-lg leading-relaxed text-body sm:text-xl lg:mx-0"
             >
               LoreonLabs tracks emerging narratives, founders, projects, and market
               signals across crypto, AI, and technology — surfacing what matters
@@ -67,7 +67,7 @@ export function Hero() {
               className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start"
             >
               <a href={site.appUrl} className="btn-primary w-full sm:w-auto">
-                Open Platform
+                Open App
                 <ArrowRight width={16} height={16} />
               </a>
               <a href={site.docsUrl} className="btn-secondary w-full sm:w-auto">
@@ -89,7 +89,7 @@ export function Hero() {
                 {coverage.map((c) => (
                   <span
                     key={c}
-                    className="rounded-full border border-border/60 bg-surface/40 px-3 py-1 text-xs text-muted"
+                    className="rounded-full border border-border/60 bg-surface px-3 py-1 text-xs text-muted"
                   >
                     {c}
                   </span>
@@ -98,12 +98,12 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Abstract visual */}
+          {/* Intelligence visual — weighted to the right */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.4, ease }}
-            className="relative"
+            transition={{ duration: 0.3, delay: 0.12, ease }}
+            className="relative lg:-mr-6 xl:-mr-12"
           >
             <HeroVisual />
           </motion.div>

@@ -60,7 +60,7 @@ export function FullSearch() {
 
   return (
     <div>
-      <div className="flex items-center gap-3 rounded-xl border border-border bg-surface/60 px-4 py-3 focus-within:border-accent/50">
+      <div className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 focus-within:border-accent/50">
         <SearchIcon width={18} height={18} className="shrink-0 text-muted" />
         <input
           value={query}
@@ -80,7 +80,7 @@ export function FullSearch() {
                 key={s}
                 type="button"
                 onClick={() => setQuery(s)}
-                className="rounded-full border border-border/70 bg-surface/40 px-3 py-1 text-xs text-muted transition-colors hover:border-accent/40 hover:text-foreground"
+                className="rounded-full border border-border/70 bg-surface px-3 py-1 text-xs text-muted transition-colors hover:border-accent/40 hover:text-foreground"
               >
                 {s}
               </button>
@@ -90,11 +90,11 @@ export function FullSearch() {
       ) : (
         <div className="mt-6 space-y-2">
           {loading && results.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-border/70 bg-surface/30 p-8 text-center text-sm text-muted">
+            <p className="rounded-xl border border-dashed border-border/70 bg-surface p-8 text-center text-sm text-muted">
               Searching live sources…
             </p>
           ) : results.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-border/70 bg-surface/30 p-8 text-center text-sm text-muted">
+            <p className="rounded-xl border border-dashed border-border/70 bg-surface p-8 text-center text-sm text-muted">
               No results for “{query}”.
             </p>
           ) : (
@@ -102,13 +102,13 @@ export function FullSearch() {
               <Link
                 key={r.id}
                 href={r.href}
-                className="group flex items-center gap-4 rounded-xl border border-border/70 bg-surface/50 p-4 transition-colors hover:border-accent/40 hover:bg-surface"
+                className="group flex items-center gap-4 rounded-xl border border-border/70 bg-surface p-4 transition-colors hover:border-accent/40 hover:bg-surface-2"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 {r.image ? (
                   <img src={r.image} alt="" width={28} height={28} className="h-7 w-7 rounded-full" />
                 ) : (
-                  <span className="grid h-7 w-7 place-items-center rounded bg-accent/10 text-[11px] font-semibold text-accent">
+                  <span className="grid h-7 w-7 place-items-center rounded bg-accent/10 text-[11px] font-semibold text-accent-ink">
                     {r.title.slice(0, 1).toUpperCase()}
                   </span>
                 )}

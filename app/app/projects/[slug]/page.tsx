@@ -105,11 +105,11 @@ export default async function ProjectDetailPage({
                     href={c.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block rounded-lg border border-border/60 bg-surface/40 p-3 transition-colors hover:border-accent/40"
+                    className="block rounded-lg border border-border/60 bg-surface p-3 transition-colors hover:border-accent/40"
                   >
                     <div className="truncate text-[13px] text-foreground">{c.message}</div>
                     <div className="mt-1 flex items-center gap-2 text-[11px] text-muted">
-                      <span className="font-mono text-accent">{c.sha}</span>
+                      <span className="font-mono text-accent-ink">{c.sha}</span>
                       <span>{c.author}</span>
                       <span>{timeAgo(c.date)}</span>
                     </div>
@@ -130,7 +130,7 @@ export default async function ProjectDetailPage({
                 <Link
                   key={c.login}
                   href={`/builders/${c.login}`}
-                  className="flex items-center gap-3 rounded-lg border border-border/60 bg-surface/40 p-2.5 transition-colors hover:border-accent/40"
+                  className="flex items-center gap-3 rounded-lg border border-border/60 bg-surface p-2.5 transition-colors hover:border-accent/40"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={c.avatarUrl} alt="" width={28} height={28} className="h-7 w-7 rounded-full" />

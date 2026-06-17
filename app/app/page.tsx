@@ -30,11 +30,11 @@ export default async function OverviewPage() {
       ) : (
         <>
           <section className="page-section grid gap-5 lg:grid-cols-2">
-            <div className="rounded-2xl border border-border/70 bg-surface/50 p-4">
-              <SectionHeader title="Trending markets" actions={<Link href="/markets" className="text-sm font-medium text-accent hover:underline">Markets</Link>} />
+            <div className="rounded-2xl border border-border/70 bg-surface shadow-card p-4">
+              <SectionHeader title="Trending markets" actions={<Link href="/markets" className="text-sm font-medium text-accent-ink hover:underline">Markets</Link>} />
               <div className="space-y-0.5">
                 {data.gainers.slice(0, 6).map((a) => (
-                  <Link key={a.id} href={`/markets/${a.id}`} className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-surface">
+                  <Link key={a.id} href={`/markets/${a.id}`} className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-surface-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={a.image} alt="" width={20} height={20} className="h-5 w-5 rounded-full" />
                     <span className="min-w-0 flex-1 truncate text-sm text-foreground">{a.name}</span>
@@ -45,11 +45,11 @@ export default async function OverviewPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border/70 bg-surface/50 p-4">
-              <SectionHeader title="Accelerating narratives" actions={<Link href="/research" className="text-sm font-medium text-accent hover:underline">Research</Link>} />
+            <div className="rounded-2xl border border-border/70 bg-surface shadow-card p-4">
+              <SectionHeader title="Accelerating narratives" actions={<Link href="/research" className="text-sm font-medium text-accent-ink hover:underline">Research</Link>} />
               <div className="space-y-0.5">
                 {data.narratives.slice(0, 6).map((n) => (
-                  <Link key={n.id} href={`/research/${n.id}`} className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-surface">
+                  <Link key={n.id} href={`/research/${n.id}`} className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-surface-2">
                     <span className="min-w-0 flex-1 truncate text-sm text-foreground">{n.name}</span>
                     <span className="text-[11px] text-muted">{n.articleCount} articles</span>
                     {n.recentCount > 0 && <TrendPill trend="up" value={`+${n.recentCount}`} />}
@@ -60,14 +60,14 @@ export default async function OverviewPage() {
           </section>
 
           <section className="page-section">
-            <SectionHeader title="Fast-moving projects" actions={<Link href="/ecosystems" className="text-sm font-medium text-accent hover:underline">Ecosystems</Link>} />
+            <SectionHeader title="Fast-moving projects" actions={<Link href="/ecosystems" className="text-sm font-medium text-accent-ink hover:underline">Ecosystems</Link>} />
             <div className="card-grid">
               {data.projects.map((p) => (
-                <Link key={p.fullName} href={`/projects/${p.slug}`} className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40 hover:bg-surface">
+                <Link key={p.fullName} href={`/projects/${p.slug}`} className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface shadow-card p-4 transition-colors hover:border-accent/40 hover:bg-surface-2">
                   <div className="truncate text-sm font-semibold text-foreground">{p.name}</div>
                   <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{p.description || "No description."}</p>
                   <div className="mt-auto flex items-center justify-between pt-3 text-[11px] text-muted">
-                    <span className="inline-flex items-center gap-1"><StarIcon width={12} height={12} className="text-accent" />{formatCompact(p.stars)}</span>
+                    <span className="inline-flex items-center gap-1"><StarIcon width={12} height={12} className="text-accent-ink" />{formatCompact(p.stars)}</span>
                     <span>updated {timeAgo(p.pushedAt) || "recently"}</span>
                   </div>
                 </Link>
@@ -76,19 +76,19 @@ export default async function OverviewPage() {
           </section>
 
           <section className="page-section">
-            <SectionHeader title="Latest news" actions={<Link href="/research" className="text-sm font-medium text-accent hover:underline">Research</Link>} />
+            <SectionHeader title="Latest news" actions={<Link href="/research" className="text-sm font-medium text-accent-ink hover:underline">Research</Link>} />
             <ul className="space-y-2">
               {data.articles.map((a) => (
                 <li key={a.url}>
-                  <a href={a.url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 p-3.5 transition-colors hover:border-accent/40">
+                  <a href={a.url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-xl border border-border/60 bg-surface p-3.5 transition-colors hover:border-accent/40">
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-[13px] font-medium text-foreground">{a.title}</div>
                       <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted">
-                        <span className="text-accent">{a.source}</span>
+                        <span className="text-accent-ink">{a.source}</span>
                         {a.publishedAt && <span>{timeAgo(a.publishedAt)}</span>}
                       </div>
                     </div>
-                    <ExternalIcon width={15} height={15} className="shrink-0 text-muted group-hover:text-accent" />
+                    <ExternalIcon width={15} height={15} className="shrink-0 text-muted group-hover:text-accent-ink" />
                   </a>
                 </li>
               ))}

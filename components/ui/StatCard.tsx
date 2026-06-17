@@ -19,10 +19,10 @@ export function StatCard({
   icon,
 }: StatCardProps) {
   return (
-    <div className="hairline-top rounded-xl border border-border/70 bg-surface/60 p-4">
+    <div className="hairline-top rounded-xl border border-border/70 bg-surface p-4 shadow-card transition-colors duration-200 hover:border-accent/30">
       <div className="flex items-center justify-between">
         <span className="t-meta uppercase tracking-wide">{label}</span>
-        {icon && <span className="text-accent">{icon}</span>}
+        {icon && <span className="text-accent-ink">{icon}</span>}
       </div>
       <div className="mt-3 flex items-end gap-2">
         <span className="font-mono text-2xl font-semibold tracking-tight text-foreground">

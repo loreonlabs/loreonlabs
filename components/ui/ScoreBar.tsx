@@ -12,7 +12,7 @@ export function ScoreBar({ score, label = "attention", className = "" }: ScoreBa
     <div className={className}>
       <div className="mb-1 flex items-center justify-between">
         <span className="text-[10px] uppercase tracking-wide text-muted">{label}</span>
-        <span className="font-mono text-[11px] font-semibold text-accent">{clamped}</span>
+        <span className="font-mono text-[11px] font-semibold text-accent-ink">{clamped}</span>
       </div>
       <div
         className="h-1.5 w-full overflow-hidden rounded-full bg-border/60"

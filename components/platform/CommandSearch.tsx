@@ -141,7 +141,7 @@ export function CommandSearch() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="group inline-flex w-full max-w-xs items-center gap-2 rounded-lg border border-border bg-surface/50 px-3 py-1.5 text-sm text-muted transition-colors hover:border-accent/40"
+        className="group inline-flex w-full max-w-xs items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-muted transition-colors hover:border-accent/40"
       >
         <SearchIcon width={15} height={15} />
         <span className="flex-1 text-left">Search…</span>
@@ -248,7 +248,7 @@ export function CommandSearch() {
                             className="h-5 w-5 rounded-full"
                           />
                         ) : (
-                          <span className="grid h-5 w-5 place-items-center rounded bg-accent/10 text-[9px] font-semibold text-accent">
+                          <span className="grid h-5 w-5 place-items-center rounded bg-accent/10 text-[9px] font-semibold text-accent-ink">
                             {r.title.slice(0, 1).toUpperCase()}
                           </span>
                         )}

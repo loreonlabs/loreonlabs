@@ -42,11 +42,11 @@ export function DocArticle({
         {prev ? (
           <Link
             href={prev.href}
-            className="group rounded-xl border border-border/70 bg-surface/40 p-4 transition-colors hover:border-accent/40"
+            className="group rounded-xl border border-border/70 bg-surface p-4 shadow-card transition-all duration-200 hover:border-accent/40 hover:bg-surface-2"
           >
             <span className="text-[11px] uppercase tracking-wide text-muted">Previous</span>
             <span className="mt-1 flex items-center gap-2 text-sm font-medium text-foreground">
-              <ArrowRight width={14} height={14} className="rotate-180 text-accent" />
+              <ArrowRight width={14} height={14} className="rotate-180 text-accent-ink" />
               {prev.label}
             </span>
           </Link>
@@ -56,12 +56,12 @@ export function DocArticle({
         {next && (
           <Link
             href={next.href}
-            className="group rounded-xl border border-border/70 bg-surface/40 p-4 text-right transition-colors hover:border-accent/40 sm:col-start-2"
+            className="group rounded-xl border border-border/70 bg-surface p-4 text-right shadow-card transition-all duration-200 hover:border-accent/40 hover:bg-surface-2 sm:col-start-2"
           >
             <span className="text-[11px] uppercase tracking-wide text-muted">Next</span>
             <span className="mt-1 flex items-center justify-end gap-2 text-sm font-medium text-foreground">
               {next.label}
-              <ArrowRight width={14} height={14} className="text-accent" />
+              <ArrowRight width={14} height={14} className="text-accent-ink" />
             </span>
           </Link>
         )}

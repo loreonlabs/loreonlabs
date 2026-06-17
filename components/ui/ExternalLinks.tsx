@@ -39,7 +39,7 @@ export function ExternalLinks({ links }: { links: ExternalLinkSpec[] }) {
             href={l.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-surface/60 px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-foreground"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-surface px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-foreground"
           >
             <Icon width={14} height={14} />
             {l.label}

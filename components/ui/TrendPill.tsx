@@ -2,8 +2,8 @@ import type { Trend } from "@/lib/types";
 import { TrendUpIcon, TrendDownIcon } from "@/components/icons";
 
 const styles: Record<Trend, string> = {
-  up: "text-accent",
-  down: "text-rose-400",
+  up: "text-success-ink",
+  down: "text-negative-ink",
   flat: "text-muted",
 };
 

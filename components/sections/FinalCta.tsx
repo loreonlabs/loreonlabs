@@ -9,7 +9,7 @@ export function FinalCta() {
     <section className="relative py-24 sm:py-32">
       <div className="container-page">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-surface/50 px-6 py-16 text-center shadow-card sm:px-12 sm:py-20">
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-background-tertiary px-6 py-16 text-center shadow-card sm:px-12 sm:py-20">
             {/* ambient glow + grid */}
             <div className="pointer-events-none absolute inset-0 bg-grid opacity-40 mask-radial" />
             <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[640px] -translate-x-1/2 rounded-full bg-accent/15 blur-[120px]" />
@@ -31,7 +31,7 @@ export function FinalCta() {
 
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <a href={site.appUrl} className="btn-primary w-full sm:w-auto">
-                  Open Platform
+                  Open App
                   <ArrowRight width={16} height={16} />
                 </a>
                 <a href={site.docsUrl} className="btn-secondary w-full sm:w-auto">

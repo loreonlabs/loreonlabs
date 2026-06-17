@@ -20,7 +20,7 @@ function AssetRow({ a }: { a: MarketAsset }) {
   return (
     <Link
       href={`/markets/${a.id}`}
-      className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-surface"
+      className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-surface-2"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={a.image} alt="" width={22} height={22} className="h-[22px] w-[22px] rounded-full" />
@@ -38,7 +38,7 @@ function AssetRow({ a }: { a: MarketAsset }) {
 
 function Panel({ title, assets }: { title: string; assets: MarketAsset[] }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-surface/50 p-4">
+    <div className="rounded-2xl border border-border/70 bg-surface shadow-card p-4">
       <h2 className="t-section-title mb-2">{title}</h2>
       <div className="space-y-0.5">
         {assets.map((a) => (
@@ -79,7 +79,7 @@ export default async function MarketsPage() {
                     <Link
                       key={t.id}
                       href={`/markets/${t.id}`}
-                      className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface/60 px-3 py-1.5 text-sm text-muted transition-colors hover:border-accent/40 hover:text-foreground"
+                      className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface px-3 py-1.5 text-sm text-muted transition-colors hover:border-accent/40 hover:text-foreground"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={t.thumb} alt="" width={16} height={16} className="h-4 w-4 rounded-full" />
@@ -93,7 +93,7 @@ export default async function MarketsPage() {
 
             <div className="mt-5">
               <SectionHeader title="Top by market cap" />
-              <div className="overflow-hidden rounded-2xl border border-border/70 bg-surface/40">
+              <div className="overflow-hidden rounded-2xl border border-border/70 bg-surface shadow-card">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border/60 text-left text-[11px] uppercase tracking-wide text-muted">
@@ -106,10 +106,10 @@ export default async function MarketsPage() {
                   </thead>
                   <tbody>
                     {data.topByMarketCap.map((a) => (
-                      <tr key={a.id} className="border-b border-border/40 last:border-0 hover:bg-surface/60">
+                      <tr key={a.id} className="border-b border-border/40 last:border-0 hover:bg-surface-2">
                         <td className="px-4 py-3 font-mono text-muted">{a.rank || "—"}</td>
                         <td className="px-4 py-3">
-                          <Link href={`/markets/${a.id}`} className="flex items-center gap-2.5 font-medium text-foreground hover:text-accent">
+                          <Link href={`/markets/${a.id}`} className="flex items-center gap-2.5 font-medium text-foreground hover:text-accent-ink">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={a.image} alt="" width={20} height={20} className="h-5 w-5 rounded-full" />
                             {a.name}

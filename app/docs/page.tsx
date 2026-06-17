@@ -32,7 +32,7 @@ export default function DocsOverviewPage() {
                 title={item.label}
                 description={item.description}
                 leading={
-                  <span className="grid h-9 w-9 place-items-center rounded-lg border border-border/70 bg-background/60 text-accent">
+                  <span className="grid h-9 w-9 place-items-center rounded-lg border border-border/70 bg-background/60 text-accent-ink">
                     <Icon width={16} height={16} />
                   </span>
                 }
@@ -42,7 +42,7 @@ export default function DocsOverviewPage() {
                     <ArrowRight
                       width={14}
                       height={14}
-                      className="text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-accent"
+                      className="text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-accent-ink"
                     />
                   </>
                 }

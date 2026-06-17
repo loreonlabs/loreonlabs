@@ -30,6 +30,22 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Smooth-scroll in-page anchors without pushing a hash into the URL/history.
+  // Non-hash links (e.g. Docs subdomain) fall through to normal navigation.
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    setOpen(false);
+    if (href.startsWith("#")) {
+      const target = document.getElementById(href.slice(1));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   return (
     <motion.header
       initial={{ y: -24, opacity: 0 }}
@@ -52,6 +68,7 @@ export function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-foreground"
               >
                 {link.label}
@@ -64,7 +81,7 @@ export function Navbar() {
               href={site.appUrl}
               className="btn-primary hidden px-4 py-2 text-[13px] sm:inline-flex"
             >
-              Open Platform
+              Open App
               <ArrowIcon />
             </a>
             <button
@@ -72,7 +89,7 @@ export function Navbar() {
               aria-label="Toggle menu"
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface/60 text-foreground md:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface text-foreground md:hidden"
             >
               <span className="relative block h-3.5 w-4">
                 <span
@@ -108,7 +125,7 @@ export function Navbar() {
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="block rounded-lg px-3 py-3 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-foreground"
                 >
                   {link.label}

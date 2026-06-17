@@ -13,7 +13,7 @@ export function BackLink({ href, label }: BackLinkProps) {
       href={href}
       className="inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-foreground"
     >
-      <ArrowRight width={14} height={14} className="rotate-180 text-accent" />
+      <ArrowRight width={14} height={14} className="rotate-180 text-accent-ink" />
       {label}
     </Link>
   );

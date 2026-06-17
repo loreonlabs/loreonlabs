@@ -30,7 +30,7 @@ export default async function IntegrationStatusPage() {
         <span
           className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium ${
             health.ok
-              ? "border-accent/40 bg-accent/10 text-accent"
+              ? "border-accent/40 bg-accent/10 text-accent-ink"
               : "border-rose-500/40 bg-rose-500/10 text-rose-400"
           }`}
         >
@@ -48,7 +48,7 @@ export default async function IntegrationStatusPage() {
         shown.
       </p>
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-border/70 bg-surface/40">
+      <div className="mt-8 overflow-hidden rounded-2xl border border-border/70 bg-surface">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border/60 text-left text-[11px] uppercase tracking-wide text-muted">
@@ -70,7 +70,7 @@ export default async function IntegrationStatusPage() {
                 <td className="px-4 py-3.5">
                   <span
                     className={`inline-flex items-center gap-1.5 ${
-                      s.ok ? "text-accent" : "text-rose-400"
+                      s.ok ? "text-accent-ink" : "text-rose-400"
                     }`}
                   >
                     <span
@@ -94,7 +94,7 @@ export default async function IntegrationStatusPage() {
       </div>
 
       <p className="mt-6 font-mono text-xs text-muted/70">
-        JSON: <span className="text-accent">/api/health/integrations</span>
+        JSON: <span className="text-accent-ink">/api/health/integrations</span>
       </p>
     </main>
   );

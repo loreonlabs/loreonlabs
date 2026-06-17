@@ -5,7 +5,7 @@ import type { IntelStatus } from "@/lib/intel/result";
 
 function Frame({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-2xl border border-dashed border-border/70 bg-surface/30 p-10 text-center">
+    <div className="rounded-2xl border border-dashed border-border/70 bg-surface shadow-card p-10 text-center">
       {children}
     </div>
   );

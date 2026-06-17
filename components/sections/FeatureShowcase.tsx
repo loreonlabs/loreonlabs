@@ -15,7 +15,7 @@ import { site } from "@/lib/site";
 function CheckRow({ children }: { children: ReactNode }) {
   return (
     <li className="flex items-start gap-3 text-sm text-muted">
-      <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent/10 text-accent">
+      <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent/10 text-accent-ink">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
           <path
             d="m5 12 5 5 9-11"
@@ -38,14 +38,14 @@ function EcosystemVisual() {
     <div className="panel hairline-top relative flex aspect-[4/3] items-center justify-center overflow-hidden p-6 shadow-card">
       <div className="absolute -inset-10 -z-10 bg-accent/5 blur-3xl" />
       <div className="absolute inset-0 bg-dots opacity-30" />
-      <span className="absolute grid h-16 w-16 place-items-center rounded-2xl border border-accent/30 bg-background/80 text-accent shadow-glow-sm">
+      <span className="absolute grid h-16 w-16 place-items-center rounded-2xl border border-accent/30 bg-background/80 text-accent-ink shadow-glow-sm">
         <LayersIcon width={26} height={26} />
       </span>
       <div className="relative grid w-full max-w-xs grid-cols-3 gap-2">
         {items.map((i) => (
           <span
             key={i}
-            className="rounded-lg border border-border/70 bg-surface/70 px-2 py-2 text-center text-[11px] font-medium text-muted backdrop-blur"
+            className="rounded-lg border border-border/70 bg-surface px-2 py-2 text-center text-[11px] font-medium text-muted backdrop-blur"
           >
             {i}
           </span>
@@ -67,16 +67,16 @@ function SignalVisual() {
           {sources.map((Icon, i) => (
             <span
               key={i}
-              className="grid h-10 w-10 place-items-center rounded-lg border border-border/70 bg-surface/70 text-muted backdrop-blur"
+              className="grid h-10 w-10 place-items-center rounded-lg border border-border/70 bg-surface text-muted backdrop-blur"
             >
               <Icon width={16} height={16} />
             </span>
           ))}
         </div>
-        <svg width="40" height="20" viewBox="0 0 40 20" className="text-accent/50" fill="none">
+        <svg width="40" height="20" viewBox="0 0 40 20" className="text-accent-ink/50" fill="none">
           <path d="M2 10h32m0 0-6-5m6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border border-accent/30 bg-background/80 text-accent shadow-glow-sm">
+        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border border-accent/30 bg-background/80 text-accent-ink shadow-glow-sm">
           <SparkIcon width={26} height={26} />
         </span>
       </div>
@@ -123,7 +123,7 @@ export function FeatureShowcase() {
             <div className={row.reverse ? "lg:order-2" : ""}>
               <Reveal>
                 <span className="badge">
-                  <span className="text-accent">
+                  <span className="text-accent-ink">
                     {row.reverse ? <ShieldCheck width={13} height={13} /> : <BoltIcon width={13} height={13} />}
                   </span>
                   {row.eyebrow}
@@ -149,9 +149,9 @@ export function FeatureShowcase() {
               <Reveal delay={0.2}>
                 <a
                   href={site.appUrl}
-                  className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-accent-soft"
+                  className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-ink transition-colors hover:text-accent-soft"
                 >
-                  Open Platform
+                  Open App
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                     <path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>

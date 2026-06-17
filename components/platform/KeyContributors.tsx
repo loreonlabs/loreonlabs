@@ -24,7 +24,7 @@ export function KeyContributors({ team }: { team: CuratedTeam }) {
             href={team.official}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-accent hover:underline"
+            className="text-sm font-medium text-accent-ink hover:underline"
           >
             {official}
           </a>
@@ -35,7 +35,7 @@ export function KeyContributors({ team }: { team: CuratedTeam }) {
         {cards.map((c) => (
           <div
             key={c.handle}
-            className="hairline-top flex h-full flex-col rounded-2xl border border-border/70 bg-surface/60 p-4"
+            className="hairline-top flex h-full flex-col rounded-2xl border border-border/70 bg-surface shadow-card p-4"
           >
             <div className="flex items-center gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -70,17 +70,17 @@ export function KeyContributors({ team }: { team: CuratedTeam }) {
               {c.builderSlug && (
                 <Link
                   href={`/builders/${c.builderSlug}`}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface/60 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-accent/40"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-accent/40"
                 >
                   View Builder
-                  <ArrowRight width={13} height={13} className="text-accent" />
+                  <ArrowRight width={13} height={13} className="text-accent-ink" />
                 </Link>
               )}
               <a
                 href={c.xUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface/60 px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-foreground"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-foreground"
               >
                 <XSocialIcon width={12} height={12} />
                 Open X

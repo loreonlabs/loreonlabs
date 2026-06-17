@@ -28,7 +28,7 @@ export function SectionHeading({
         <span
           className={`badge ${align === "center" ? "mx-auto" : ""}`}
         >
-          {icon && <span className="text-accent">{icon}</span>}
+          {icon && <span className="text-accent-ink">{icon}</span>}
           {eyebrow}
         </span>
       </Reveal>

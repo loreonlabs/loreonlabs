@@ -11,13 +11,13 @@ export const revalidate = 900;
 
 function chip(active: boolean) {
   return `rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
-    active ? "border-accent/40 bg-accent/10 text-foreground" : "border-border bg-surface/40 text-muted hover:text-foreground"
+    active ? "border-accent/40 bg-accent/10 text-foreground" : "border-border bg-surface text-muted hover:text-foreground"
   }`;
 }
 
 function Leaderboard({ board }: { board: Board }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-surface/50 p-4">
+    <div className="rounded-2xl border border-border/70 bg-surface shadow-card p-4">
       <div className="mb-3">
         <h2 className="t-section-title">{board.label}</h2>
         <p className="text-[11px] text-muted">{board.description}</p>
@@ -25,7 +25,7 @@ function Leaderboard({ board }: { board: Board }) {
       <ol className="space-y-0.5">
         {board.entries.map((e, i) => (
           <li key={e.builder.login}>
-            <Link href={`/builders/${e.builder.login}`} className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-surface">
+            <Link href={`/builders/${e.builder.login}`} className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-surface-2">
               <span className="w-4 text-right font-mono text-[11px] text-muted">{i + 1}</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={e.builder.avatarUrl} alt="" width={28} height={28} className="h-7 w-7 rounded-full" />
@@ -36,7 +36,7 @@ function Leaderboard({ board }: { board: Board }) {
                 </div>
                 <div className="truncate text-[11px] text-muted">@{e.builder.login}</div>
               </div>
-              <span className="shrink-0 font-mono text-[11px] text-accent">{e.value}</span>
+              <span className="shrink-0 font-mono text-[11px] text-accent-ink">{e.value}</span>
             </Link>
           </li>
         ))}

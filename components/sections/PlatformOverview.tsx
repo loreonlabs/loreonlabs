@@ -35,8 +35,8 @@ export function PlatformOverview() {
             const Icon = p.icon;
             return (
               <StaggerItem key={p.title}>
-                <div className="hairline-top h-full rounded-2xl border border-border/70 bg-surface/60 p-6">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-border/70 bg-background/60 text-accent">
+                <div className="hairline-top h-full rounded-2xl border border-border/70 bg-surface p-6">
+                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-border/70 bg-background/60 text-accent-ink">
                     <Icon width={20} height={20} />
                   </span>
                   <h3 className="mt-5 text-lg font-semibold tracking-tight text-foreground">

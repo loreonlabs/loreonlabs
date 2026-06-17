@@ -85,7 +85,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
             href={profile.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent/40"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent/40"
           >
             View full profile on GitHub
           </a>
@@ -98,13 +98,13 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
             <SectionHeader title="Projects" description="Repositories this builder owns." />
             <div className="space-y-2">
               {repos.slice(0, 8).map((r) => (
-                <Link key={r.fullName} href={`/projects/${toSlug(r.fullName)}`} className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 p-3 transition-colors hover:border-accent/40">
+                <Link key={r.fullName} href={`/projects/${toSlug(r.fullName)}`} className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface p-3 transition-colors hover:border-accent/40">
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[13px] font-medium text-foreground">{r.fullName.split("/")[1]}</div>
                     <div className="truncate text-[11px] text-muted">{r.description || "No description."}</div>
                   </div>
                   <span className="inline-flex items-center gap-1 text-[11px] text-muted">
-                    <StarIcon width={12} height={12} className="text-accent" />{formatCompact(r.stars)}
+                    <StarIcon width={12} height={12} className="text-accent-ink" />{formatCompact(r.stars)}
                   </span>
                 </Link>
               ))}
@@ -116,7 +116,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
             <ul className="space-y-2">
               {recent.map((r) => (
                 <li key={r.fullName}>
-                  <a href={r.url} target="_blank" rel="noopener noreferrer" className="block rounded-xl border border-border/60 bg-surface/40 p-3 transition-colors hover:border-accent/40">
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" className="block rounded-xl border border-border/60 bg-surface p-3 transition-colors hover:border-accent/40">
                     <div className="truncate text-[13px] font-medium text-foreground">{r.fullName}</div>
                     <div className="mt-1 text-[11px] text-muted">pushed {timeAgo(r.pushedAt) || "recently"}</div>
                   </a>
@@ -160,7 +160,7 @@ export default async function BuilderDetailPage({ params }: { params: Promise<{ 
           <SectionHeader title="Related builders" description="Others building in the same ecosystem." />
           <div className="card-grid">
             {relatedBuilders.map((b) => (
-              <Link key={b.login} href={`/builders/${b.login}`} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface/60 p-3.5 transition-colors hover:border-accent/40">
+              <Link key={b.login} href={`/builders/${b.login}`} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface shadow-card p-3.5 transition-colors hover:border-accent/40">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={b.avatarUrl} alt="" width={36} height={36} className="h-9 w-9 rounded-full" />
                 <div className="min-w-0 flex-1">

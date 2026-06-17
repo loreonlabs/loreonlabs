@@ -30,7 +30,7 @@ export default async function EcosystemsPage() {
                 title={e.name}
                 description={e.blurb}
                 leading={
-                  <span className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-background/60 font-mono text-sm font-semibold text-accent">
+                  <span className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-background/60 font-mono text-sm font-semibold text-accent-ink">
                     {e.symbol}
                   </span>
                 }
@@ -38,7 +38,7 @@ export default async function EcosystemsPage() {
                 footer={
                   <>
                     <span>{e.newsCount} recent articles</span>
-                    <span className="text-accent">Explore →</span>
+                    <span className="text-accent-ink">Explore →</span>
                   </>
                 }
               />

@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 type BadgeTone = "default" | "accent" | "muted";
 
 const tones: Record<BadgeTone, string> = {
-  default: "border-border/70 bg-surface/60 text-muted",
-  accent: "border-accent/30 bg-accent/10 text-accent",
-  muted: "border-border/60 bg-background/40 text-muted",
+  default: "border-border/70 bg-surface text-muted",
+  accent: "border-accent/30 bg-accent/10 text-accent-ink",
+  muted: "border-border/60 bg-background-secondary/60 text-muted",
 };
 
 interface BadgeProps {

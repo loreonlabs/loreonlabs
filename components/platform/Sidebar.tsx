@@ -44,16 +44,16 @@ export function Sidebar({ groups, onNavigate }: SidebarProps) {
                     href={item.href}
                     onClick={onNavigate}
                     aria-current={active ? "page" : undefined}
-                    className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    className={`group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ${
                       active
-                        ? "bg-accent/10 font-medium text-foreground"
-                        : "text-muted hover:bg-surface hover:text-foreground"
+                        ? "bg-accent/10 font-medium text-foreground ring-1 ring-inset ring-accent/20 before:absolute before:left-0 before:top-1/2 before:h-4 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:bg-accent"
+                        : "text-muted hover:bg-surface-2 hover:text-foreground"
                     }`}
                   >
                     <Icon
                       width={16}
                       height={16}
-                      className={active ? "text-accent" : "text-muted group-hover:text-foreground"}
+                      className={active ? "text-accent-ink" : "text-muted group-hover:text-foreground"}
                     />
                     {item.label}
                   </Link>

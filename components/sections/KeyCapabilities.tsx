@@ -57,8 +57,8 @@ export function KeyCapabilities() {
             const Icon = c.icon;
             return (
               <StaggerItem key={c.title}>
-                <div className="hairline-top group h-full rounded-2xl border border-border/70 bg-surface/60 p-6 transition-colors duration-300 hover:border-accent/40 hover:bg-surface">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-border/70 bg-background/60 text-accent transition-transform duration-300 group-hover:-translate-y-0.5">
+                <div className="hairline-top group h-full rounded-2xl border border-border/70 bg-surface p-6 transition-colors duration-300 hover:border-accent/40 hover:bg-surface">
+                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-border/70 bg-background/60 text-accent-ink transition-transform duration-300 group-hover:-translate-y-0.5">
                     <Icon width={20} height={20} />
                   </span>
                   <h3 className="mt-5 text-base font-semibold tracking-tight text-foreground">

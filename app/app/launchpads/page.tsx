@@ -12,7 +12,7 @@ export const revalidate = 600;
 
 function chip(active: boolean) {
   return `rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
-    active ? "border-accent/40 bg-accent/10 text-foreground" : "border-border bg-surface/40 text-muted hover:text-foreground"
+    active ? "border-accent/40 bg-accent/10 text-foreground" : "border-border bg-surface text-muted hover:text-foreground"
   }`;
 }
 
@@ -53,7 +53,7 @@ export default async function LaunchpadsPage({
               <Link
                 key={l.id}
                 href={`/launchpads/${l.id}`}
-                className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface/60 p-5 transition-colors hover:border-accent/40 hover:bg-surface"
+                className="hairline-top group flex h-full flex-col rounded-2xl border border-border/70 bg-surface shadow-card p-5 transition-colors hover:border-accent/40 hover:bg-surface-2"
               >
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}

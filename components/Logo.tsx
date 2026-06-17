@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoMark } from "./LogoMark";
 
 type LogoProps = {
   size?: number;
@@ -13,21 +14,12 @@ export function Logo({
   href = "/",
   className = "",
 }: LogoProps) {
-  // Temporary neutral placeholder — same size/ring/rounding as the logo mark,
-  // so layout and spacing are unchanged while the Loreon logo is removed.
-  const mark = (
-    <span
-      className="relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[26%] bg-white/5 ring-1 ring-white/10"
-      style={{ width: size, height: size }}
-      aria-hidden
-    />
-  );
-
+  // Boxless geometric mark sitting directly beside the wordmark.
   const content = (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      {mark}
+      <LogoMark height={Math.round(size * 0.82)} className="shrink-0" />
       {withWordmark && (
-        <span className="text-[15px] font-semibold tracking-tight text-foreground">
+        <span className="font-display text-[15px] font-semibold tracking-tight text-foreground">
           Loreon<span className="text-muted">Labs</span>
         </span>
       )}

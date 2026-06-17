@@ -102,7 +102,7 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ i
               <Link
                 key={a.id}
                 href={`/markets/${a.id}`}
-                className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface/60 p-4 transition-colors hover:border-accent/40"
+                className="flex items-center gap-3 rounded-2xl border border-border/70 bg-surface shadow-card p-4 transition-colors hover:border-accent/40"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={a.image} alt="" width={28} height={28} className="h-7 w-7 rounded-full" />
@@ -126,15 +126,15 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ i
           <ul className="space-y-2">
             {news.map((a) => (
               <li key={a.url}>
-                <a href={a.url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 p-3.5 transition-colors hover:border-accent/40">
+                <a href={a.url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-xl border border-border/60 bg-surface p-3.5 transition-colors hover:border-accent/40">
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[13px] font-medium text-foreground">{a.title}</div>
                     <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted">
-                      <span className="text-accent">{a.source}</span>
+                      <span className="text-accent-ink">{a.source}</span>
                       {a.publishedAt && <span>{timeAgo(a.publishedAt)}</span>}
                     </div>
                   </div>
-                  <ExternalIcon width={15} height={15} className="shrink-0 text-muted group-hover:text-accent" />
+                  <ExternalIcon width={15} height={15} className="shrink-0 text-muted group-hover:text-accent-ink" />
                 </a>
               </li>
             ))}

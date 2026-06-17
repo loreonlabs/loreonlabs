@@ -9,7 +9,7 @@ export default function AppError({
   reset: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-dashed border-border/70 bg-surface/30 p-10 text-center">
+    <div className="rounded-2xl border border-dashed border-border/70 bg-surface shadow-card p-10 text-center">
       <p className="text-sm font-medium text-foreground">Something went wrong</p>
       <p className="mx-auto mt-1.5 max-w-md text-[13px] text-muted">
         {error.message || "An unexpected error occurred while loading live data."}
