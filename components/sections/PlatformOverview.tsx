@@ -1,22 +1,32 @@
 import { SectionHeading } from "../SectionHeading";
-import { Reveal, Stagger, StaggerItem } from "../Reveal";
-import { RadarIcon, SparkIcon, NetworkIcon } from "../icons";
+import { Reveal } from "../Reveal";
+import { GlobeIcon, LayersIcon, ChartIcon, PulseIcon, SparkIcon } from "../icons";
 
-const pillars = [
+const stages = [
   {
-    icon: RadarIcon,
-    title: "A discovery engine",
-    body: "Continuously scans the open web, communities, developer activity, and markets to find what's emerging — not what's already obvious.",
+    icon: GlobeIcon,
+    label: "Sources",
+    body: "News, communities, GitHub, and markets — ingested continuously.",
+  },
+  {
+    icon: LayersIcon,
+    label: "Signal Processing",
+    body: "Clean, normalize, and corroborate every signal across sources.",
+  },
+  {
+    icon: ChartIcon,
+    label: "Attention Scoring",
+    body: "Measure momentum, weighted toward what's accelerating early.",
+  },
+  {
+    icon: PulseIcon,
+    label: "Narrative Discovery",
+    body: "Cluster fragmented coverage into ranked, coherent narratives.",
   },
   {
     icon: SparkIcon,
-    title: "An intelligence platform",
-    body: "Turns scattered, noisy signals into structured, comparable intelligence across narratives, founders, projects, and ecosystems.",
-  },
-  {
-    icon: NetworkIcon,
-    title: "A signal aggregation system",
-    body: "Corroborates signals across many independent sources so attention is measured, not guessed — with provenance you can trust.",
+    label: "Output",
+    body: "Surfaced across markets, builders, narratives, and ecosystems.",
   },
 ];
 
@@ -30,28 +40,62 @@ export function PlatformOverview() {
       <div className="container-page">
         <SectionHeading
           eyebrow="The platform"
-          title="One layer for everything gaining attention."
-          description="LoreonLabs is a single intelligence surface for the signals that move markets — built to feel calm, precise, and enterprise-grade."
+          title="How attention becomes intelligence."
+          description="A single pipeline turns scattered signals into ranked, trustworthy intelligence — every stage is real and auditable."
         />
 
-        <Stagger className="mt-14 grid gap-4 md:grid-cols-3">
-          {pillars.map((p) => {
-            const Icon = p.icon;
-            return (
-              <StaggerItem key={p.title}>
-                <div className="hairline-top h-full rounded-2xl border border-border/70 bg-surface p-6">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-border/70 bg-background/60 text-accent-ink">
+        <Reveal className="relative mt-14">
+          {/* animated flowing signal connecting the pipeline (desktop) */}
+          <svg
+            className="absolute inset-x-[9%] top-[2.55rem] hidden h-1 w-[82%] lg:block"
+            viewBox="0 0 1000 4"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <line x1="0" y1="2" x2="1000" y2="2" stroke="#E2E8F0" strokeWidth="2" />
+            <line
+              x1="0"
+              y1="2"
+              x2="1000"
+              y2="2"
+              stroke="url(#pf-flow)"
+              strokeWidth="2"
+              strokeDasharray="16 12"
+              className="animate-flow-dash"
+            />
+            <defs>
+              <linearGradient id="pf-flow" x1="0" y1="0" x2="1" y2="0">
+                <stop stopColor="#00D4FF" />
+                <stop offset="1" stopColor="#4F8CFF" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+            {stages.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div
+                  key={s.label}
+                  className="discovery-card group relative flex h-full flex-col p-5 text-center"
+                >
+                  <span className="relative z-10 mx-auto grid h-12 w-12 place-items-center rounded-2xl border border-accent/20 bg-surface text-accent-ink shadow-glow-sm transition-transform duration-300 ease-premium group-hover:scale-105">
                     <Icon width={20} height={20} />
                   </span>
-                  <h3 className="mt-5 text-lg font-semibold tracking-tight text-foreground">
-                    {p.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{p.body}</p>
+                  <div className="mt-4 flex items-center justify-center gap-2">
+                    <span className="font-mono text-[11px] text-muted">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="font-display text-sm font-semibold tracking-tight text-foreground">
+                      {s.label}
+                    </h3>
+                  </div>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{s.body}</p>
                 </div>
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
+              );
+            })}
+          </div>
+        </Reveal>
 
         <Reveal delay={0.1} className="mt-8">
           <p className="mx-auto max-w-2xl text-center text-sm text-muted">

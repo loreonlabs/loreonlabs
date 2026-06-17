@@ -80,6 +80,13 @@ const config: Config = {
           "0%, 100%": { transform: "translate3d(0, 0, 0)" },
           "50%": { transform: "translate3d(-1.5%, -2.2%, 0)" },
         },
+        stream: {
+          "0%": { transform: "translateX(-130%)" },
+          "100%": { transform: "translateX(130%)" },
+        },
+        "flow-dash": {
+          to: { strokeDashoffset: "-200" },
+        },
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
@@ -99,6 +106,8 @@ const config: Config = {
         "mesh-drift-2": "mesh-drift-2 22s ease-in-out infinite",
         "signal-sweep": "signal-sweep 20s ease-in-out infinite alternate",
         wave: "wave 16s ease-in-out infinite",
+        stream: "stream 17s linear infinite",
+        "flow-dash": "flow-dash 1.6s linear infinite",
         "spin-slow": "spin-slow 24s linear infinite",
         marquee: "marquee 38s linear infinite",
       },
