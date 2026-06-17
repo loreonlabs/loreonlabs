@@ -50,7 +50,7 @@ const _getDiscovery = unstable_cache(
     };
   },
   ["discovery"],
-  { revalidate: 120 },
+  { revalidate: 86400 },
 );
 
 export async function getDiscovery(): Promise<Intel<DiscoveryData>> {

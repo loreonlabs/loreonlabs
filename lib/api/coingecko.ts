@@ -11,9 +11,9 @@ import { httpJson, withCache, health, type ApiHealth } from "./client";
  */
 
 const BASE = "https://api.coingecko.com/api/v3";
-const TTL_MARKET = 60 * 1000;
-const TTL_TOKEN = 2 * 60 * 1000;
-const TTL_TRENDING = 5 * 60 * 1000;
+const TTL_MARKET = 60 * 60 * 1000; // 1h
+const TTL_TOKEN = 60 * 60 * 1000; // 1h
+const TTL_TRENDING = 60 * 60 * 1000; // 1h
 
 export interface MarketAsset {
   id: string;

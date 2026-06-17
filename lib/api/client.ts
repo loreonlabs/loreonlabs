@@ -86,6 +86,9 @@ interface CacheEntry {
   value: unknown;
 }
 const cacheStore = new Map<string, CacheEntry>();
+// In-flight requests, keyed identically — so concurrent calls for the same
+// input share a single upstream request instead of duplicating it.
+const inflight = new Map<string, Promise<unknown>>();
 
 export async function withCache<T>(
   key: string,
@@ -95,9 +98,22 @@ export async function withCache<T>(
   const now = Date.now();
   const hit = cacheStore.get(key);
   if (hit && hit.expires > now) return hit.value as T;
-  const value = await producer();
-  cacheStore.set(key, { value, expires: now + ttlMs });
-  return value;
+
+  // De-duplicate concurrent identical requests (request coalescing).
+  const pending = inflight.get(key);
+  if (pending) return pending as Promise<T>;
+
+  const p = (async () => {
+    try {
+      const value = await producer();
+      cacheStore.set(key, { value, expires: Date.now() + ttlMs });
+      return value;
+    } finally {
+      inflight.delete(key);
+    }
+  })();
+  inflight.set(key, p);
+  return p as Promise<T>;
 }
 
 export function clearApiCache(): void {

@@ -9,7 +9,7 @@ import { httpJson, withCache, health, type ApiHealth } from "./client";
  */
 
 const ENDPOINT = "https://api.tavily.com/search";
-const TTL = 10 * 60 * 1000;
+const TTL = 24 * 60 * 60 * 1000; // 24h — Tavily is expensive; cache hard
 
 export interface TavilyResult {
   title: string;

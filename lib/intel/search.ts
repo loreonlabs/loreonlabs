@@ -34,7 +34,7 @@ export interface SearchResult {
 const _globalSearch = unstable_cache(
   async (q: string): Promise<SearchResult[]> => searchImpl(q),
   ["global-search"],
-  { revalidate: 120 },
+  { revalidate: 86400 },
 );
 
 export async function globalSearch(query: string): Promise<SearchResult[]> {

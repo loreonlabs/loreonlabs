@@ -58,7 +58,7 @@ const _listEcosystems = unstable_cache(
     }).sort((a, b) => b.recentNews - a.recentNews);
   },
   ["ecosystems-list"],
-  { revalidate: 300 },
+  { revalidate: 86400 },
 );
 
 export async function listEcosystems(): Promise<Intel<IntelEcosystem[]>> {
@@ -106,7 +106,7 @@ const _getEcosystem = unstable_cache(
       };
   },
   ["ecosystem-detail"],
-  { revalidate: 300 },
+  { revalidate: 86400 },
 );
 
 export async function getEcosystem(id: string): Promise<Intel<EcosystemDetail | null>> {

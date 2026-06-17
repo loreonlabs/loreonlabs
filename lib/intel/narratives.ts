@@ -102,7 +102,7 @@ const _buildPool = unstable_cache(
     ].filter((a) => a.url && !seen.has(a.url) && seen.add(a.url));
   },
   ["article-pool"],
-  { revalidate: 300 },
+  { revalidate: 21600 },
 );
 
 /** Shared, cached article pool (revalidates every 5 min). */
@@ -151,7 +151,7 @@ const _listNarratives = unstable_cache(
         .sort((a, b) => b.recentCount - a.recentCount || b.articleCount - a.articleCount);
   },
   ["narratives-list"],
-  { revalidate: 300 },
+  { revalidate: 86400 },
 );
 
 export async function listNarratives(): Promise<Intel<IntelNarrative[]>> {
@@ -236,7 +236,7 @@ const _narrativeDetail = unstable_cache(
       };
   },
   ["narrative-detail"],
-  { revalidate: 300 },
+  { revalidate: 86400 },
 );
 
 function hostOf(url: string): string {

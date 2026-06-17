@@ -102,7 +102,7 @@ const _listProjects = unstable_cache(
       return all;
   },
   ["projects-list"],
-  { revalidate: 300 },
+  { revalidate: 86400 },
 );
 
 export async function listProjects(
@@ -138,7 +138,7 @@ const _getProject = unstable_cache(
     };
   },
   ["project-detail"],
-  { revalidate: 300 },
+  { revalidate: 86400 },
 );
 
 export async function getProject(slug: string): Promise<Intel<ProjectDetail | null>> {

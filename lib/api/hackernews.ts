@@ -8,8 +8,8 @@ import { httpJson, withCache, health, type ApiHealth } from "./client";
  * server env (no key required).
  */
 
-const TTL_LIST = 5 * 60 * 1000;
-const TTL_ITEM = 10 * 60 * 1000;
+const TTL_LIST = 6 * 60 * 60 * 1000; // 6h feed cache
+const TTL_ITEM = 6 * 60 * 60 * 1000;
 
 export interface HNItem {
   id: number;

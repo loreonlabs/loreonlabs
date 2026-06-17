@@ -9,7 +9,7 @@ import { httpText, withCache, health, type ApiHealth } from "./client";
  * Dependency-free parsing; resilient per-feed.
  */
 
-const TTL = 10 * 60 * 1000;
+const TTL = 6 * 60 * 60 * 1000; // 6h feed cache
 
 export interface RssItem {
   title: string;

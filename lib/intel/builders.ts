@@ -142,7 +142,7 @@ const _listBuilders = unstable_cache(
     return [...featured, ...rest].slice(0, 120);
   },
   ["builders-list"],
-  { revalidate: 300 },
+  { revalidate: 86400 },
 );
 
 /** Lightweight builder list (no profile hydration) — used by embeds. Cached 5m. */
@@ -261,7 +261,7 @@ const _builderBoards = unstable_cache(
       return boards.filter((b) => b.entries.length > 0);
   },
   ["builder-boards"],
-  { revalidate: 300 },
+  { revalidate: 86400 },
 );
 
 export async function getBuilderBoards(ecosystem?: string): Promise<Intel<Board[]>> {

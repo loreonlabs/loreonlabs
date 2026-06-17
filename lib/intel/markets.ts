@@ -47,7 +47,7 @@ const _marketsOverview = unstable_cache(
     };
   },
   ["markets-overview"],
-  { revalidate: 60 },
+  { revalidate: 3600 },
 );
 
 export async function getMarketsOverview(): Promise<Intel<MarketsOverview>> {
@@ -121,7 +121,7 @@ const _marketDetail = unstable_cache(
       };
   },
   ["market-detail"],
-  { revalidate: 60 },
+  { revalidate: 3600 },
 );
 
 export async function getMarketDetail(id: string): Promise<Intel<MarketDetail | null>> {
