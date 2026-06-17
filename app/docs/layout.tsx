@@ -4,13 +4,29 @@ import { ReadingProgress } from "@/components/docs/ReadingProgress";
 import { docsNav } from "@/lib/navigation";
 import { zoneUrls } from "@/lib/urls";
 
+const DOCS_DESC =
+  "Methodology, sources, validation, and intelligence framework.";
+
 export const metadata: Metadata = {
+  // Own metadataBase so the OG image URL resolves on the docs subdomain.
+  metadataBase: new URL(zoneUrls.docs),
   title: {
-    default: "Documentation",
-    template: "%s · LoreonLabs Docs",
+    default: "Loreon Docs",
+    template: "%s · Loreon Docs",
   },
-  description:
-    "LoreonLabs documentation — what the platform is, why it exists, how it works, its data sources, and scoring methodology.",
+  description: DOCS_DESC,
+  openGraph: {
+    type: "website",
+    url: zoneUrls.docs,
+    siteName: "Loreon Docs",
+    title: "Loreon Docs",
+    description: DOCS_DESC,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Loreon Docs",
+    description: DOCS_DESC,
+  },
 };
 
 const crossLinks = [

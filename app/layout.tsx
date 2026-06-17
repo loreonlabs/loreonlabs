@@ -55,14 +55,13 @@ export const metadata: Metadata = {
     type: "website",
     url: site.url,
     siteName: site.name,
-    title: `${site.name} — ${site.tagline}`,
-    description: site.description,
-    // Logo-based OG image intentionally removed.
+    title: site.name,
+    description: site.tagline,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — ${site.tagline}`,
-    description: site.description,
+    title: site.name,
+    description: site.tagline,
     // Logo-based Twitter image intentionally removed.
     creator: "@loreonlabs",
   },
