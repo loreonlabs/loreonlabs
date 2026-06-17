@@ -2,10 +2,10 @@ import { Backdrop } from "@/components/Backdrop";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { NARRATIVE_THEMES, ECOSYSTEMS, LAUNCHPADS } from "@/lib/intel/config";
-import { PlatformOverview } from "@/components/sections/PlatformOverview";
+import { CoverageMatrix } from "@/components/sections/CoverageMatrix";
+import { IntelligenceLayer } from "@/components/sections/IntelligenceLayer";
 import { KeyCapabilities } from "@/components/sections/KeyCapabilities";
-import { FeatureShowcase } from "@/components/sections/FeatureShowcase";
-import { MethodologyPreview } from "@/components/sections/MethodologyPreview";
+import { IntelligencePipeline } from "@/components/sections/IntelligencePipeline";
 import { IntelligencePrinciples } from "@/components/sections/IntelligencePrinciples";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Footer } from "@/components/Footer";
@@ -41,10 +41,10 @@ export default function Home() {
       <Navbar />
       <main className="relative">
         <Hero stats={heroStats} />
-        <PlatformOverview />
+        <CoverageMatrix />
+        <IntelligenceLayer />
         <KeyCapabilities />
-        <FeatureShowcase />
-        <MethodologyPreview />
+        <IntelligencePipeline />
         <IntelligencePrinciples />
         <FinalCta />
       </main>
