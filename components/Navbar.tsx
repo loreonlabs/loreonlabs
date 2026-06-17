@@ -90,7 +90,7 @@ export function Navbar() {
     >
       <div className="container-page">
         <div
-          className={`mt-3 flex items-center justify-between rounded-2xl border px-3 py-2.5 transition-all duration-300 sm:px-4 ${
+          className={`mt-2 flex items-center justify-between rounded-2xl border px-3 py-2 transition-all duration-300 sm:mt-3 sm:px-4 sm:py-2.5 ${
             scrolled
               ? "border-border/80 bg-background/80 shadow-card backdrop-blur-xl"
               : "border-transparent bg-transparent"

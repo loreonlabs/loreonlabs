@@ -28,7 +28,7 @@ export function IntelligencePipeline() {
   return (
     <section
       id="methodology"
-      className="relative scroll-mt-24 border-y border-border/60 bg-background-secondary/70 py-16 backdrop-blur-sm sm:py-24 lg:py-28"
+      className="relative scroll-mt-24 border-y border-border/60 bg-background-secondary/70 py-12 backdrop-blur-sm sm:py-24 lg:py-28"
     >
       <div className="container-page">
         <SectionHeading

@@ -41,7 +41,7 @@ function StatItem({ label, value, suffix }: Stat) {
 /** Animated count-up stats — real coverage figures, not decorative numbers. */
 export function LiveStats({ stats }: { stats: Stat[] }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-10 gap-y-5">
+    <div className="flex flex-wrap items-center gap-x-7 gap-y-4 sm:gap-x-10 sm:gap-y-5">
       {stats.map((s) => (
         <StatItem key={s.label} {...s} />
       ))}

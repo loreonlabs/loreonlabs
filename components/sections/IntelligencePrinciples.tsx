@@ -27,7 +27,7 @@ const principles = [
 
 export function IntelligencePrinciples() {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-28">
+    <section className="relative py-12 sm:py-24 lg:py-28">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute right-[8%] top-10 h-72 w-72 rounded-full bg-accent/[0.06] blur-[120px]"

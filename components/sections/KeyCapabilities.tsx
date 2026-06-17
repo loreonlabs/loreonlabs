@@ -44,7 +44,7 @@ const capabilities = [
 
 export function KeyCapabilities() {
   return (
-    <section id="features" className="relative scroll-mt-24 border-y border-border/60 bg-background-secondary/80 py-16 backdrop-blur-sm sm:py-24 lg:py-28">
+    <section id="features" className="relative scroll-mt-24 border-y border-border/60 bg-background-secondary/80 py-12 backdrop-blur-sm sm:py-24 lg:py-28">
       <div className="container-page">
         <SectionHeading
           eyebrow="Key capabilities"

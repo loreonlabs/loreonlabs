@@ -6,10 +6,10 @@ import { site } from "@/lib/site";
 
 export function FinalCta() {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-32">
+    <section className="relative py-12 sm:py-24 lg:py-32">
       <div className="container-page">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-border bg-background-tertiary px-6 py-16 text-center shadow-card sm:px-12 sm:py-20">
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-background-tertiary px-6 py-12 text-center shadow-card sm:px-12 sm:py-20">
             {/* ambient glow + grid */}
             <div className="pointer-events-none absolute inset-0 bg-grid opacity-40 mask-radial" />
             <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[640px] -translate-x-1/2 rounded-full bg-accent/15 blur-[120px]" />

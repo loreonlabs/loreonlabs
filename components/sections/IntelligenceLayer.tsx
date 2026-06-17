@@ -37,7 +37,7 @@ const layers = [
 
 export function IntelligenceLayer() {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-28">
+    <section className="relative py-12 sm:py-24 lg:py-28">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute left-[10%] top-20 h-80 w-80 rounded-full bg-accent-blue/[0.07] blur-[130px]"

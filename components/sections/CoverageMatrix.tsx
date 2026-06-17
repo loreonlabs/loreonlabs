@@ -37,7 +37,7 @@ function DepthBars({ level }: { level: number }) {
 
 export function CoverageMatrix() {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-28">
+    <section className="relative py-12 sm:py-24 lg:py-28">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute left-1/2 top-24 h-72 w-[80%] -translate-x-1/2 rounded-full bg-accent/[0.07] blur-[130px]"
