@@ -12,6 +12,12 @@ const waves = [
   { d: "M-40 232 C 120 286, 250 178, 460 244", stroke: "#25C9FF", opacity: 0.3 },
 ];
 
+const chips = [
+  { label: "AI agents", state: "accelerating", x: "5%", y: "14%", tone: "success" },
+  { label: "Stablecoins", state: "rising", x: "44%", y: "40%", tone: "accent" },
+  { label: "Base", state: "active", x: "12%", y: "70%", tone: "accent" },
+];
+
 export function HeroVisual() {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[560px] lg:max-w-[640px]">
@@ -95,7 +101,52 @@ export function HeroVisual() {
         <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-glow" />
 
         {/* top sheen */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white/20" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/10" />
+
+        {/* live intelligence overlay — real labels over the animated field */}
+        <div className="absolute inset-0 z-20 flex flex-col justify-between p-5 sm:p-6">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+              Signal map
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wide text-accent-ink">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+              </span>
+              Live
+            </span>
+          </div>
+
+          <div className="relative flex-1">
+            {chips.map((c) => (
+              <span
+                key={c.label}
+                style={{ left: c.x, top: c.y }}
+                className="absolute inline-flex items-center gap-2 rounded-xl border border-border bg-white/90 px-3 py-1.5 shadow-card backdrop-blur"
+              >
+                <span
+                  className={`h-1.5 w-1.5 animate-pulse-soft rounded-full ${c.tone === "success" ? "bg-success" : "bg-accent"}`}
+                />
+                <span className="text-xs font-medium text-foreground">{c.label}</span>
+                <span
+                  className={`font-mono text-[10px] ${c.tone === "success" ? "text-success-ink" : "text-accent-ink"}`}
+                >
+                  {c.state}
+                </span>
+              </span>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between rounded-xl border border-border/70 bg-white/80 px-3 py-2 backdrop-blur">
+            <span className="font-mono text-[11px] text-muted">Attention momentum</span>
+            <span className="flex items-end gap-0.5">
+              {[6, 9, 7, 11, 10, 14, 17].map((h, i) => (
+                <span key={i} className="w-1 rounded-sm bg-accent/70" style={{ height: h }} />
+              ))}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
