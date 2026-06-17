@@ -22,9 +22,9 @@ const coverage = ["Crypto", "AI", "Base", "Ethereum", "Solana", "DeFi", "Stablec
 
 export function Hero({ stats }: { stats: Stat[] }) {
   return (
-    <section className="relative overflow-hidden pt-28 sm:pt-36 lg:pt-44">
+    <section className="relative overflow-hidden pt-24 sm:pt-32 lg:pt-40">
       <div className="container-page">
-        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] lg:gap-10">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] lg:gap-10">
           {/* Copy */}
           <div className="text-center lg:text-left">
             <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible">
@@ -42,7 +42,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-7 text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl sm:leading-[1.02] lg:text-[4.5rem]"
+              className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl sm:leading-[1.02] lg:text-[4.5rem]"
             >
               <span className="text-gradient">Discover what gains attention</span>{" "}
               <span className="text-gradient-accent">before consensus.</span>
@@ -53,7 +53,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mx-auto mt-7 max-w-xl text-pretty text-lg leading-relaxed text-body sm:text-xl lg:mx-0"
+              className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-body sm:mt-6 sm:text-xl lg:mx-0"
             >
               LoreonLabs tracks emerging narratives, founders, projects, and market
               signals across crypto, AI, and technology — surfacing what matters
@@ -65,7 +65,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start"
+              className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start"
             >
               <a href={site.appUrl} className="btn-primary w-full sm:w-auto">
                 Open App
@@ -81,7 +81,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-11 flex justify-center lg:justify-start"
+              className="mt-8 flex justify-center lg:justify-start"
             >
               <LiveStats stats={stats} />
             </motion.div>
@@ -91,7 +91,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-10"
+              className="mt-8"
             >
               <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted/70">
                 Coverage across
