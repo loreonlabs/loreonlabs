@@ -24,7 +24,7 @@ export function Logo({
         width={size}
         height={size}
         priority
-        className="shrink-0 object-contain"
+        className="shrink-0 object-contain transition-transform duration-300 ease-premium group-hover:scale-[1.06]"
         style={{ width: size, height: size }}
       />
       {withWordmark && (

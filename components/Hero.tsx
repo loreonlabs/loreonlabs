@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { HeroVisual } from "./HeroVisual";
+import { LiveStats, type Stat } from "./LiveStats";
 import { ArrowRight } from "./icons";
 import { site } from "@/lib/site";
 
@@ -19,7 +20,7 @@ const fadeUp = {
 
 const coverage = ["Crypto", "AI", "Base", "Ethereum", "Solana", "DeFi", "Stablecoins"];
 
-export function Hero() {
+export function Hero({ stats }: { stats: Stat[] }) {
   return (
     <section className="relative overflow-hidden pt-36 sm:pt-40 lg:pt-44">
       <div className="container-page">
@@ -80,7 +81,17 @@ export function Hero() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-12"
+              className="mt-11 flex justify-center lg:justify-start"
+            >
+              <LiveStats stats={stats} />
+            </motion.div>
+
+            <motion.div
+              custom={5}
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              className="mt-10"
             >
               <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted/70">
                 Coverage across
@@ -89,7 +100,7 @@ export function Hero() {
                 {coverage.map((c) => (
                   <span
                     key={c}
-                    className="rounded-full border border-border/60 bg-surface px-3 py-1 text-xs text-muted"
+                    className="chip-interactive rounded-full border border-border/60 bg-surface px-3 py-1 text-xs text-muted shadow-card"
                   >
                     {c}
                   </span>

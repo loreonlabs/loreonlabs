@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Shell } from "@/components/platform/Shell";
+import { ReadingProgress } from "@/components/docs/ReadingProgress";
 import { docsNav } from "@/lib/navigation";
 import { zoneUrls } from "@/lib/urls";
 
@@ -19,8 +20,11 @@ const crossLinks = [
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Shell section="Docs" groups={docsNav} links={crossLinks}>
-      {children}
-    </Shell>
+    <>
+      <ReadingProgress />
+      <Shell section="Docs" groups={docsNav} links={crossLinks}>
+        {children}
+      </Shell>
+    </>
   );
 }
