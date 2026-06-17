@@ -19,7 +19,7 @@ export function Logo({
   const content = (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <Image
-        src="/loreon-logo.jpg"
+        src="/loreon-logo.png"
         alt="LoreonLabs"
         width={size}
         height={size}

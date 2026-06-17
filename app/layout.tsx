@@ -47,9 +47,9 @@ export const metadata: Metadata = {
   authors: [{ name: site.name }],
   creator: site.name,
   icons: {
-    icon: "/loreon-logo.jpg",
-    shortcut: "/loreon-logo.jpg",
-    apple: "/loreon-logo.jpg",
+    icon: "/loreon-logo.png",
+    shortcut: "/loreon-logo.png",
+    apple: "/loreon-logo.png",
   },
   openGraph: {
     type: "website",
