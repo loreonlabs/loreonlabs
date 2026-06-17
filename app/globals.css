@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  /* Bright background hierarchy — 90% of the interface uses these. */
-  --background: #ffffff; /* primary */
-  --background-secondary: #fafbfc; /* secondary */
-  --background-tertiary: #f5f8fa; /* tinted */
+  /* Off-white foundation hierarchy — white surfaces gain depth against it. */
+  --background: #f8fafc; /* off-white foundation */
+  --background-secondary: #f1f5f9; /* tinted bands */
+  --background-tertiary: #e9eff6; /* deeper tint */
   --surface: #ffffff; /* card */
-  --surface-2: #f5f8fa; /* raised / hover */
-  --border: #e6ebf2; /* thin light hairline */
+  --surface-2: #f1f5f9; /* raised / hover */
+  --border: #e2e8f0; /* hairline with definition */
   --foreground: #07101f; /* headlines */
   --body: #2d3748; /* body text */
   --muted: #718096; /* muted / meta */

@@ -9,15 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Bright, spacious background hierarchy (90% of the UI lives here).
+        // Off-white foundation so white cards/surfaces gain real depth.
         background: {
-          DEFAULT: "#FFFFFF", // primary
-          secondary: "#FAFBFC", // secondary
-          tertiary: "#F5F8FA", // tinted sections
+          DEFAULT: "#F8FAFC", // off-white foundation
+          secondary: "#F1F5F9", // tinted bands
+          tertiary: "#E9EFF6", // deeper tint
         },
-        surface: "#FFFFFF", // card background
-        "surface-2": "#F5F8FA", // raised / hover
-        border: "#E6EBF2", // thin light hairline
+        surface: "#FFFFFF", // card background — pops off the foundation
+        "surface-2": "#F1F5F9", // raised / hover
+        border: "#E2E8F0", // hairline with definition on off-white
         foreground: "#07101F", // headlines
         body: "#2D3748", // body text
         muted: "#718096", // muted / meta
@@ -47,9 +47,9 @@ const config: Config = {
         // Soft, premium light-theme shadows.
         glow: "0 12px 32px -10px rgba(0, 180, 235, 0.5)",
         "glow-sm": "0 6px 18px -8px rgba(0, 180, 235, 0.4)",
-        card: "0 1px 2px 0 rgba(16,24,40,0.04), 0 12px 32px -16px rgba(16,24,40,0.12)",
+        card: "0 1px 2px 0 rgba(15,23,42,0.05), 0 14px 36px -18px rgba(15,23,42,0.16)",
         elevate:
-          "0 2px 4px 0 rgba(16,24,40,0.05), 0 24px 56px -24px rgba(16,24,40,0.18)",
+          "0 2px 6px 0 rgba(15,23,42,0.06), 0 28px 64px -24px rgba(15,23,42,0.22)",
       },
       keyframes: {
         "grid-pan": {

@@ -114,6 +114,10 @@ const rows = [
 export function FeatureShowcase() {
   return (
     <section className="relative py-24 sm:py-28">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[4%] top-1/3 h-80 w-80 rounded-full bg-accent-blue/[0.06] blur-[130px]"
+      />
       <div className="container-page space-y-20 sm:space-y-28">
         {rows.map((row) => (
           <div
