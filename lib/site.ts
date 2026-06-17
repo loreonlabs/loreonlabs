@@ -13,8 +13,16 @@ export const site = {
   twitterUrl: "https://x.com/loreonlabs",
 };
 
-export const navLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Methodology", href: "#methodology" },
+/**
+ * Landing navigation. In-page items use `target` (a section id we scroll to,
+ * never a hash href) so the URL stays clean; cross-zone items use `href`.
+ */
+export type NavLink =
+  | { label: string; target: string }
+  | { label: string; href: string };
+
+export const navLinks: NavLink[] = [
+  { label: "Features", target: "features" },
+  { label: "Methodology", target: "methodology" },
   { label: "Docs", href: site.docsUrl },
 ];
