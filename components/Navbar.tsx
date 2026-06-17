@@ -42,6 +42,18 @@ export function Navbar() {
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // Activate an in-page item. When the mobile menu is open we close it first
+  // and defer the scroll past its collapse animation — otherwise the menu's
+  // reflow cancels the in-flight smooth scroll (notably on iOS Safari).
+  const goToSection = (id: string) => {
+    if (open) {
+      setOpen(false);
+      window.setTimeout(() => scrollToSection(id), 280);
+    } else {
+      scrollToSection(id);
+    }
+  };
+
   // One handler for desktop + mobile: in-page items scroll, cross-zone items
   // navigate. The mobile menu always closes on activation.
   const renderItem = (link: NavLink, className: string) => {
@@ -50,10 +62,7 @@ export function Navbar() {
         <button
           key={link.label}
           type="button"
-          onClick={() => {
-            setOpen(false);
-            scrollToSection(link.target);
-          }}
+          onClick={() => goToSection(link.target)}
           className={className}
         >
           {link.label}
