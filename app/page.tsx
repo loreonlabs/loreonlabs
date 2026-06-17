@@ -6,6 +6,7 @@ import { PlatformOverview } from "@/components/sections/PlatformOverview";
 import { KeyCapabilities } from "@/components/sections/KeyCapabilities";
 import { FeatureShowcase } from "@/components/sections/FeatureShowcase";
 import { MethodologyPreview } from "@/components/sections/MethodologyPreview";
+import { IntelligencePrinciples } from "@/components/sections/IntelligencePrinciples";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Footer } from "@/components/Footer";
 import { site } from "@/lib/site";
@@ -44,6 +45,7 @@ export default function Home() {
         <KeyCapabilities />
         <FeatureShowcase />
         <MethodologyPreview />
+        <IntelligencePrinciples />
         <FinalCta />
       </main>
       <Footer />
