@@ -46,7 +46,11 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: site.name }],
   creator: site.name,
-  // Logo-based icons (favicon / app icon / apple-touch) intentionally removed.
+  icons: {
+    icon: "/loreon-logo.jpg",
+    shortcut: "/loreon-logo.jpg",
+    apple: "/loreon-logo.jpg",
+  },
   openGraph: {
     type: "website",
     url: site.url,

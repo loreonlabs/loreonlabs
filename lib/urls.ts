@@ -13,9 +13,9 @@
  * use the absolute URLs below so the browser changes host.
  *
  * Zone URLs come from the validated public env (NEXT_PUBLIC_SITE_URL /
- * NEXT_PUBLIC_APP_URL / NEXT_PUBLIC_DOCS_URL). The root domain is derived from
- * the site URL. Locally, the *.localhost subdomains resolve to 127.0.0.1 in all
- * modern browsers, so the same model works in development.
+ * NEXT_PUBLIC_APP_URL / NEXT_PUBLIC_DOCS_URL), defaulting to the production
+ * https://loreonlabs.xyz domains. Hosts are classified by their `app.` /
+ * `docs.` subdomain prefix, so the same model works across environments.
  */
 
 import { publicEnv, rootDomain } from "./env";
@@ -40,8 +40,8 @@ export const zoneUrls: Record<Zone, string> = {
 };
 
 /**
- * Classify a request host into a zone. Works for production subdomains,
- * *.localhost development, and custom domains (any `app.` / `docs.` host).
+ * Classify a request host into a zone by its subdomain prefix — works for the
+ * production subdomains and any custom `app.` / `docs.` host.
  */
 export function zoneFromHost(host: string | null | undefined): Zone {
   const hostname = (host ?? "").split(":")[0].toLowerCase();

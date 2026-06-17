@@ -20,7 +20,7 @@ export function Footer() {
       <div className="container-page py-12">
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <div className="max-w-xs">
-            <Logo size={32} />
+            <Logo size={38} />
             <p className="mt-4 text-sm leading-relaxed text-muted">
               Intelligence and discovery for what gains attention before
               consensus.

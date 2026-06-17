@@ -15,7 +15,7 @@ import {
  * - docs.* → internally rewritten under "/docs" (URL stays clean)
  * - apex / www → landing only; any /app or /docs paths are sent to the
  *   matching subdomain so there is a single clean home for each zone.
- * - other hosts (previews, plain localhost) → served as-is.
+ * - any other host (e.g. preview deployments) → served as-is.
  *
  * Rewrites (not redirects) keep the visible host + path unchanged for the
  * subdomains, satisfying the "clean URL" requirement.

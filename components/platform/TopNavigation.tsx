@@ -31,7 +31,7 @@ export function TopNavigation({ section, links, onMenuClick }: TopNavigationProp
         </button>
 
         <div className="flex shrink-0 items-center gap-2.5">
-          <Logo size={28} withWordmark={false} />
+          <Logo size={34} withWordmark={false} />
           <div className="hidden items-center gap-2 sm:flex">
             <span className="font-display text-sm font-semibold tracking-tight text-foreground">
               Loreon<span className="text-muted">Labs</span>

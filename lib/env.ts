@@ -15,8 +15,6 @@
  * consumed exclusively by the server-only services in lib/services/*.
  */
 
-const isProd = process.env.NODE_ENV === "production";
-
 function validatedUrl(value: string | undefined, fallback: string): string {
   const raw = value?.trim() || fallback;
   try {
@@ -34,15 +32,15 @@ function validatedUrl(value: string | undefined, fallback: string): string {
 export const publicEnv = {
   siteUrl: validatedUrl(
     process.env.NEXT_PUBLIC_SITE_URL,
-    isProd ? "https://loreonlabs.xyz" : "http://localhost:3000",
+    "https://loreonlabs.xyz",
   ),
   appUrl: validatedUrl(
     process.env.NEXT_PUBLIC_APP_URL,
-    isProd ? "https://app.loreonlabs.xyz" : "http://app.localhost:3000",
+    "https://app.loreonlabs.xyz",
   ),
   docsUrl: validatedUrl(
     process.env.NEXT_PUBLIC_DOCS_URL,
-    isProd ? "https://docs.loreonlabs.xyz" : "http://docs.localhost:3000",
+    "https://docs.loreonlabs.xyz",
   ),
 } as const;
 
