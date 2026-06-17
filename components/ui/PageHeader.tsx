@@ -25,8 +25,19 @@ export function PageHeader({
     <header className="border-b border-border/60 pb-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="max-w-2xl">
-          {eyebrow && <p className="t-eyebrow">{eyebrow}</p>}
-          <h1 className="t-page-title mt-2">{title}</h1>
+          {eyebrow && (
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+              </span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-ink">
+                {eyebrow}
+              </span>
+              <span className="h-px w-8 bg-gradient-to-r from-accent/60 to-transparent" />
+            </div>
+          )}
+          <h1 className="t-page-title mt-2.5">{title}</h1>
           {description && <p className="t-body mt-3 text-pretty">{description}</p>}
         </div>
         {actions && (
