@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import * as cg from "@/lib/api/coingecko";
 import { intel, type Intel } from "./result";
 import { ECOSYSTEMS, NARRATIVE_THEMES } from "./config";
@@ -29,25 +30,31 @@ const EMPTY: MarketsOverview = {
   topByMarketCap: [],
 };
 
+const _marketsOverview = unstable_cache(
+  async (): Promise<MarketsOverview> => {
+    const [markets, trending] = await Promise.all([
+      cg.getMarketData({ perPage: 120 }),
+      cg.getTrending().catch(() => []),
+    ]);
+    const byChange = [...markets].sort((a, b) => b.change24h - a.change24h);
+    const byMcap = [...markets].sort((a, b) => b.marketCap - a.marketCap);
+    return {
+      topByMarketCap: byMcap.slice(0, 100),
+      gainers: byChange.slice(0, 10),
+      losers: byChange.slice(-10).reverse(),
+      volumeLeaders: byMcap.slice(0, 10),
+      trending,
+    };
+  },
+  ["markets-overview"],
+  { revalidate: 60 },
+);
+
 export async function getMarketsOverview(): Promise<Intel<MarketsOverview>> {
   return intel<MarketsOverview>({
     empty: EMPTY,
     isEmpty: (v) => v.topByMarketCap.length === 0,
-    run: async () => {
-      const [markets, trending] = await Promise.all([
-        cg.getMarketData({ perPage: 120 }),
-        cg.getTrending().catch(() => []),
-      ]);
-      const byChange = [...markets].sort((a, b) => b.change24h - a.change24h);
-      const byMcap = [...markets].sort((a, b) => b.marketCap - a.marketCap);
-      return {
-        topByMarketCap: byMcap.slice(0, 100),
-        gainers: byChange.slice(0, 10),
-        losers: byChange.slice(-10).reverse(),
-        volumeLeaders: byMcap.slice(0, 10),
-        trending,
-      };
-    },
+    run: _marketsOverview,
   });
 }
 
@@ -71,11 +78,8 @@ function matchText(token: cg.TokenData): string {
   return `${token.name} ${token.symbol} ${token.categories.join(" ")}`.toLowerCase();
 }
 
-export async function getMarketDetail(id: string): Promise<Intel<MarketDetail | null>> {
-  return intel<MarketDetail | null>({
-    empty: null,
-    isEmpty: (v) => v == null,
-    run: async () => {
+const _marketDetail = unstable_cache(
+  async (id: string): Promise<MarketDetail | null> => {
       const token = await cg.getTokenData(id);
 
       const categorySlug = token.categories[0]
@@ -115,6 +119,15 @@ export async function getMarketDetail(id: string): Promise<Intel<MarketDetail | 
         narratives,
         news,
       };
-    },
+  },
+  ["market-detail"],
+  { revalidate: 60 },
+);
+
+export async function getMarketDetail(id: string): Promise<Intel<MarketDetail | null>> {
+  return intel<MarketDetail | null>({
+    empty: null,
+    isEmpty: (v) => v == null,
+    run: () => _marketDetail(id),
   });
 }

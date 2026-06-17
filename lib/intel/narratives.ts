@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import { serverEnv } from "@/lib/env";
 import * as rss from "@/lib/api/rss";
 import * as hn from "@/lib/api/hackernews";
@@ -80,34 +81,41 @@ function clusterFor(theme: NarrativeTheme, pool: Article[]): IntelNarrative {
   };
 }
 
-export async function buildPool(): Promise<Article[]> {
-  const [feed, top, best] = await Promise.all([
-    rss.getAggregatedFeed(250).catch(() => []),
-    hn.getTopStories(80).catch(() => []),
-    hn.getBestStories(40).catch(() => []),
-  ]);
-  const seen = new Set<string>();
-  return [
-    ...feed.map((f) => ({
-      title: f.title,
-      url: f.link,
-      source: f.source,
-      publishedAt: f.publishedAt,
-      text: `${f.title} ${f.summary}`,
-    })),
-    ...top.map(hnToArticle),
-    ...best.map(hnToArticle),
-  ].filter((a) => a.url && !seen.has(a.url) && seen.add(a.url));
+const _buildPool = unstable_cache(
+  async (): Promise<Article[]> => {
+    const [feed, top, best] = await Promise.all([
+      rss.getAggregatedFeed(250).catch(() => []),
+      hn.getTopStories(80).catch(() => []),
+      hn.getBestStories(40).catch(() => []),
+    ]);
+    const seen = new Set<string>();
+    return [
+      ...feed.map((f) => ({
+        title: f.title,
+        url: f.link,
+        source: f.source,
+        publishedAt: f.publishedAt,
+        text: `${f.title} ${f.summary}`,
+      })),
+      ...top.map(hnToArticle),
+      ...best.map(hnToArticle),
+    ].filter((a) => a.url && !seen.has(a.url) && seen.add(a.url));
+  },
+  ["article-pool"],
+  { revalidate: 300 },
+);
+
+/** Shared, cached article pool (revalidates every 5 min). */
+export function buildPool(): Promise<Article[]> {
+  return _buildPool();
 }
 
 function matchedSources(theme: NarrativeTheme, pool: Article[]): Article[] {
   return dedupeByUrl(pool.filter((a) => matches(theme, a.text ?? a.title)));
 }
 
-export async function listNarratives(): Promise<Intel<IntelNarrative[]>> {
-  return intel<IntelNarrative[]>({
-    empty: [],
-    run: async () => {
+const _listNarratives = unstable_cache(
+  async (): Promise<IntelNarrative[]> => {
       const pool = await buildPool();
       const clusters = NARRATIVE_THEMES.map((t) => clusterFor(t, pool));
 
@@ -141,8 +149,13 @@ export async function listNarratives(): Promise<Intel<IntelNarrative[]>> {
       return clusters
         .filter((n) => n.articleCount >= MIN_ARTICLES) // hide thin narratives
         .sort((a, b) => b.recentCount - a.recentCount || b.articleCount - a.articleCount);
-    },
-  });
+  },
+  ["narratives-list"],
+  { revalidate: 300 },
+);
+
+export async function listNarratives(): Promise<Intel<IntelNarrative[]>> {
+  return intel<IntelNarrative[]>({ empty: [], run: _listNarratives });
 }
 
 export interface NarrativeDetail extends IntelNarrative {
@@ -162,7 +175,14 @@ export async function getNarrative(id: string): Promise<Intel<NarrativeDetail | 
   return intel<NarrativeDetail | null>({
     empty: null,
     isEmpty: (v) => v == null || v.allSources.length < MIN_ARTICLES,
-    run: async () => {
+    run: () => _narrativeDetail(id),
+  });
+}
+
+const _narrativeDetail = unstable_cache(
+  async (id: string): Promise<NarrativeDetail | null> => {
+      const theme = themeById(id);
+      if (!theme) return null;
       const pool = await buildPool();
       const base = clusterFor(theme, pool);
 
@@ -214,9 +234,10 @@ export async function getNarrative(id: string): Promise<Intel<NarrativeDetail | 
         relatedProjects: projectsRes.data.slice(0, 6),
         relatedBuilders: buildersRes.data.slice(0, 6),
       };
-    },
-  });
-}
+  },
+  ["narrative-detail"],
+  { revalidate: 300 },
+);
 
 function hostOf(url: string): string {
   try {

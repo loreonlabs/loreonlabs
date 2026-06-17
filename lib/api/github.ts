@@ -101,6 +101,7 @@ export function getRepository(owner: string, repo: string): Promise<Repository> 
   return withCache(`gh:repo:${owner}/${repo}`, TTL, async () => {
     const raw = await httpJson<RawRepo>(`${BASE}/repos/${owner}/${repo}`, {
       headers: headers(),
+      revalidate: 300,
     });
     return mapRepo(raw);
   });
@@ -116,7 +117,7 @@ export function searchRepositories(query: string, perPage = 10): Promise<Reposit
   return withCache(`gh:search:${params}`, TTL, async () => {
     const raw = await httpJson<{ items?: RawRepo[] }>(
       `${BASE}/search/repositories?${params}`,
-      { headers: headers() },
+      { headers: headers(), revalidate: 300 },
     );
     return (raw.items ?? []).map(mapRepo);
   });
@@ -149,6 +150,7 @@ export function getUser(username: string): Promise<Developer> {
   return withCache(`gh:user:${username}`, TTL, async () => {
     const u = await httpJson<RawUser>(`${BASE}/users/${username}`, {
       headers: headers(),
+      revalidate: 300,
     });
     return {
       login: u.login,
@@ -182,7 +184,7 @@ export function getContributors(
   return withCache(`gh:contributors:${owner}/${repo}:${perPage}`, TTL, async () => {
     const raw = await httpJson<RawContributor[]>(
       `${BASE}/repos/${owner}/${repo}/contributors?per_page=${perPage}`,
-      { headers: headers() },
+      { headers: headers(), revalidate: 300 },
     );
     return raw.map((c) => ({
       login: c.login,
@@ -207,7 +209,7 @@ export function getCommits(
   return withCache(`gh:commits:${owner}/${repo}:${perPage}`, TTL, async () => {
     const raw = await httpJson<RawCommit[]>(
       `${BASE}/repos/${owner}/${repo}/commits?per_page=${perPage}`,
-      { headers: headers() },
+      { headers: headers(), revalidate: 300 },
     );
     return raw.map((c) => ({
       sha: c.sha.slice(0, 7),
@@ -224,7 +226,7 @@ export function listUserRepos(login: string, perPage = 6): Promise<Repository[]>
   return withCache(`gh:userrepos:${login}:${perPage}`, TTL, async () => {
     const raw = await httpJson<RawRepo[]>(
       `${BASE}/users/${login}/repos?sort=pushed&per_page=${perPage}&type=owner`,
-      { headers: headers() },
+      { headers: headers(), revalidate: 300 },
     );
     return raw.map(mapRepo);
   });
@@ -242,7 +244,7 @@ export function searchUsers(query: string, perPage = 8): Promise<UserHit[]> {
   return withCache(`gh:usersearch:${params}`, TTL, async () => {
     const raw = await httpJson<{ items?: Array<{ login: string; avatar_url: string; html_url: string; type?: string }> }>(
       `${BASE}/search/users?${params}`,
-      { headers: headers() },
+      { headers: headers(), revalidate: 300 },
     );
     return (raw.items ?? [])
       .filter((u) => u.type !== "Organization")

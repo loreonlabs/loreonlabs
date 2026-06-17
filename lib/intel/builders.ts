@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import * as gh from "@/lib/api/github";
 import { HttpError } from "@/lib/api/client";
 import {
@@ -126,26 +127,29 @@ async function featuredBuilders(ecosystem?: string): Promise<IntelBuilder[]> {
   return builders;
 }
 
-/** Lightweight builder list (no profile hydration) — used by embeds. */
+const _listBuilders = unstable_cache(
+  async (opts: { ecosystem?: string; sort?: BuilderSort }): Promise<IntelBuilder[]> => {
+    const [featured, contributors] = await Promise.all([
+      featuredBuilders(opts.ecosystem),
+      contributorBuilders(opts.ecosystem),
+    ]);
+    const featuredLogins = new Set(featured.map((b) => b.login));
+    const rest = contributors.filter((b) => !featuredLogins.has(b.login));
+    const sort = opts.sort ?? "contributions";
+    rest.sort((a, b) =>
+      sort === "name" ? a.login.localeCompare(b.login) : b.contributions - a.contributions,
+    );
+    return [...featured, ...rest].slice(0, 120);
+  },
+  ["builders-list"],
+  { revalidate: 300 },
+);
+
+/** Lightweight builder list (no profile hydration) — used by embeds. Cached 5m. */
 export async function listBuilders(
   opts: { ecosystem?: string; sort?: BuilderSort } = {},
 ): Promise<Intel<IntelBuilder[]>> {
-  return intel<IntelBuilder[]>({
-    empty: [],
-    run: async () => {
-      const [featured, contributors] = await Promise.all([
-        featuredBuilders(opts.ecosystem),
-        contributorBuilders(opts.ecosystem),
-      ]);
-      const featuredLogins = new Set(featured.map((b) => b.login));
-      const rest = contributors.filter((b) => !featuredLogins.has(b.login));
-      const sort = opts.sort ?? "contributions";
-      rest.sort((a, b) =>
-        sort === "name" ? a.login.localeCompare(b.login) : b.contributions - a.contributions,
-      );
-      return [...featured, ...rest].slice(0, 120);
-    },
-  });
+  return intel<IntelBuilder[]>({ empty: [], run: () => _listBuilders(opts) });
 }
 
 /* --------------------------- leaderboards --------------------------- */
@@ -182,11 +186,8 @@ export interface Board {
 
 const FOUR_YEARS = 4 * 365 * 24 * 60 * 60 * 1000;
 
-export async function getBuilderBoards(ecosystem?: string): Promise<Intel<Board[]>> {
-  return intel<Board[]>({
-    empty: [],
-    isEmpty: (v) => v.length === 0 || v.every((b) => b.entries.length === 0),
-    run: async () => {
+const _builderBoards = unstable_cache(
+  async (ecosystem?: string): Promise<Board[]> => {
       const [featured, contributors] = await Promise.all([
         featuredBuilders(ecosystem),
         contributorBuilders(ecosystem),
@@ -258,7 +259,16 @@ export async function getBuilderBoards(ecosystem?: string): Promise<Intel<Board[
         },
       ];
       return boards.filter((b) => b.entries.length > 0);
-    },
+  },
+  ["builder-boards"],
+  { revalidate: 300 },
+);
+
+export async function getBuilderBoards(ecosystem?: string): Promise<Intel<Board[]>> {
+  return intel<Board[]>({
+    empty: [],
+    isEmpty: (v) => v.length === 0 || v.every((b) => b.entries.length === 0),
+    run: () => _builderBoards(ecosystem),
   });
 }
 
@@ -329,13 +339,14 @@ function minimalDeveloper(login: string, c?: CuratedBuilder): gh.Developer {
  * 404s on a transient GitHub failure — only when a non-curated slug genuinely
  * does not exist on GitHub.
  */
-export async function getBuilder(slug: string): Promise<Intel<BuilderDetail | null>> {
-  const curated = curatedBySlug(slug);
-
-  return intel<BuilderDetail | null>({
-    empty: null,
-    isEmpty: (v) => v == null,
-    run: async () => {
+// NOT wrapped in unstable_cache: caching the *result* would freeze a degraded
+// fallback (e.g. minimal profile during a GitHub rate-limit window) for the full
+// revalidate period. Instead the underlying gh.getUser / gh.listUserRepos fetches
+// are cached in Next's data cache (revalidate 300, see lib/api/github.ts) — that
+// keeps detail pages fast while self-healing the moment GitHub recovers, so a
+// real GitHub builder always shows real stats.
+async function _getBuilder(slug: string): Promise<BuilderDetail | null> {
+      const curated = curatedBySlug(slug);
       // GitHub login to try: curated.github, or the slug itself (unless the
       // curated entry is explicitly X-only).
       const ghLogin = curated?.github ?? (curated ? undefined : slug);
@@ -407,6 +418,13 @@ export async function getBuilder(slug: string): Promise<Intel<BuilderDetail | nu
         relatedBuilders,
         relatedNarratives,
       };
-    },
+}
+
+/** Resolve a builder across all sources. Backed by fetch-level GitHub cache. */
+export async function getBuilder(slug: string): Promise<Intel<BuilderDetail | null>> {
+  return intel<BuilderDetail | null>({
+    empty: null,
+    isEmpty: (v) => v == null,
+    run: () => _getBuilder(slug),
   });
 }

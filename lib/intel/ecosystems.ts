@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import {
   ECOSYSTEMS,
   ecosystemById,
@@ -40,26 +41,28 @@ function newsFor(keywords: string[], pool: Article[]): Article[] {
   });
 }
 
+const _listEcosystems = unstable_cache(
+  async (): Promise<IntelEcosystem[]> => {
+    const pool = await buildPool().catch(() => [] as Article[]);
+    const now = Date.now();
+    return ECOSYSTEMS.map((e) => {
+      const news = newsFor(e.keywords, pool);
+      return {
+        id: e.id,
+        name: e.name,
+        symbol: e.symbol,
+        blurb: e.blurb,
+        newsCount: news.length,
+        recentNews: news.filter((a) => a.publishedAt && now - Date.parse(a.publishedAt) < WEEK).length,
+      };
+    }).sort((a, b) => b.recentNews - a.recentNews);
+  },
+  ["ecosystems-list"],
+  { revalidate: 300 },
+);
+
 export async function listEcosystems(): Promise<Intel<IntelEcosystem[]>> {
-  return intel<IntelEcosystem[]>({
-    empty: [],
-    isEmpty: () => false,
-    run: async () => {
-      const pool = await buildPool().catch(() => [] as Article[]);
-      const now = Date.now();
-      return ECOSYSTEMS.map((e) => {
-        const news = newsFor(e.keywords, pool);
-        return {
-          id: e.id,
-          name: e.name,
-          symbol: e.symbol,
-          blurb: e.blurb,
-          newsCount: news.length,
-          recentNews: news.filter((a) => a.publishedAt && now - Date.parse(a.publishedAt) < WEEK).length,
-        };
-      }).sort((a, b) => b.recentNews - a.recentNews);
-    },
-  });
+  return intel<IntelEcosystem[]>({ empty: [], isEmpty: () => false, run: _listEcosystems });
 }
 
 export interface EcosystemDetail {
@@ -75,14 +78,10 @@ export interface EcosystemDetail {
   news: Article[];
 }
 
-export async function getEcosystem(id: string): Promise<Intel<EcosystemDetail | null>> {
-  const cfg = ecosystemById(id);
-  if (!cfg) return { status: "empty", data: null };
-
-  return intel<EcosystemDetail | null>({
-    empty: null,
-    isEmpty: (v) => v == null,
-    run: async () => {
+const _getEcosystem = unstable_cache(
+  async (id: string): Promise<EcosystemDetail | null> => {
+      const cfg = ecosystemById(id);
+      if (!cfg) return null;
       const [pool, projectsRes, buildersRes] = await Promise.all([
         buildPool().catch(() => [] as Article[]),
         listProjects({ ecosystem: id }),
@@ -105,6 +104,16 @@ export async function getEcosystem(id: string): Promise<Intel<EcosystemDetail | 
           .map((t) => ({ id: t.id, name: t.name, summary: t.summary })),
         news: news.slice(0, 8),
       };
-    },
+  },
+  ["ecosystem-detail"],
+  { revalidate: 300 },
+);
+
+export async function getEcosystem(id: string): Promise<Intel<EcosystemDetail | null>> {
+  if (!ecosystemById(id)) return { status: "empty", data: null };
+  return intel<EcosystemDetail | null>({
+    empty: null,
+    isEmpty: (v) => v == null,
+    run: () => _getEcosystem(id),
   });
 }

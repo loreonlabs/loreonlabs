@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import * as gh from "@/lib/api/github";
 import { ECOSYSTEMS, ecosystemById } from "./config";
 import { intel, type Intel } from "./result";
@@ -67,16 +68,11 @@ export interface ProjectFilters {
   sort?: ProjectSort;
 }
 
-export async function listProjects(
-  filters: ProjectFilters = {},
-): Promise<Intel<IntelProject[]>> {
-  const ecosystems = filters.ecosystem
-    ? ECOSYSTEMS.filter((e) => e.id === filters.ecosystem)
-    : ECOSYSTEMS;
-
-  return intel<IntelProject[]>({
-    empty: [],
-    run: async () => {
+const _listProjects = unstable_cache(
+  async (filters: ProjectFilters): Promise<IntelProject[]> => {
+      const ecosystems = filters.ecosystem
+        ? ECOSYSTEMS.filter((e) => e.id === filters.ecosystem)
+        : ECOSYSTEMS;
       const groups = await Promise.all(
         ecosystems.map((e) =>
           gh
@@ -104,8 +100,15 @@ export async function listProjects(
         return b.stars - a.stars;
       });
       return all;
-    },
-  });
+  },
+  ["projects-list"],
+  { revalidate: 300 },
+);
+
+export async function listProjects(
+  filters: ProjectFilters = {},
+): Promise<Intel<IntelProject[]>> {
+  return intel<IntelProject[]>({ empty: [], run: () => _listProjects(filters) });
 }
 
 export interface ProjectDetail {
@@ -115,30 +118,35 @@ export interface ProjectDetail {
   ecosystemName: string | null;
 }
 
+const _getProject = unstable_cache(
+  async (slug: string): Promise<ProjectDetail | null> => {
+    const [owner, repo] = fromSlug(slug).split("/");
+    if (!owner || !repo) return null;
+    const repository = await gh.getRepository(owner, repo);
+    if (!repository) return null;
+    const [commits, contributors] = await Promise.all([
+      gh.getCommits(owner, repo, 8).catch(() => []),
+      gh.getContributors(owner, repo, 8).catch(() => []),
+    ]);
+    const ecosystem =
+      ECOSYSTEMS.find((e) => repository.topics.includes(e.githubTopic))?.id ?? "";
+    return {
+      project: mapProject(repository, ecosystem),
+      commits,
+      contributors,
+      ecosystemName: ecosystem ? ecosystemById(ecosystem)?.name ?? null : null,
+    };
+  },
+  ["project-detail"],
+  { revalidate: 300 },
+);
+
 export async function getProject(slug: string): Promise<Intel<ProjectDetail | null>> {
-  const fullName = fromSlug(slug);
-  const [owner, repo] = fullName.split("/");
-  if (!owner || !repo) {
-    return { status: "empty", data: null };
-  }
+  const [owner, repo] = fromSlug(slug).split("/");
+  if (!owner || !repo) return { status: "empty", data: null };
   return intel<ProjectDetail | null>({
     empty: null,
     isEmpty: (v) => v == null,
-    run: async () => {
-      const repository = await gh.getRepository(owner, repo);
-      if (!repository) return null;
-      const [commits, contributors] = await Promise.all([
-        gh.getCommits(owner, repo, 8).catch(() => []),
-        gh.getContributors(owner, repo, 8).catch(() => []),
-      ]);
-      const ecosystem =
-        ECOSYSTEMS.find((e) => repository.topics.includes(e.githubTopic))?.id ?? "";
-      return {
-        project: mapProject(repository, ecosystem),
-        commits,
-        contributors,
-        ecosystemName: ecosystem ? ecosystemById(ecosystem)?.name ?? null : null,
-      };
-    },
+    run: () => _getProject(slug),
   });
 }

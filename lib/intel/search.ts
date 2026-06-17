@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import * as gh from "@/lib/api/github";
 import * as cg from "@/lib/api/coingecko";
 import { ECOSYSTEMS, NARRATIVE_THEMES, LAUNCHPADS } from "./config";
@@ -28,9 +29,19 @@ export interface SearchResult {
   image?: string;
 }
 
+const _globalSearch = unstable_cache(
+  async (q: string): Promise<SearchResult[]> => searchImpl(q),
+  ["global-search"],
+  { revalidate: 120 },
+);
+
 export async function globalSearch(query: string): Promise<SearchResult[]> {
   const q = query.trim();
   if (q.length < 2) return [];
+  return _globalSearch(q);
+}
+
+async function searchImpl(q: string): Promise<SearchResult[]> {
 
   const lower = q.toLowerCase();
 
